@@ -1,21 +1,36 @@
-//package com.enershare.controller.user;
-//
-//import com.enershare.model.user.User;
-//import com.enershare.service.user.UserService;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.time.LocalDateTime;
-//import java.util.List;
-//
-//@Slf4j
-//@RestController
-//@RequestMapping("/user")
-//public class UserController {
-//
+package com.enershare.controller.user;
+
+import com.enershare.model.user.User;
+
+import com.enershare.service.auth.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Slf4j
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+    @Autowired
+    private JwtService jwtService;
+
+    @GetMapping
+    public ResponseEntity<String> testJwt(HttpServletRequest request) {
+        String token = jwtService.getJwt(request);
+        if (token != null) {
+            String userId = jwtService.getUserIdByToken(token);
+            return ResponseEntity.ok("User ID: " + userId);
+        } else {
+            return ResponseEntity.badRequest().body("No JWT token found in the request.");
+        }
+    }
 //    @Autowired
 //    private UserService userService;
 //
@@ -65,4 +80,4 @@
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
 //    }
-//}
+}
