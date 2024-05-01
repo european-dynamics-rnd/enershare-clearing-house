@@ -1,25 +1,30 @@
 package com.enershare.controller.user;
 
-import com.enershare.model.user.User;
+import com.enershare.dto.user.UserDTO;
 
 import com.enershare.service.auth.JwtService;
+import com.enershare.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
+    private final UserService userService;
+
     @Autowired
     private JwtService jwtService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public ResponseEntity<String> testJwt(HttpServletRequest request) {
@@ -31,6 +36,12 @@ public class UserController {
             return ResponseEntity.badRequest().body("No JWT token found in the request.");
         }
     }
+
+    @GetMapping(path = "/all-users")
+    Page<UserDTO> getUsers(@RequestParam int page, @RequestParam int size) {
+        return userService.getUsers(page,size);
+    }
+
 //    @Autowired
 //    private UserService userService;
 //

@@ -27,4 +27,17 @@ public class UserDTO extends BaseDTO {
 
     @NotNull
     private String repeatPassword;
+
+    private String firstName;
+
+    private String lastName;
+
+    public UserDTO(Long id,String firstName,String lastName, String email) {
+        this.setId(id);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+
+    }
+
 }

@@ -1,30 +1,31 @@
-//package com.enershare.service.user;
-//
-//import com.enershare.dto.user.ChangePasswordRequest;
-//import com.enershare.dto.user.JwtAuthenticationResponse;
-//import com.enershare.dto.user.UserDTO;
-//import com.enershare.model.LocalUser;
-//import com.enershare.model.user.User;
-//import com.enershare.repository.user.UserRepository;
-//import jakarta.persistence.EntityManager;
-//import jakarta.transaction.Transactional;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.PlatformTransactionManager;
-//import org.springframework.transaction.support.TransactionTemplate;
-//
-//import javax.validation.constraints.NotBlank;
-//
-//@Service
-//@Slf4j
-//public class UserService {
+package com.enershare.service.user;
+
+import com.enershare.dto.user.UserDTO;
+import com.enershare.repository.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
+
+
+@Service
+@Slf4j
+public class UserService {
+
+
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+
+    public Page<UserDTO> getUsers(int page, int size) {
+        Page<UserDTO> users = userRepository.getUsers(PageRequest.of(page, size));
+        return users;
+    }
+
 //    private final UserRepository userRepository;
 //    private final UserMapper userMapper;
 //    private final PasswordEncoder passwordEncoder;
@@ -35,31 +36,31 @@
 //    private final EntityManager entityManager;
 //    private final PlatformTransactionManager transactionManager;
 //    private TransactionTemplate transactionTemplate;
+
+//    @Transactional
+//    public UserDTO changePassword(ChangePasswordRequest optionalChangePasswordRequest) {
 //
-////    @Transactional
-////    public UserDTO changePassword(ChangePasswordRequest optionalChangePasswordRequest) {
-////
-////        ChangePasswordRequest changePasswordRequest = Optional.ofNullable(optionalChangePasswordRequest)
-////                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error!"));
-////
-////        User currentUser = userRepository.findByUsername(changePasswordRequest.getUsername())
-////                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error!"));
-////
-////
-////        if (StringUtils.isNotBlank(changePasswordRequest.getPassword()) || StringUtils.isNotBlank(changePasswordRequest.getRepeatPassword())) {
-////            if (!changePasswordRequest.getPassword().equals(changePasswordRequest.getRepeatPassword())) {
-////                throw new ChangePasswordException();
-////            } else {
-////                currentUser.setEnabled(true);
-////                currentUser.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
-////            }
-////        }
-////
-////        UserDTO responseUserDTO = userMapper.mapUserToDto(currentUser);
-////        return responseUserDTO;
-////    }
+//        ChangePasswordRequest changePasswordRequest = Optional.ofNullable(optionalChangePasswordRequest)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error!"));
+//
+//        User currentUser = userRepository.findByUsername(changePasswordRequest.getUsername())
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error!"));
 //
 //
+//        if (StringUtils.isNotBlank(changePasswordRequest.getPassword()) || StringUtils.isNotBlank(changePasswordRequest.getRepeatPassword())) {
+//            if (!changePasswordRequest.getPassword().equals(changePasswordRequest.getRepeatPassword())) {
+//                throw new ChangePasswordException();
+//            } else {
+//                currentUser.setEnabled(true);
+//                currentUser.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
+//            }
+//        }
+//
+//        UserDTO responseUserDTO = userMapper.mapUserToDto(currentUser);
+//        return responseUserDTO;
+//    }
+
+
 //    @Transactional
 //    public ResponseEntity<?> authenticate(@NotBlank String username, @NotBlank String enteredPassword) {
 //
@@ -88,4 +89,4 @@
 //            throw new IncorrectPasswordException();
 //        }
 //    }
-//}
+}

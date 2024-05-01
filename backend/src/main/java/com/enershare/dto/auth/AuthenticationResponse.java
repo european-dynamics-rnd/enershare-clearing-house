@@ -1,6 +1,6 @@
 package com.enershare.dto.auth;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationResponse {
 
-    @JsonProperty("access_token")
+    @JsonAlias("access_token")
     private String accessToken;
 
-    @JsonProperty("refresh_token")
+    @JsonAlias("refresh_token")
     private String refreshToken;
 }
