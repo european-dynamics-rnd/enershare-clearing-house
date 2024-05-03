@@ -20,6 +20,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public long getTotalUsers() {
+        return userRepository.count();
+    }
+
 
     public Page<UserDTO> getUsers(int page, int size) {
         Page<UserDTO> users = userRepository.getUsers(PageRequest.of(page, size));

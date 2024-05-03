@@ -37,6 +37,11 @@ public class UserController {
         }
     }
 
+    @GetMapping("/total-users")
+    public long getTotalUsers() {
+        return userService.getTotalUsers();
+    }
+
     @GetMapping(path = "/all-users")
     Page<UserDTO> getUsers(@RequestParam int page, @RequestParam int size) {
         return userService.getUsers(page,size);
