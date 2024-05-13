@@ -1,5 +1,6 @@
 package com.enershare.dto.auth;
 
+import com.enershare.enums.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,4 +24,7 @@ public class RegisterRequest {
 
     @JsonProperty("password")
     private String password;
+
+    @JsonProperty("role")
+    private Role role;
 }

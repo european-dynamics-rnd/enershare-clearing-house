@@ -1,6 +1,7 @@
 package com.enershare.dto.user;
 
 import com.enershare.dto.common.BaseDTO;
+import com.enershare.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,11 +33,14 @@ public class UserDTO extends BaseDTO {
 
     private String lastName;
 
-    public UserDTO(Long id,String firstName,String lastName, String email) {
+    private Role role;
+
+    public UserDTO(Long id,String firstName,String lastName, String email, Role role) {
         this.setId(id);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.role = role;
 
     }
 

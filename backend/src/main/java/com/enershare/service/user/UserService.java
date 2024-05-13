@@ -1,6 +1,7 @@
 package com.enershare.service.user;
 
 import com.enershare.dto.user.UserDTO;
+import com.enershare.model.user.User;
 import com.enershare.repository.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
