@@ -30,6 +30,8 @@ public class UserDTO extends BaseDTO {
 
     private Role role;
 
+    private String connectorUrl;
+
     public UserDTO(Long id, String firstname, String lastname, String email, Role role) {
         this.setId(id);
         this.firstname = firstname;

@@ -2,7 +2,8 @@ package com.enershare.controller.auth;
 
 import com.enershare.dto.auth.AuthenticationRequest;
 import com.enershare.dto.auth.AuthenticationResponse;
-import com.enershare.dto.auth.RegisterRequest;
+//import com.enershare.dto.auth.RegisterRequest;
+//import com.enershare.dto.auth.RegisterRequest;
 import com.enershare.service.auth.AuthenticationService;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,10 +19,10 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/register")
-    public void register(@RequestBody RegisterRequest request) {
-        authenticationService.register(request);
-    }
+//    @PostMapping("/register")
+//    public void register(@RequestBody RegisterRequest request) {
+//        authenticationService.register(request);
+//    }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {

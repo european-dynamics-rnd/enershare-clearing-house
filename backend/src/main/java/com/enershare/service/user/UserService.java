@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,9 @@ public class UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
 
 
     public long getTotalUsers() {
@@ -50,7 +54,16 @@ public class UserService {
             User user = userRepository.findById(dto.getId()).orElseThrow();
             userMapper.updateUser(dto, user);
         } else {
-            userMapper.updateUser(dto, new User());
+            var user = User
+                    .builder()
+                    .firstname(dto.getFirstname())
+                    .lastname(dto.getLastname())
+                    .email(dto.getEmail())
+                    .connectorUrl(dto.getConnectorUrl())
+                    .password(passwordEncoder.encode(dto.getPassword()))
+                    .role(dto.getRole())
+                    .build();
+            userRepository.save(user);
         }
     }
 

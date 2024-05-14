@@ -2,7 +2,7 @@ package com.enershare.service.auth;
 
 import com.enershare.dto.auth.AuthenticationRequest;
 import com.enershare.dto.auth.AuthenticationResponse;
-import com.enershare.dto.auth.RegisterRequest;
+//import com.enershare.dto.auth.RegisterRequest;
 import com.enershare.dto.user.UserDTO;
 import com.enershare.enums.TokenType;
 import com.enershare.model.token.Token;
@@ -33,16 +33,16 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
-    public void register(RegisterRequest request) {
-        var user = User
-                .builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
-                .build();
-        var savedUser = userRepository.save(user);
+//    public void register(RegisterRequest request) {
+//        var user = User
+//                .builder()
+//                .firstname(request.getFirstname())
+//                .lastname(request.getLastname())
+//                .email(request.getEmail())
+//                .password(passwordEncoder.encode(request.getPassword()))
+//                .role(request.getRole())
+//                .build();
+//        var savedUser = userRepository.save(user);
 //        var jwtToken = jwtService.generateToken(user);
 //        var refreshToken = jwtService.generateRefreshToken(user);
 //        saveUserToken(savedUser, jwtToken);
@@ -51,7 +51,7 @@ public class AuthenticationService {
 //                .accessToken(jwtToken)
 //                .refreshToken(refreshToken)
 //                .build();
-    }
+//    }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(

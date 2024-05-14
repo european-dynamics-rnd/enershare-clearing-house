@@ -36,6 +36,8 @@ public class User implements UserDetails {
 
     private String lastname;
 
+    private String connectorUrl;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

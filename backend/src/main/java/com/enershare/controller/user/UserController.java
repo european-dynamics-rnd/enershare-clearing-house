@@ -46,25 +46,23 @@ public class UserController {
         return userService.getUsers(page, size);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create-update")
     public void create(@RequestBody UserDTO dto) {
         userService.createOrUpdateUser(dto);
-    }
-
-    @PostMapping("/update")
-    public void update(@RequestBody UserDTO dto) {
-        userService.createOrUpdateUser(dto);
-    }
-
-    @GetMapping(path = "/by-id")
-    UserDTO getObject(@RequestParam("id") Long id) {
-        return userService.getObject(id);
     }
 
     @DeleteMapping
     public void deleteObject(@RequestParam("id") Long id) {
         userService.deleteObject(id);
     }
+
+
+
+    @GetMapping(path = "/by-id")
+    UserDTO getObject(@RequestParam("id") Long id) {
+        return userService.getObject(id);
+    }
+
 
 //    @Autowired
 //    private UserService userService;
