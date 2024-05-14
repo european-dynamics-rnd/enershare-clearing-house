@@ -1,25 +1,30 @@
 package com.enershare.service.user;
 
 import com.enershare.dto.user.UserDTO;
+import com.enershare.mapper.UserMapper;
 import com.enershare.model.user.User;
 import com.enershare.repository.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
 @Slf4j
+@Transactional
 public class UserService {
 
 
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+
+    @Autowired
+    private UserMapper userMapper;
+
 
     public long getTotalUsers() {
         return userRepository.count();
@@ -29,6 +34,31 @@ public class UserService {
     public Page<UserDTO> getUsers(int page, int size) {
         Page<UserDTO> users = userRepository.getUsers(PageRequest.of(page, size));
         return users;
+    }
+
+    public UserDTO getObject(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow();
+
+        UserDTO dto = userMapper.map(user);
+        return dto;
+    }
+
+    public void createOrUpdateUser(UserDTO dto) {
+
+        if (dto.getId() != null) {
+            User user = userRepository.findById(dto.getId()).orElseThrow();
+            userMapper.updateUser(dto, user);
+        } else {
+            userMapper.updateUser(dto, new User());
+        }
+    }
+
+    public void deleteObject(Long id) {
+        User optionalEntity = userRepository.findById(id)
+                .orElseThrow();
+
+        userRepository.deleteById(optionalEntity.getId());
     }
 
 //    private final UserRepository userRepository;

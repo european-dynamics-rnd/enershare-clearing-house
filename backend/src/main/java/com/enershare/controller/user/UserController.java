@@ -1,7 +1,6 @@
 package com.enershare.controller.user;
 
 import com.enershare.dto.user.UserDTO;
-
 import com.enershare.service.auth.JwtService;
 import com.enershare.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,7 +43,27 @@ public class UserController {
 
     @GetMapping(path = "/all-users")
     Page<UserDTO> getUsers(@RequestParam int page, @RequestParam int size) {
-        return userService.getUsers(page,size);
+        return userService.getUsers(page, size);
+    }
+
+    @PostMapping("/create")
+    public void create(@RequestBody UserDTO dto) {
+        userService.createOrUpdateUser(dto);
+    }
+
+    @PostMapping("/update")
+    public void update(@RequestBody UserDTO dto) {
+        userService.createOrUpdateUser(dto);
+    }
+
+    @GetMapping(path = "/by-id")
+    UserDTO getObject(@RequestParam("id") Long id) {
+        return userService.getObject(id);
+    }
+
+    @DeleteMapping
+    public void deleteObject(@RequestParam("id") Long id) {
+        userService.deleteObject(id);
     }
 
 //    @Autowired

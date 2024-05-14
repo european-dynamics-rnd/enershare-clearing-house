@@ -11,10 +11,9 @@ public class UserConverter {
 
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
-        userDTO.setUsername(user.getUsername());
         userDTO.setEmail(user.getEmail());
-        userDTO.setFirstName(user.getFirstname());
-        userDTO.setLastName(user.getLastname());
+        userDTO.setFirstname(user.getFirstname());
+        userDTO.setLastname(user.getLastname());
         userDTO.setRole(user.getRole());
 
         return userDTO;
