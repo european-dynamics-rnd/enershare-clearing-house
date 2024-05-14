@@ -18,5 +18,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT new com.enershare.dto.user.UserDTO(u.id, u.firstname, u.lastname, u.email, u.role) FROM User u ")
     Page<UserDTO> getUsers(Pageable pageable);
 
-
 }

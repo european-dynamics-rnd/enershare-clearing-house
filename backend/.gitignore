@@ -15,7 +15,7 @@ src/**/*.DS_Store
 mvnw
 mvnw.cmd
 
-# BlueJ files
+# BleJ files
 *.ctxt
 
 # Mobile Tools for Java (J2ME)

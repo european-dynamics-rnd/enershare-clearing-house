@@ -3,6 +3,9 @@ package com.enershare.service.logs;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,11 +29,34 @@ public class LogsService {
         return logsRepository.findById(id);
     }
 
-    public List<Logs> getAllLogs() {
-        return logsRepository.findAll();
-    }
-
     public List<Logs> getAllLogsSortedByCreatedOn() {
         return logsRepository.findAllLogsOrderByCreatedOnDesc();
     }
+
+    public Page<Logs> getIngressLogsByEmail(String email, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return logsRepository.getIngressLogsByEmail(email, pageable);
+    }
+
+    public Page<Logs> getEgressLogsByEmail(String email, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return logsRepository.getEgressLogsByEmail(email, pageable);
+    }
+
+    public long countIngressLogsByEmail(String email) {
+        return logsRepository.countIngressLogsByEmail(email);
+    }
+
+    public long countEgressLogsByEmail(String email) {
+        return logsRepository.countEgressLogsByEmail(email);
+    }
+
+    public List<Logs> getLatestIngressLogs(int count) {
+        return logsRepository.findLatestIngressLogs(PageRequest.of(0, count));
+    }
+
+    public List<Logs> getLatestEgressLogs(int count) {
+        return logsRepository.findLatestEgressLogs(PageRequest.of(0, count));
+    }
+
 }

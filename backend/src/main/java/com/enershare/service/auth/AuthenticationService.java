@@ -3,12 +3,13 @@ package com.enershare.service.auth;
 import com.enershare.dto.auth.AuthenticationRequest;
 import com.enershare.dto.auth.AuthenticationResponse;
 import com.enershare.dto.auth.RegisterRequest;
-import com.enershare.enums.Role;
+import com.enershare.dto.user.UserDTO;
 import com.enershare.enums.TokenType;
 import com.enershare.model.token.Token;
 import com.enershare.model.user.User;
 import com.enershare.repository.token.TokenRepository;
 import com.enershare.repository.user.UserRepository;
+import com.enershare.util.converter.UserConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,8 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -60,15 +59,21 @@ public class AuthenticationService {
                         request.getEmail()
                         , request.getPassword()));
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllTokensOfUser(user);
         saveUserToken(user, jwtToken);
+
+        UserDTO userDTO = UserConverter.convertUserToDTO(user);
+
         return AuthenticationResponse.
                 builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
+                .userDTO(userDTO)
                 .build();
+
     }
 
     private void revokeAllTokensOfUser(User user) {
