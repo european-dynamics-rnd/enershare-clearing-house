@@ -1,7 +1,6 @@
 package com.enershare.model.token;
 
 import com.enershare.enums.TokenType;
-import com.enershare.model.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +32,8 @@ public class Token {
 
     private Date expirationDate;
 
-    @ManyToOne
-    @JoinColumn(name = "User_id")
-    private User user;
+    //    @ManyToOne
+//    @JoinColumn(name = "User_id")
+    @Column(name = "user_id")
+    private Long userId;
 }
