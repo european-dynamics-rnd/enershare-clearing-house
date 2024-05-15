@@ -2,7 +2,6 @@ package com.enershare.service.auth;
 
 import com.enershare.dto.auth.AuthenticationRequest;
 import com.enershare.dto.auth.AuthenticationResponse;
-//import com.enershare.dto.auth.RegisterRequest;
 import com.enershare.dto.user.UserDTO;
 import com.enershare.enums.TokenType;
 import com.enershare.model.token.Token;
@@ -91,7 +90,7 @@ public class AuthenticationService {
     private void saveUserToken(User user, String jwtToken) {
         var expirationDate = jwtService.extractExpiration(jwtToken);
         var token = Token.builder()
-                .user(user)
+                .userId(user.getId())
                 .token(jwtToken)
                 .tokenType(TokenType.BEARER)
                 .revoked(false)
