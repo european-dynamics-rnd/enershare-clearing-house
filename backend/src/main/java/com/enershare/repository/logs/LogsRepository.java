@@ -17,7 +17,7 @@ public interface LogsRepository extends JpaRepository<Logs, Long> {
     List<Logs> findAllLogsOrderByCreatedOnDesc();
 
     @Query("SELECT l FROM Logs l " +
-            "WHERE (l.consumer = :email OR l.provider = :email) " +
+            "WHERE (l.provider = :email) " +
             "AND l.stage = 'INGRESS'")
     Page<Logs> getIngressLogsByEmail(String email, Pageable pageable);
 

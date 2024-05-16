@@ -17,7 +17,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UserDTO extends BaseDTO {
 
-
     private String email;
 
     private String password;

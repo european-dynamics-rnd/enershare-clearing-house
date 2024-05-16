@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private JwtService jwtService;
@@ -46,9 +47,9 @@ public class UserController {
         return userService.getUsers(page, size);
     }
 
-    @PostMapping("/create-update")
-    public void create(@RequestBody UserDTO dto) {
-        userService.createOrUpdateUser(dto);
+    @PostMapping("/create")
+    public void createUser(@RequestBody UserDTO userDTO) {
+        userService.createUser(userDTO);
     }
 
     @DeleteMapping
@@ -56,14 +57,15 @@ public class UserController {
         userService.deleteObject(id);
     }
 
-
-
     @GetMapping(path = "/by-id")
     UserDTO getObject(@RequestParam("id") Long id) {
         return userService.getObject(id);
     }
 
+    @PutMapping("/update")
+    public void updateUser(@RequestBody UserDTO userDTO) {
 
+    }
 //    @Autowired
 //    private UserService userService;
 //
