@@ -4,6 +4,7 @@ import com.enershare.dto.auth.AuthenticationRequest;
 import com.enershare.dto.auth.AuthenticationResponse;
 //import com.enershare.dto.auth.RegisterRequest;
 //import com.enershare.dto.auth.RegisterRequest;
+import com.enershare.dto.auth.RegisterRequest;
 import com.enershare.service.auth.AuthenticationService;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;

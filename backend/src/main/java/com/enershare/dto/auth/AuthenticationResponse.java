@@ -20,5 +20,5 @@ public class AuthenticationResponse {
     private String refreshToken;
 
     @JsonAlias("current_user")
-    private UserDTO userDTO;
+    private UserDTO user;
 }

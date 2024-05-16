@@ -2,6 +2,8 @@ package com.enershare.service.auth;
 
 import com.enershare.dto.auth.AuthenticationRequest;
 import com.enershare.dto.auth.AuthenticationResponse;
+//import com.enershare.dto.auth.RegisterRequest;
+import com.enershare.dto.auth.RegisterRequest;
 import com.enershare.dto.user.UserDTO;
 import com.enershare.enums.TokenType;
 import com.enershare.model.token.Token;
@@ -45,11 +47,11 @@ public class AuthenticationService {
 //        var jwtToken = jwtService.generateToken(user);
 //        var refreshToken = jwtService.generateRefreshToken(user);
 //        saveUserToken(savedUser, jwtToken);
-//        return AuthenticationResponse.
-//                builder()
-//                .accessToken(jwtToken)
-//                .refreshToken(refreshToken)
-//                .build();
+////        return AuthenticationResponse.
+////                builder()
+////                .accessToken(jwtToken)
+////                .refreshToken(refreshToken)
+////                .build();
 //    }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -70,7 +72,7 @@ public class AuthenticationService {
                 builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
-                .userDTO(userDTO)
+                .user(userDTO)
                 .build();
 
     }
@@ -113,7 +115,7 @@ public class AuthenticationService {
             var user = this.userRepository.findByEmail(userEmail).orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
-                revokeAllTokensOfUser(user);
+               revokeAllTokensOfUser(user);
                 saveUserToken(user, accessToken);
                 var authResponse = AuthenticationResponse
                         .builder()
