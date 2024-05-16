@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Optional;
+
 
 @Service
 @Slf4j
@@ -43,6 +45,7 @@ public class UserService {
                 .orElseThrow();
 
         UserDTO dto = userMapper.map(user);
+        dto.setPassword(null); // Fix the typo here
         return dto;
     }
 
@@ -88,6 +91,36 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    public void updateUser(@RequestBody UserDTO userDTO) {
+        Optional<User> optionalUser = userRepository.findById(userDTO.getId());
+        User existingUser = optionalUser.orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        String newEmail = userDTO.getEmail();
+        if (!existingUser.getEmail().equals(newEmail)) {
+            // Check if the new email already exists in the database
+            Optional<User> userWithNewEmail = userRepository.findByEmail(newEmail);
+            if (userWithNewEmail.isPresent() && !userWithNewEmail.get().equals(existingUser)) {
+                // Email already exists and belongs to another user
+                throw new IllegalArgumentException("Email already exists for another user");
+            }
+        }
+
+        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setFirstname(userDTO.getFirstname());
+        existingUser.setLastname(userDTO.getLastname());
+        existingUser.setRole(userDTO.getRole());
+
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+            existingUser.setPassword(hashedPassword);
+        }
+
+        // Save the updated user
+        userRepository.save(existingUser);
+    }
+
+}
 
 //    private final UserRepository userRepository;
 //    private final UserMapper userMapper;
@@ -152,4 +185,4 @@ public class UserService {
 //            throw new IncorrectPasswordException();
 //        }
 //    }
-}
+

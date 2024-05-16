@@ -5,8 +5,11 @@ import com.enershare.service.auth.JwtService;
 import com.enershare.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +19,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userService;
-
     @Autowired
     private JwtService jwtService;
 
@@ -63,8 +66,16 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public void updateUser(@RequestBody UserDTO userDTO) {
-
+    public ResponseEntity<String> updateUser(@RequestBody UserDTO userDTO) {
+        try {
+            userService.updateUser(userDTO);
+            return ResponseEntity.ok("User updated successfully");
+        } catch (Exception e) {
+            // Log the error with additional context information
+            logger.error("Error updating user. UserDTO: {}", userDTO, e);
+            // Handle the exception and return an appropriate response
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("403 Forbidden: Insufficient permissions");
+        }
     }
 //    @Autowired
 //    private UserService userService;
