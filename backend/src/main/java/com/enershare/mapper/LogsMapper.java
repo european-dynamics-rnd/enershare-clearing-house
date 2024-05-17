@@ -1,6 +1,6 @@
 package com.enershare.mapper;
 
-import com.enershare.dto.request.LogsDTO;
+import com.enershare.dto.logs.LogsDTO;
 import com.enershare.model.logs.Logs;
 import org.springframework.stereotype.Component;
 

@@ -58,6 +58,8 @@ public class Logs {
 
     private String stage;
 
+    private String connectorUrl;
+
     @Column(name = "request_id")
     @JsonProperty("requestId")
     private String requestId;

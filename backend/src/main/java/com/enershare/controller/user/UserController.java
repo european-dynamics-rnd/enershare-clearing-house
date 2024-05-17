@@ -25,10 +25,6 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping
     public ResponseEntity<String> testJwt(HttpServletRequest request) {
         String token = jwtService.getJwt(request);
@@ -77,23 +73,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("403 Forbidden: Insufficient permissions");
         }
     }
-//    @Autowired
-//    private UserService userService;
-//
-//    @PostMapping("/register")
-//    public ResponseEntity<User> registerUser(@RequestBody User user) {
-//        // Perform user registration and save to the database
-//        User createdUser = userService.createUser(user);
-//
-//        if (createdUser != null) {
-//            // Return a 201 Created response with the created user
-//            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-//        } else {
-//            // Return a 400 Bad Request response if registration fails
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
-//
+
 ////    @PostMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 ////    @Transactional
 ////    public ResponseEntity<?> authenticate(@RequestBody LoginDTO loginDTO) {

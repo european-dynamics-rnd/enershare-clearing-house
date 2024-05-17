@@ -1,5 +1,6 @@
 package com.enershare.service.logs;
 
+import com.enershare.dto.logs.LogSummaryDTO;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +52,15 @@ public class LogsService {
         return logsRepository.countEgressLogsByEmail(email);
     }
 
-    public List<Logs> getLatestIngressLogs(int count) {
-        return logsRepository.findLatestIngressLogs(PageRequest.of(0, count));
+    public List<Logs> getLatestIngressLogs(String email, int count) {
+        return logsRepository.findLatestIngressLogs(email, PageRequest.of(0, count));
     }
 
-    public List<Logs> getLatestEgressLogs(int count) {
-        return logsRepository.findLatestEgressLogs(PageRequest.of(0, count));
+    public List<Logs> getLatestEgressLogs(String email, int count) {
+        return logsRepository.findLatestEgressLogs(email, PageRequest.of(0, count));
     }
 
+    public List<LogSummaryDTO> getSummary(String email) {
+        return logsRepository.getSummary(email);
+    }
 }

@@ -1,12 +1,14 @@
 package com.enershare.controller.logs;
 
-import com.enershare.dto.request.LogsDTO;
+import com.enershare.dto.logs.LogSummaryDTO;
+import com.enershare.dto.logs.LogsDTO;
 import com.enershare.mapper.LogsMapper;
 import com.enershare.model.logs.Logs;
 import com.enershare.service.auth.JwtService;
 import com.enershare.service.logs.LogsService;
 import com.enershare.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,8 @@ public class LogsController {
     private JwtService jwtService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private HttpServletResponse httpServletResponse;
 
     @PostMapping
     public ResponseEntity createLog(@RequestBody LogsDTO logsDTO) {
@@ -94,15 +98,30 @@ public class LogsController {
     }
 
     @GetMapping("/latestIngressLogs")
-    public ResponseEntity<List<Logs>> getLatestIngressLogs(@RequestParam(defaultValue = "5") int count) {
-        List<Logs> latestIngressLogs = logsService.getLatestIngressLogs(count);
+    public ResponseEntity<List<Logs>> getLatestIngressLogs(HttpServletRequest request,
+                                                           @RequestParam(defaultValue = "5") int count) {
+        String token = jwtService.getJwt(request);
+        String email = jwtService.getUserIdByToken(token);
+        List<Logs> latestIngressLogs = logsService.getLatestIngressLogs(email, count);
+
         return ResponseEntity.ok(latestIngressLogs);
     }
 
     @GetMapping("/latestEgressLogs")
-    public ResponseEntity<List<Logs>> getLatestEgressLogs(@RequestParam(defaultValue = "5") int count) {
-        List<Logs> latestEgressLogs = logsService.getLatestEgressLogs(count);
+    public ResponseEntity<List<Logs>> getLatestEgressLogs(HttpServletRequest request,
+                                                          @RequestParam(defaultValue = "5") int count) {
+        String token = jwtService.getJwt(request);
+        String email = jwtService.getUserIdByToken(token);
+        List<Logs> latestEgressLogs = logsService.getLatestEgressLogs(email, count);
         return ResponseEntity.ok(latestEgressLogs);
+    }
+
+    @GetMapping("/summary")
+    public List<LogSummaryDTO> getSummary(HttpServletRequest request) {
+        String token = jwtService.getJwt(request);
+        String email = jwtService.getUserIdByToken(token);
+        List<LogSummaryDTO> summaries = logsService.getSummary(email);
+        return summaries;
     }
 
 }
