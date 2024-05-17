@@ -1,9 +1,8 @@
 package com.enershare.service.logs;
 
-import com.enershare.dto.logs.LogSummaryDTO;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,14 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class LogsService {
 
     private final LogsRepository logsRepository;
-
-    @Autowired
-    public LogsService(LogsRepository logsRepository) {
-        this.logsRepository = logsRepository;
-    }
 
     public Logs createLog(Logs logs) {
         return logsRepository.save(logs);
@@ -60,7 +55,4 @@ public class LogsService {
         return logsRepository.findLatestEgressLogs(email, PageRequest.of(0, count));
     }
 
-    public List<LogSummaryDTO> getSummary(String email) {
-        return logsRepository.getSummary(email);
-    }
 }

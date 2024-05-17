@@ -4,6 +4,7 @@ import com.enershare.dto.logs.LogSummaryDTO;
 import com.enershare.dto.logs.LogsDTO;
 import com.enershare.mapper.LogsMapper;
 import com.enershare.model.logs.Logs;
+import com.enershare.repository.logs.LogsRepository;
 import com.enershare.service.auth.JwtService;
 import com.enershare.service.logs.LogsService;
 import com.enershare.service.user.UserService;
@@ -33,6 +34,8 @@ public class LogsController {
     private UserService userService;
     @Autowired
     private HttpServletResponse httpServletResponse;
+    @Autowired
+    private LogsRepository logsRepository;
 
     @PostMapping
     public ResponseEntity createLog(@RequestBody LogsDTO logsDTO) {
@@ -117,11 +120,19 @@ public class LogsController {
     }
 
     @GetMapping("/summary")
-    public List<LogSummaryDTO> getSummary(HttpServletRequest request) {
+    public ResponseEntity<List<LogSummaryDTO>> getSummary(HttpServletRequest request) {
         String token = jwtService.getJwt(request);
         String email = jwtService.getUserIdByToken(token);
-        List<LogSummaryDTO> summaries = logsService.getSummary(email);
-        return summaries;
+        List<LogSummaryDTO> summaries = logsRepository.getCustomLogSummary(email);
+        return ResponseEntity.ok().body(summaries);
+    }
+
+    @GetMapping("/summaryhours")
+    public ResponseEntity<List<LogSummaryDTO>> getLastTenHoursSummary(HttpServletRequest request) {
+        String token = jwtService.getJwt(request);
+        String email = jwtService.getUserIdByToken(token);
+        List<LogSummaryDTO> summaries = logsRepository.getCustomLogSummaryLastTenHours(email);
+        return ResponseEntity.ok().body(summaries);
     }
 
 }

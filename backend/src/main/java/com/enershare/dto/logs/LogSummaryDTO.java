@@ -1,18 +1,16 @@
 package com.enershare.dto.logs;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LogSummaryDTO {
     private String dataLabel;
     private String dateRange;
     private int ingressLogCount;
     private int egressLogCount;
-    
-    public LogSummaryDTO(String dataLabel, String dateRange, int ingressLogCount, int egressLogCount) {
-        this.dataLabel = dataLabel;
-        this.dateRange = dateRange;
-        this.ingressLogCount = ingressLogCount;
-        this.egressLogCount = egressLogCount;
-    }
+
 }

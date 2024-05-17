@@ -110,6 +110,7 @@ public class UserService {
         existingUser.setFirstname(userDTO.getFirstname());
         existingUser.setLastname(userDTO.getLastname());
         existingUser.setRole(userDTO.getRole());
+        existingUser.setConnectorUrl(userDTO.getConnectorUrl());
 
         if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
             String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
