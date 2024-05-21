@@ -7,10 +7,9 @@ import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
 import com.enershare.service.auth.JwtService;
 import com.enershare.service.logs.LogsService;
-import com.enershare.service.user.UserService;
+import com.enershare.util.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,55 +20,40 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/logs")
+@RequiredArgsConstructor
 public class LogsController {
 
-    @Autowired
-    private LogsService logsService;
-    @Autowired
-    private LogsMapper logsMapper;
-
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private HttpServletResponse httpServletResponse;
-    @Autowired
-    private LogsRepository logsRepository;
+    private final LogsService logsService;
+    private final LogsMapper logsMapper;
+    private final JwtService jwtService;
+    private final LogsRepository logsRepository;
+    private final RequestUtils requestUtils;
 
     @PostMapping
-    public ResponseEntity createLog(@RequestBody LogsDTO logsDTO) {
+    public ResponseEntity<Void> createLog(@RequestBody LogsDTO logsDTO) {
         Logs logs = logsMapper.mapConsumerDTOToEntity(logsDTO);
         logsService.createLog(logs);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getLogs(@PathVariable Long id) {
+    public ResponseEntity<Logs> getLogs(@PathVariable Long id) {
         Optional<Logs> logsOptional = logsService.getLogById(id);
-        if (logsOptional.isPresent()) {
-            return ResponseEntity.ok(logsOptional.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return logsOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
     public ResponseEntity<List<Logs>> getAllLogs() {
         List<Logs> logsList = logsService.getAllLogsSortedByCreatedOn();
-        if (!logsList.isEmpty()) {
-            return ResponseEntity.ok(logsList);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return logsList.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(logsList);
     }
 
     @GetMapping("/ingress")
     public ResponseEntity<Page<Logs>> getIngressLogs(HttpServletRequest request,
                                                      @RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "10") int size) {
-        String token = jwtService.getJwt(request);
-        String email = jwtService.getUserIdByToken(token);
+        String token = requestUtils.getTokenFromRequest(request);
+        String email = requestUtils.getEmailFromToken(token);
         Page<Logs> ingressLogs = logsService.getIngressLogsByEmail(email, page, size);
         return ResponseEntity.ok(ingressLogs);
     }
@@ -78,8 +62,8 @@ public class LogsController {
     public ResponseEntity<Page<Logs>> getEgressLogs(HttpServletRequest request,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "10") int size) {
-        String token = jwtService.getJwt(request);
-        String email = jwtService.getUserIdByToken(token);
+        String token = requestUtils.getTokenFromRequest(request);
+        String email = requestUtils.getEmailFromToken(token);
         Page<Logs> egressLogs = logsService.getEgressLogsByEmail(email, page, size);
         return ResponseEntity.ok(egressLogs);
     }
@@ -94,8 +78,8 @@ public class LogsController {
 
     @GetMapping("/egress/count")
     public ResponseEntity<Long> countEgressLogs(HttpServletRequest request) {
-        String token = jwtService.getJwt(request);
-        String email = jwtService.getUserIdByToken(token);
+        String token = requestUtils.getTokenFromRequest(request);
+        String email = requestUtils.getEmailFromToken(token);
         long count = logsService.countEgressLogsByEmail(email);
         return ResponseEntity.ok(count);
     }
@@ -103,8 +87,8 @@ public class LogsController {
     @GetMapping("/latestIngressLogs")
     public ResponseEntity<List<Logs>> getLatestIngressLogs(HttpServletRequest request,
                                                            @RequestParam(defaultValue = "5") int count) {
-        String token = jwtService.getJwt(request);
-        String email = jwtService.getUserIdByToken(token);
+        String token = requestUtils.getTokenFromRequest(request);
+        String email = requestUtils.getEmailFromToken(token);
         List<Logs> latestIngressLogs = logsService.getLatestIngressLogs(email, count);
 
         return ResponseEntity.ok(latestIngressLogs);
@@ -113,24 +97,24 @@ public class LogsController {
     @GetMapping("/latestEgressLogs")
     public ResponseEntity<List<Logs>> getLatestEgressLogs(HttpServletRequest request,
                                                           @RequestParam(defaultValue = "5") int count) {
-        String token = jwtService.getJwt(request);
-        String email = jwtService.getUserIdByToken(token);
+        String token = requestUtils.getTokenFromRequest(request);
+        String email = requestUtils.getEmailFromToken(token);
         List<Logs> latestEgressLogs = logsService.getLatestEgressLogs(email, count);
         return ResponseEntity.ok(latestEgressLogs);
     }
 
     @GetMapping("/summary")
     public ResponseEntity<List<LogSummaryDTO>> getSummary(HttpServletRequest request) {
-        String token = jwtService.getJwt(request);
-        String email = jwtService.getUserIdByToken(token);
+        String token = requestUtils.getTokenFromRequest(request);
+        String email = requestUtils.getEmailFromToken(token);
         List<LogSummaryDTO> summaries = logsRepository.getCustomLogSummary(email);
         return ResponseEntity.ok().body(summaries);
     }
 
     @GetMapping("/summaryhours")
     public ResponseEntity<List<LogSummaryDTO>> getLastTenHoursSummary(HttpServletRequest request) {
-        String token = jwtService.getJwt(request);
-        String email = jwtService.getUserIdByToken(token);
+        String token = requestUtils.getTokenFromRequest(request);
+        String email = requestUtils.getEmailFromToken(token);
         List<LogSummaryDTO> summaries = logsRepository.getCustomLogSummaryLastTenHours(email);
         return ResponseEntity.ok().body(summaries);
     }

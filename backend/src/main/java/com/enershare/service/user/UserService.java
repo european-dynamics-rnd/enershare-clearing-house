@@ -22,51 +22,32 @@ import java.util.Optional;
 @Transactional
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public long getTotalUsers() {
         return userRepository.count();
     }
 
     public Page<UserDTO> getUsers(int page, int size) {
-        Page<UserDTO> users = userRepository.getUsers(PageRequest.of(page, size));
-        return users;
+        return userRepository.getUsers(PageRequest.of(page, size));
     }
 
     public UserDTO getObject(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow();
-
         UserDTO dto = userMapper.map(user);
-        dto.setPassword(null); // Fix the typo here
+        dto.setPassword(null);
         return dto;
     }
-
-//    public void createOrUpdateUser(UserDTO dto) {
-//
-//        if (dto.getId() != null) {
-//            User user = userRepository.findById(dto.getId()).orElseThrow();
-//            userMapper.updateUser(dto, user);
-//        } else {
-//            var user = User
-//                    .builder()
-//                    .firstname(dto.getFirstname())
-//                    .lastname(dto.getLastname())
-//                    .email(dto.getEmail())
-//                    .connectorUrl(dto.getConnectorUrl())
-//                    .password(passwordEncoder.encode(dto.getPassword()))
-//                    .role(dto.getRole())
-//                    .build();
-//            userRepository.save(user);
-//        }
-//    }
 
     public void deleteObject(Long id) {
         User optionalEntity = userRepository.findById(id)
@@ -98,10 +79,8 @@ public class UserService {
 
         String newEmail = userDTO.getEmail();
         if (!existingUser.getEmail().equals(newEmail)) {
-            // Check if the new email already exists in the database
             Optional<User> userWithNewEmail = userRepository.findByEmail(newEmail);
             if (userWithNewEmail.isPresent() && !userWithNewEmail.get().equals(existingUser)) {
-                // Email already exists and belongs to another user
                 throw new IllegalArgumentException("Email already exists for another user");
             }
         }
@@ -117,73 +96,9 @@ public class UserService {
             existingUser.setPassword(hashedPassword);
         }
 
-        // Save the updated user
         userRepository.save(existingUser);
     }
 
 }
 
-//    private final UserRepository userRepository;
-//    private final UserMapper userMapper;
-//    private final PasswordEncoder passwordEncoder;
-//    private final JWTService jwtService;
-//    private final RoleRepository roleRepository;
-//    private final AuthenticationManager authenticationManager;
-//    private final TokenProvider tokenProvider;
-//    private final EntityManager entityManager;
-//    private final PlatformTransactionManager transactionManager;
-//    private TransactionTemplate transactionTemplate;
-
-//    @Transactional
-//    public UserDTO changePassword(ChangePasswordRequest optionalChangePasswordRequest) {
-//
-//        ChangePasswordRequest changePasswordRequest = Optional.ofNullable(optionalChangePasswordRequest)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error!"));
-//
-//        User currentUser = userRepository.findByUsername(changePasswordRequest.getUsername())
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error!"));
-//
-//
-//        if (StringUtils.isNotBlank(changePasswordRequest.getPassword()) || StringUtils.isNotBlank(changePasswordRequest.getRepeatPassword())) {
-//            if (!changePasswordRequest.getPassword().equals(changePasswordRequest.getRepeatPassword())) {
-//                throw new ChangePasswordException();
-//            } else {
-//                currentUser.setEnabled(true);
-//                currentUser.setPassword(passwordEncoder.encode(changePasswordRequest.getPassword()));
-//            }
-//        }
-//
-//        UserDTO responseUserDTO = userMapper.mapUserToDto(currentUser);
-//        return responseUserDTO;
-//    }
-
-
-//    @Transactional
-//    public ResponseEntity<?> authenticate(@NotBlank String username, @NotBlank String enteredPassword) {
-//
-//        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-//
-//        if (passwordEncoder.matches(enteredPassword, user.getPassword())) {
-//            user.setEnabled(true);
-//            UserDetails userDetails =
-//                    new LocalUser(user.getEmail(), user.getPassword(),
-//                            true, true, true,
-//                            true,
-//                            GeneralUtils.buildSimpleGrantedAuthorities(user.getRolesSet()), user, user.getRoles());
-//
-//
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(username, enteredPassword)
-//            );
-//            SecurityContextHolder.getContext().setAuthentication(authentication);
-//            String jwt = tokenProvider.createToken(authentication);
-//            LocalUser localUser = (LocalUser) authentication.getPrincipal();
-//
-//            UserDTO userDTO = this.userMapper.mapUserToDtoWithMenu(localUser.getUser());
-//            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userDTO));
-//        } else {
-//
-//            throw new IncorrectPasswordException();
-//        }
-//    }
 

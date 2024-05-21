@@ -18,6 +18,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
         return new ResponseEntity<>("Data integrity violation", HttpStatus.CONFLICT);
     }
-
-    // Add other exception handlers if needed
+    
 }

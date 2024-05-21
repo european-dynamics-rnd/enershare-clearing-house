@@ -17,8 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.http.HttpHeaders.*;
 
@@ -26,10 +25,9 @@ import static org.springframework.http.HttpHeaders.*;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-
-    @Value("${cors.origin.url}")
-    private  String corsOriginUrl;
     private final UserRepository userRepository;
+    @Value("${cors.origin.url}")
+    private String corsOriginUrl;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -54,27 +52,18 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
-    public CorsFilter corsFilter(){
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        final CorsConfiguration config = new CorsConfiguration();
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(Collections.singletonList(corsOriginUrl));
-        config.setAllowedHeaders(Arrays.asList(
-                ORIGIN,
-                CONTENT_TYPE,
-                ACCEPT,
-                AUTHORIZATION
-        ));
-        config.setAllowedMethods(Arrays.asList(
-                "GET",
-                "POST",
-                "DELETE",
-                "PUT",
-                "PATCH"
-        ));
-        source.registerCorsConfiguration("/**",config);
-        return  new CorsFilter(source);
+        config.setAllowedOrigins(List.of(corsOriginUrl));
+        config.setAllowedHeaders(List.of(ORIGIN, CONTENT_TYPE, ACCEPT, AUTHORIZATION));
+        config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
 }
