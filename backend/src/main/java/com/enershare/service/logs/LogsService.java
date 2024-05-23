@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,8 +30,9 @@ public class LogsService {
         return logsRepository.findAllLogsOrderByCreatedOnDesc();
     }
 
-    public Page<Logs> getIngressLogsByEmail(String email, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<Logs> getIngressLogsByEmail(String email, int page, int size,String sort, String direction) {
+        Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort);
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
         return logsRepository.getIngressLogsByEmail(email, pageable);
     }
 

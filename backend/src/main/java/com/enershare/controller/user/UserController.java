@@ -60,17 +60,20 @@ public class UserController {
         return userService.getObject(id);
     }
 
+//    @PutMapping("/update")
+//    public ResponseEntity<String> updateUser(@RequestBody UserDTO userDTO) {
+//        try {
+//            userService.updateUser(userDTO);
+//            return ResponseEntity.ok("User updated successfully");
+//        } catch (Exception e) {
+//            logger.error("Error updating user. UserDTO: {}", userDTO, e);
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("403 Forbidden: Insufficient permissions");
+//        }
+//    }
+
     @PutMapping("/update")
-    public ResponseEntity<String> updateUser(@RequestBody UserDTO userDTO) {
-        try {
-            userService.updateUser(userDTO);
-            return ResponseEntity.ok("User updated successfully");
-        } catch (Exception e) {
-            // Log the error with additional context information
-            logger.error("Error updating user. UserDTO: {}", userDTO, e);
-            // Handle the exception and return an appropriate response
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("403 Forbidden: Insufficient permissions");
-        }
+    public void updateUser(@RequestBody UserDTO userDTO) {
+        userService.updateUser(userDTO);
     }
     
 }

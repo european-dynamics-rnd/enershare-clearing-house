@@ -11,6 +11,9 @@ import com.enershare.util.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,11 +54,13 @@ public class LogsController {
     @GetMapping("/ingress")
     public ResponseEntity<Page<Logs>> getIngressLogs(HttpServletRequest request,
                                                      @RequestParam(defaultValue = "0") int page,
-                                                     @RequestParam(defaultValue = "10") int size) {
+                                                     @RequestParam(defaultValue = "10") int size,
+                                                     @RequestParam(defaultValue = "provider") String sort,
+                                                     @RequestParam(defaultValue = "asc") String direction) {
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);
-        Page<Logs> ingressLogs = logsService.getIngressLogsByEmail(email, page, size);
-        return ResponseEntity.ok(ingressLogs);
+        Page<Logs> egressLogs = logsService.getIngressLogsByEmail(email, page, size, sort, direction);
+        return ResponseEntity.ok(egressLogs);
     }
 
     @GetMapping("/egress")
@@ -111,7 +116,7 @@ public class LogsController {
         return ResponseEntity.ok().body(summaries);
     }
 
-    @GetMapping("/summaryhours")
+    @GetMapping("/summaryHours")
     public ResponseEntity<List<LogSummaryDTO>> getLastTenHoursSummary(HttpServletRequest request) {
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);
