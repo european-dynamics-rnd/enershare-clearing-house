@@ -30,14 +30,15 @@ public class LogsService {
         return logsRepository.findAllLogsOrderByCreatedOnDesc();
     }
 
-    public Page<Logs> getIngressLogsByEmail(String email, int page, int size,String sort, String direction) {
+    public Page<Logs> getIngressLogsByEmail(String email, int page, int size, String sort, String direction) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort);
         Pageable pageable = PageRequest.of(page, size, sortOrder);
         return logsRepository.getIngressLogsByEmail(email, pageable);
     }
 
-    public Page<Logs> getEgressLogsByEmail(String email, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<Logs> getEgressLogsByEmail(String email, int page, int size, String sort, String direction) {
+        Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort);
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
         return logsRepository.getEgressLogsByEmail(email, pageable);
     }
 
