@@ -17,40 +17,34 @@ public interface LogsRepository extends JpaRepository<Logs, Long>, CustomLogsRep
     List<Logs> findAllLogsOrderByCreatedOnDesc();
 
     @Query("SELECT l FROM Logs l " +
-            "JOIN User u ON u.connectorUrl = l.connectorUrl " +
-            "WHERE u.email = :email " +
-            "AND l.stage = 'INGRESS'")
+            "JOIN User u ON u.connectorUrl = l.consumer " +
+            "WHERE u.email = :email")
     Page<Logs> getIngressLogsByEmail(@Param("email") String email, Pageable pageable);
 
     @Query("SELECT l FROM Logs l " +
-            "JOIN User u ON u.connectorUrl = l.connectorUrl " +
-            "WHERE u.email = :email " +
-            "AND l.stage = 'EGRESS'")
+            "JOIN User u ON u.connectorUrl = l.provider " +
+            "WHERE u.email = :email ")
     Page<Logs> getEgressLogsByEmail(@Param("email") String email, Pageable pageable);
 
     @Query("SELECT COUNT(l) FROM Logs l " +
-            "JOIN User u ON u.connectorUrl = l.connectorUrl " +
-            "WHERE u.email = :email " +
-            "AND l.stage = 'INGRESS'")
+            "JOIN User u ON u.connectorUrl = l.consumer " +
+            "WHERE u.email = :email ")
     long countIngressLogsByEmail(@Param("email") String email);
 
     @Query("SELECT COUNT(l) FROM Logs l " +
-            "JOIN User u ON u.connectorUrl = l.connectorUrl " +
-            "WHERE u.email = :email " +
-            "AND l.stage = 'EGRESS'")
+            "JOIN User u ON u.connectorUrl = l.provider " +
+            "WHERE u.email = :email ")
     long countEgressLogsByEmail(@Param("email") String email);
 
     @Query("SELECT l FROM Logs l " +
-            "JOIN User u ON u.connectorUrl = l.connectorUrl " +
+            "JOIN User u ON u.connectorUrl = l.consumer " +
             "WHERE u.email = :email " +
-            "AND l.stage = 'INGRESS' " +
             "ORDER BY l.createdOn DESC")
     List<Logs> findLatestIngressLogs(@Param("email") String email, Pageable pageable);
 
     @Query("SELECT l FROM Logs l " +
-            "JOIN User u ON u.connectorUrl = l.connectorUrl " +
+            "JOIN User u ON u.connectorUrl = l.provider " +
             "WHERE u.email = :email " +
-            "AND l.stage = 'EGRESS' " +
             "ORDER BY l.createdOn DESC")
     List<Logs> findLatestEgressLogs(@Param("email") String email, Pageable pageable);
     
