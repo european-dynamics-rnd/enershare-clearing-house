@@ -29,7 +29,7 @@ public class LogsController {
     private final LogsRepository logsRepository;
     private final RequestUtils requestUtils;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> createLog(@RequestBody LogsDTO logsDTO) {
         Logs logs = logsMapper.mapConsumerDTOToEntity(logsDTO);
         logsService.createLog(logs);
