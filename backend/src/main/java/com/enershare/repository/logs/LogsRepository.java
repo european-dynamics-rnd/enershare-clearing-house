@@ -1,9 +1,11 @@
 package com.enershare.repository.logs;
 
+import com.enershare.filtering.specification.LogsSpecification;
 import com.enershare.model.logs.Logs;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface LogsRepository extends JpaRepository<Logs, Long>, CustomLogsRepository {
+public interface LogsRepository extends JpaRepository<Logs, Long>, CustomLogsRepository, JpaSpecificationExecutor<Logs> {
 
     @Query("SELECT l FROM Logs l ORDER BY l.createdOn DESC")
     List<Logs> findAllLogsOrderByCreatedOnDesc();

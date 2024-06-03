@@ -1,5 +1,7 @@
 package com.enershare.service.logs;
 
+import com.enershare.filtering.SearchCriteria;
+import com.enershare.filtering.specification.LogsSpecification;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
 import lombok.RequiredArgsConstructor;
@@ -7,8 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +22,7 @@ import java.util.Optional;
 public class LogsService {
 
     private final LogsRepository logsRepository;
+
 
     public Logs createLog(Logs logs) {
         return logsRepository.save(logs);
@@ -33,21 +39,59 @@ public class LogsService {
     public Page<Logs> getIngressLogsByEmail(String email, int page, int size, String sort, String direction) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort);
         Pageable pageable = PageRequest.of(page, size, sortOrder);
-        return logsRepository.getIngressLogsByEmail(email, pageable);
+
+        //TODO: The Next 8 lines of code are only for testing. The Search Criteria List should be fetched from front-end
+        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
+        LocalDateTime specificDateTime = LocalDateTime.of(2024, 5, 30, 10, 15, 30);
+        SearchCriteria searchCriteria = new SearchCriteria("action","READ");
+        SearchCriteria searchCriteria2 = new SearchCriteria("contractId","contractId3");
+        SearchCriteria searchCriteria3 = new SearchCriteria("createdOn",specificDateTime);
+        searchCriteriaList.add(searchCriteria);
+        searchCriteriaList.add(searchCriteria2);
+        searchCriteriaList.add(searchCriteria3);
+
+
+        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email,searchCriteriaList);
+        return logsRepository.findAll(spec, pageable);
     }
 
     public Page<Logs> getEgressLogsByEmail(String email, int page, int size, String sort, String direction) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort);
         Pageable pageable = PageRequest.of(page, size, sortOrder);
-        return logsRepository.getEgressLogsByEmail(email, pageable);
+
+        //TODO: The Next  line of code is only for testing. The Search Criteria List should be fetched from front-end
+        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
+
+        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email,searchCriteriaList);
+        return logsRepository.findAll(spec, pageable);
+
     }
 
     public long countIngressLogsByEmail(String email) {
-        return logsRepository.countIngressLogsByEmail(email);
+
+        //TODO: The Next 8 lines of code are only for testing. The Search Criteria List should be fetched from front-end
+        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
+        LocalDateTime specificDateTime = LocalDateTime.of(2024, 5, 30, 10, 15, 30);
+        SearchCriteria searchCriteria = new SearchCriteria("action","RE");
+        SearchCriteria searchCriteria2 = new SearchCriteria("contractId","contractId3");
+        SearchCriteria searchCriteria3 = new SearchCriteria("createdOn",specificDateTime);
+        searchCriteriaList.add(searchCriteria);
+        searchCriteriaList.add(searchCriteria2);
+        searchCriteriaList.add(searchCriteria3);
+
+
+        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email,searchCriteriaList);
+        return logsRepository.count(spec);
+
     }
 
     public long countEgressLogsByEmail(String email) {
-        return logsRepository.countEgressLogsByEmail(email);
+
+        //TODO: The Next  line of code is only for testing. The Search Criteria List should be fetched from front-end
+        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
+
+        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email,searchCriteriaList);
+        return logsRepository.count(spec);
     }
 
     public List<Logs> getLatestIngressLogs(String email, int count) {
