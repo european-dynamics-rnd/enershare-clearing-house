@@ -3,6 +3,7 @@ package com.enershare.controller.logs;
 import com.enershare.dto.common.SearchRequestDTO;
 import com.enershare.dto.logs.LogSummaryDTO;
 import com.enershare.dto.logs.LogsDTO;
+import com.enershare.filtering.SearchCriteria;
 import com.enershare.mapper.LogsMapper;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +56,7 @@ public class LogsController {
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);
 
-        Page<Logs> ingressLogs = logsService.getIngressLogsByEmail(email,searchRequestDTO);
+        Page<Logs> ingressLogs = logsService.getIngressLogsByEmail(email, searchRequestDTO);
         return ResponseEntity.ok(ingressLogs);
     }
 
@@ -62,11 +64,12 @@ public class LogsController {
     public ResponseEntity<Page<Logs>> getEgressLogs(HttpServletRequest request,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "10") int size,
-                                                    @RequestParam(defaultValue = "consumer") String sort,
-                                                    @RequestParam(defaultValue = "asc") String direction) {
+                                                    @RequestParam(defaultValue = "provider") String sort,
+                                                    @RequestParam(defaultValue = "asc") String direction,
+                                                    @RequestParam List<SearchCriteria> searchCriteriaList) {
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);
-        Page<Logs> egressLogs = logsService.getEgressLogsByEmail(email, page, size, sort, direction);
+        Page<Logs> egressLogs = logsService.getEgressLogsByEmail(email, page, size, sort, direction, searchCriteriaList);
         return ResponseEntity.ok(egressLogs);
     }
 
@@ -74,7 +77,9 @@ public class LogsController {
     public ResponseEntity<Long> countIngressLogs(HttpServletRequest request) {
         String token = jwtService.getJwt(request);
         String email = jwtService.getUserIdByToken(token);
-        long count = logsService.countIngressLogsByEmail(email);
+        //TODO: Once FE is finished pass the parameter here also
+        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
+        long count = logsService.countIngressLogsByEmail(email, searchCriteriaList);
         return ResponseEntity.ok(count);
     }
 
@@ -82,7 +87,10 @@ public class LogsController {
     public ResponseEntity<Long> countEgressLogs(HttpServletRequest request) {
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);
-        long count = logsService.countEgressLogsByEmail(email);
+
+        //TODO: Replace this List with a parameter from FE
+        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
+        long count = logsService.countEgressLogsByEmail(email, searchCriteriaList);
         return ResponseEntity.ok(count);
     }
 

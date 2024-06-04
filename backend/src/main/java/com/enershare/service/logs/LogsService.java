@@ -13,8 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,42 +43,42 @@ public class LogsService {
         return logsRepository.findAll(spec, pageable);
     }
 
-    public Page<Logs> getEgressLogsByEmail(String email, int page, int size, String sort, String direction) {
+    public Page<Logs> getEgressLogsByEmail(String email, int page, int size, String sort, String direction, List<SearchCriteria> searchCriteriaList) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort);
         Pageable pageable = PageRequest.of(page, size, sortOrder);
 
         //TODO: The Next  line of code is only for testing. The Search Criteria List should be fetched from front-end
-        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
+//        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
 
-        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email,searchCriteriaList);
+        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email, searchCriteriaList);
         return logsRepository.findAll(spec, pageable);
 
     }
 
-    public long countIngressLogsByEmail(String email) {
+    public long countIngressLogsByEmail(String email, List<SearchCriteria> searchCriteriaList) {
 
         //TODO: The Next 8 lines of code are only for testing. The Search Criteria List should be fetched from front-end
-        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
-        LocalDateTime specificDateTime = LocalDateTime.of(2024, 5, 30, 10, 15, 30);
-        SearchCriteria searchCriteria = new SearchCriteria("action","RE");
-        SearchCriteria searchCriteria2 = new SearchCriteria("contractId","contractId3");
-        SearchCriteria searchCriteria3 = new SearchCriteria("createdOn",specificDateTime);
-        searchCriteriaList.add(searchCriteria);
-        searchCriteriaList.add(searchCriteria2);
-        searchCriteriaList.add(searchCriteria3);
+//        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
+//        LocalDateTime specificDateTime = LocalDateTime.of(2024, 5, 30, 10, 15, 30);
+//        SearchCriteria searchCriteria = new SearchCriteria("action", "RE");
+//        SearchCriteria searchCriteria2 = new SearchCriteria("contractId", "contractId3");
+//        SearchCriteria searchCriteria3 = new SearchCriteria("createdOn", specificDateTime);
+//        searchCriteriaList.add(searchCriteria);
+//        searchCriteriaList.add(searchCriteria2);
+//        searchCriteriaList.add(searchCriteria3);
 
 
-        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email,searchCriteriaList);
+        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email, searchCriteriaList);
         return logsRepository.count(spec);
 
     }
 
-    public long countEgressLogsByEmail(String email) {
+    public long countEgressLogsByEmail(String email, List<SearchCriteria> searchCriteriaList) {
 
         //TODO: The Next  line of code is only for testing. The Search Criteria List should be fetched from front-end
-        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
 
-        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email,searchCriteriaList);
+
+        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email, searchCriteriaList);
         return logsRepository.count(spec);
     }
 

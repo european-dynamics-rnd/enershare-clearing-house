@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class LogSummaryDTO {
     private String dataLabel;
-    private String dateRange;
+    private LocalDateTime dateRange;
     private int ingressLogCount;
     private int egressLogCount;
 

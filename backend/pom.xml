@@ -54,6 +54,12 @@
             <version>8.0.28</version> <!-- Adjust version if needed -->
         </dependency>
 
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
