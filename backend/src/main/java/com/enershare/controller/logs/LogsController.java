@@ -1,5 +1,6 @@
 package com.enershare.controller.logs;
 
+import com.enershare.dto.common.SearchRequestDTO;
 import com.enershare.dto.logs.LogSummaryDTO;
 import com.enershare.dto.logs.LogsDTO;
 import com.enershare.mapper.LogsMapper;
@@ -48,23 +49,20 @@ public class LogsController {
         return logsList.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(logsList);
     }
 
-    @GetMapping("/ingress")
-    public ResponseEntity<Page<Logs>> getIngressLogs(HttpServletRequest request,
-                                                     @RequestParam(defaultValue = "0") int page,
-                                                     @RequestParam(defaultValue = "10") int size,
-                                                     @RequestParam(defaultValue = "provider") String sort,
-                                                     @RequestParam(defaultValue = "asc") String direction) {
+    @PostMapping("/ingress")
+    public ResponseEntity<Page<Logs>> getIngressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);
-        Page<Logs> egressLogs = logsService.getIngressLogsByEmail(email, page, size, sort, direction);
-        return ResponseEntity.ok(egressLogs);
+
+        Page<Logs> ingressLogs = logsService.getIngressLogsByEmail(email,searchRequestDTO);
+        return ResponseEntity.ok(ingressLogs);
     }
 
     @GetMapping("/egress")
     public ResponseEntity<Page<Logs>> getEgressLogs(HttpServletRequest request,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "10") int size,
-                                                    @RequestParam(defaultValue = "provider") String sort,
+                                                    @RequestParam(defaultValue = "consumer") String sort,
                                                     @RequestParam(defaultValue = "asc") String direction) {
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);

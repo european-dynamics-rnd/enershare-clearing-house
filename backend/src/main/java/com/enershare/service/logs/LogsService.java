@@ -1,5 +1,6 @@
 package com.enershare.service.logs;
 
+import com.enershare.dto.common.SearchRequestDTO;
 import com.enershare.filtering.SearchCriteria;
 import com.enershare.filtering.specification.LogsSpecification;
 import com.enershare.model.logs.Logs;
@@ -36,22 +37,11 @@ public class LogsService {
         return logsRepository.findAllLogsOrderByCreatedOnDesc();
     }
 
-    public Page<Logs> getIngressLogsByEmail(String email, int page, int size, String sort, String direction) {
-        Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort);
-        Pageable pageable = PageRequest.of(page, size, sortOrder);
+    public Page<Logs> getIngressLogsByEmail(String email, SearchRequestDTO searchRequestDTO) {
+        Sort sortOrder = Sort.by(Sort.Direction.fromString(searchRequestDTO.getDirection()), searchRequestDTO.getSort());
+        Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(), sortOrder);
 
-        //TODO: The Next 8 lines of code are only for testing. The Search Criteria List should be fetched from front-end
-        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
-        LocalDateTime specificDateTime = LocalDateTime.of(2024, 5, 30, 10, 15, 30);
-        SearchCriteria searchCriteria = new SearchCriteria("action","READ");
-        SearchCriteria searchCriteria2 = new SearchCriteria("contractId","contractId3");
-        SearchCriteria searchCriteria3 = new SearchCriteria("createdOn",specificDateTime);
-        searchCriteriaList.add(searchCriteria);
-        searchCriteriaList.add(searchCriteria2);
-        searchCriteriaList.add(searchCriteria3);
-
-
-        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email,searchCriteriaList);
+        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email, searchRequestDTO.getSearchCriteriaList());
         return logsRepository.findAll(spec, pageable);
     }
 
