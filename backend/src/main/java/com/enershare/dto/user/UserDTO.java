@@ -31,11 +31,12 @@ public class UserDTO extends BaseDTO {
 
     private String connectorUrl;
 
-    public UserDTO(Long id, String firstname, String lastname, String email, Role role) {
+    public UserDTO(Long id, String firstname, String lastname, String email, String connectorUrl, Role role) {
         this.setId(id);
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
+        this.connectorUrl = connectorUrl;
         this.role = role;
 
     }

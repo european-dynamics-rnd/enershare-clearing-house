@@ -37,24 +37,24 @@ public class LogsService {
     public Page<Logs> getIngressLogsByEmail(String email, SearchRequestDTO searchRequestDTO) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(searchRequestDTO.getDirection()), searchRequestDTO.getSort());
         Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(), sortOrder);
-        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email, searchRequestDTO);
+        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email, searchRequestDTO.getSearchCriteriaList());
         return logsRepository.findAll(spec, pageable);
     }
 
     public Page<Logs> getEgressLogsByEmail(String email, SearchRequestDTO searchRequestDTO) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(searchRequestDTO.getDirection()), searchRequestDTO.getSort());
         Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(), sortOrder);
-        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email, searchRequestDTO);
+        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email, searchRequestDTO.getSearchCriteriaList());
         return logsRepository.findAll(spec, pageable);
     }
 
     public long countIngressLogsByEmail(String email, SearchRequestDTO searchRequestDTO) {
-        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email, searchRequestDTO);
+        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email, searchRequestDTO.getSearchCriteriaList());
         return logsRepository.count(spec);
     }
 
     public long countEgressLogsByEmail(String email, SearchRequestDTO searchRequestDTO) {
-        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email, searchRequestDTO);
+        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email, searchRequestDTO.getSearchCriteriaList());
         return logsRepository.count(spec);
     }
 
