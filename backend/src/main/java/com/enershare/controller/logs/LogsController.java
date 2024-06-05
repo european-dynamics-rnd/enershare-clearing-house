@@ -3,7 +3,6 @@ package com.enershare.controller.logs;
 import com.enershare.dto.common.SearchRequestDTO;
 import com.enershare.dto.logs.LogSummaryDTO;
 import com.enershare.dto.logs.LogsDTO;
-import com.enershare.filtering.SearchCriteria;
 import com.enershare.mapper.LogsMapper;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
@@ -17,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,42 +53,31 @@ public class LogsController {
     public ResponseEntity<Page<Logs>> getIngressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);
-
         Page<Logs> ingressLogs = logsService.getIngressLogsByEmail(email, searchRequestDTO);
         return ResponseEntity.ok(ingressLogs);
     }
 
-    @GetMapping("/egress")
-    public ResponseEntity<Page<Logs>> getEgressLogs(HttpServletRequest request,
-                                                    @RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "10") int size,
-                                                    @RequestParam(defaultValue = "provider") String sort,
-                                                    @RequestParam(defaultValue = "asc") String direction,
-                                                    @RequestParam List<SearchCriteria> searchCriteriaList) {
+    @PostMapping("/egress")
+    public ResponseEntity<Page<Logs>> getEgressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);
-        Page<Logs> egressLogs = logsService.getEgressLogsByEmail(email, page, size, sort, direction, searchCriteriaList);
+        Page<Logs> egressLogs = logsService.getEgressLogsByEmail(email, searchRequestDTO);
         return ResponseEntity.ok(egressLogs);
     }
 
-    @GetMapping("/ingress/count")
-    public ResponseEntity<Long> countIngressLogs(HttpServletRequest request) {
+    @PostMapping("/ingress/count")
+    public ResponseEntity<Long> countIngressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
         String token = jwtService.getJwt(request);
         String email = jwtService.getUserIdByToken(token);
-        //TODO: Once FE is finished pass the parameter here also
-        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
-        long count = logsService.countIngressLogsByEmail(email, searchCriteriaList);
+        long count = logsService.countIngressLogsByEmail(email, searchRequestDTO);
         return ResponseEntity.ok(count);
     }
 
-    @GetMapping("/egress/count")
-    public ResponseEntity<Long> countEgressLogs(HttpServletRequest request) {
+    @PostMapping("/egress/count")
+    public ResponseEntity<Long> countEgressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);
-
-        //TODO: Replace this List with a parameter from FE
-        List<SearchCriteria> searchCriteriaList = new ArrayList<>();
-        long count = logsService.countEgressLogsByEmail(email, searchCriteriaList);
+        long count = logsService.countEgressLogsByEmail(email, searchRequestDTO);
         return ResponseEntity.ok(count);
     }
 
@@ -115,6 +102,7 @@ public class LogsController {
 
     @GetMapping("/summary")
     public ResponseEntity<List<LogSummaryDTO>> getSummary(HttpServletRequest request) {
+        System.out.println("getSummary method called");
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);
         List<LogSummaryDTO> summaries = logsRepository.getCustomLogSummary(email);

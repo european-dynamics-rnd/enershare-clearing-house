@@ -1,5 +1,6 @@
 package com.enershare.filtering.specification;
 
+import com.enershare.dto.common.SearchRequestDTO;
 import com.enershare.filtering.SearchCriteria;
 import com.enershare.model.logs.Logs;
 import com.enershare.model.user.User;
@@ -14,10 +15,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogsSpecification  {
+public class LogsSpecification {
 
 
-    public static Specification<Logs> ingressLogsByEmail(String email ,List<SearchCriteria> searchCriteriaList) {
+    public static Specification<Logs> ingressLogsByEmail(String email, SearchRequestDTO searchRequestDTO) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -29,11 +30,11 @@ public class LogsSpecification  {
                     criteriaBuilder.equal(userRoot.get("connectorUrl"), root.get("consumer")),
                     criteriaBuilder.equal(userRoot.get("email"), email)
             ));
-            return getPredicate(searchCriteriaList, root, criteriaBuilder, predicates, userSubquery);
+            return getPredicate(searchRequestDTO, root, criteriaBuilder, predicates, userSubquery);
         };
     }
 
-    public static Specification<Logs> egressLogsByEmail(String email ,List<SearchCriteria> searchCriteriaList) {
+    public static Specification<Logs> egressLogsByEmail(String email, SearchRequestDTO searchRequestDTO) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -45,14 +46,14 @@ public class LogsSpecification  {
                     criteriaBuilder.equal(userRoot.get("connectorUrl"), root.get("provider")),
                     criteriaBuilder.equal(userRoot.get("email"), email)
             ));
-            return getPredicate(searchCriteriaList, root, criteriaBuilder, predicates, userSubquery);
+            return getPredicate(searchRequestDTO, root, criteriaBuilder, predicates, userSubquery);
         };
     }
 
-    private static Predicate getPredicate(List<SearchCriteria> searchCriteriaList, Root<Logs> root, CriteriaBuilder criteriaBuilder,
+    private static Predicate getPredicate(SearchRequestDTO searchRequestDTO, Root<Logs> root, CriteriaBuilder criteriaBuilder,
                                           List<Predicate> predicates, Subquery<User> userSubquery) {
         predicates.add(criteriaBuilder.exists(userSubquery));
-
+        List<SearchCriteria> searchCriteriaList = searchRequestDTO.getSearchCriteriaList();
 
         searchCriteriaList.forEach(searchCriteria ->
         {
@@ -60,7 +61,7 @@ public class LogsSpecification  {
             if (searchCriteria.getColumnValue() instanceof String) {
                 // Use 'like' for String values
                 predicate = criteriaBuilder.like(root.get(searchCriteria.getColumnName()), "%" + searchCriteria.getColumnValue() + "%");
-                
+
             } else if (searchCriteria.getColumnValue() instanceof LocalDateTime) {
                 LocalDate dateValue = ((LocalDateTime) searchCriteria.getColumnValue()).toLocalDate();
                 // Compare the LocalDate part only
