@@ -65,21 +65,21 @@ public class LogsController {
         return ResponseEntity.ok(egressLogs);
     }
 
-    @PostMapping("/ingress/count")
-    public ResponseEntity<Long> countIngressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-        String token = jwtService.getJwt(request);
-        String email = jwtService.getUserIdByToken(token);
-        long count = logsService.countIngressLogsByEmail(email, searchRequestDTO);
-        return ResponseEntity.ok(count);
-    }
-
-    @PostMapping("/egress/count")
-    public ResponseEntity<Long> countEgressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-        String token = requestUtils.getTokenFromRequest(request);
-        String email = requestUtils.getEmailFromToken(token);
-        long count = logsService.countEgressLogsByEmail(email, searchRequestDTO);
-        return ResponseEntity.ok(count);
-    }
+//    @PostMapping("/ingress/count")
+//    public ResponseEntity<Long> countIngressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
+//        String token = jwtService.getJwt(request);
+//        String email = jwtService.getUserIdByToken(token);
+//        long count = logsService.countIngressLogsByEmail(email, searchRequestDTO);
+//        return ResponseEntity.ok(count);
+//    }
+//
+//    @PostMapping("/egress/count")
+//    public ResponseEntity<Long> countEgressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
+//        String token = requestUtils.getTokenFromRequest(request);
+//        String email = requestUtils.getEmailFromToken(token);
+//        long count = logsService.countEgressLogsByEmail(email, searchRequestDTO);
+//        return ResponseEntity.ok(count);
+//    }
 
     @GetMapping("/latestIngressLogs")
     public ResponseEntity<List<Logs>> getLatestIngressLogs(HttpServletRequest request,

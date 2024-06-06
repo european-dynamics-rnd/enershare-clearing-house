@@ -1,10 +1,416 @@
-<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="drop_test_table" author="vuk">
-        <dropTable tableName="test_table"/>
+    <changeSet id="2024-06-05-1" author="vuk">
+        <createTable tableName="user_seq">
+            <column name="next_val" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
     </changeSet>
+
+    <changeSet id="2024-06-05-2" author="vuk">
+        <insert tableName="user_seq">
+            <column name="next_val" valueNumeric="501"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="2024-06-05-3" author="vuk">
+        <!-- Create user table -->
+        <createTable tableName="user">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="connector_url" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="firstname" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="lastname" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="repeat_password" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="role" type="varchar(5)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!-- Set auto increment for id column -->
+        <addAutoIncrement
+                tableName="user"
+                columnName="id"
+                columnDataType="bigint"/>
+
+        <!-- Insert initial data into user table -->
+        <insert tableName="user">
+            <column name="id" value="52"/>
+            <column name="connector_url" value="admin"/>
+            <column name="email" value="admin"/>
+            <column name="firstname" value="admin"/>
+            <column name="lastname" value="admin"/>
+            <column name="password" value="$2a$10$.fNLQU3yKy9iyyPKxZYPpOWjGo6G3OflqOJ7nsDPxfyJrgxo9YIwq"/>
+            <column name="repeat_password" value=""/>
+            <column name="role" value="ADMIN"/>
+        </insert>
+
+        <insert tableName="user">
+            <column name="id" value="152"/>
+            <column name="connector_url" value="vuk@eurodyn.com"/>
+            <column name="email" value="vuk@eurodyn.com"/>
+            <column name="firstname" value="vuk"/>
+            <column name="lastname" value="topalovic"/>
+            <column name="password" value="$2a$10$ejpVZ9a2kifNLG2v6iGykuszB1H8Nr37xg.dK4vUOt8FbXQ5NeAPa"/>
+            <column name="repeat_password" value=""/>
+            <column name="role" value="USER"/>
+        </insert>
+
+        <insert tableName="user">
+            <column name="id" value="202"/>
+            <column name="connector_url" value="paok@gmail.com"/>
+            <column name="email" value="paok@gmail.com"/>
+            <column name="firstname" value="paok@gmail.com"/>
+            <column name="lastname" value="paok@gmail.com"/>
+            <column name="password" value="$2a$10$IhWlz9zpzV35Ti/FRHYxwu9t1IEM8CHBDi1Ilf.1HWEH/qbz8xViO"/>
+            <column name="repeat_password" value=""/>
+            <column name="role" value="USER"/>
+        </insert>
+
+        <!-- Add charset and collation settings -->
+        <sql>
+            ALTER TABLE `user`
+                CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2024-06-05-4" author="vuk">
+        <!-- Create user_profiles table -->
+        <createTable tableName="user_profiles">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="address" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="date_of_birth" type="datetime(6)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="first_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="last_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="phone_number" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="true" unique="true"/>
+            </column>
+        </createTable>
+
+        <!-- Set auto increment for id column -->
+        <addAutoIncrement
+                tableName="user_profiles"
+                columnName="id"
+                columnDataType="bigint"/>
+
+        <!-- Add unique constraint to user_id column -->
+        <addUniqueConstraint
+                tableName="user_profiles"
+                columnNames="user_id"
+                constraintName="UK_e5h89rk3ijvdmaiig4srogdc6"/>
+
+        <!-- Add foreign key constraint to user_id column -->
+        <addForeignKeyConstraint
+                baseTableName="user_profiles"
+                baseColumnNames="user_id"
+                constraintName="FK4np1ktrt8iwtncc4otmhfd6yn"
+                referencedTableName="user"
+                referencedColumnNames="id"/>
+
+    </changeSet>
+
+    <changeSet id="2024-06-05-5" author="vuk">
+        <!-- Create users table -->
+        <createTable tableName="users">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="username" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(100)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!-- Set auto increment for id column -->
+        <addAutoIncrement
+                tableName="users"
+                columnName="id"
+                columnDataType="bigint"/>
+
+        <!-- Add charset and collation settings -->
+        <sql>
+            ALTER TABLE `users`
+                CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2024-06-05-6" author="vuk">
+        <!-- Create token_seq table -->
+        <createTable tableName="token_seq">
+            <column name="next_val" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <!-- Insert initial data into token_seq table -->
+        <insert tableName="token_seq">
+            <column name="next_val" value="3551"/>
+        </insert>
+
+        <!-- Add charset and collation settings -->
+        <sql>
+            ALTER TABLE `token_seq`
+                CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2024-06-05-7" author="vuk">
+        <createTable tableName="token">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="expiration_date" type="datetime(6)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="expired" type="bit(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revoked" type="bit(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="token_type" type="enum('BEARER')">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2024-06-05-8" author="vuk">
+        <createTable tableName="logs_seq">
+            <column name="next_val" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <sql>INSERT INTO `logs_seq` (`next_val`)
+             VALUES (1);</sql>
+    </changeSet>
+
+    <changeSet id="2024-06-05-9" author="vuk">
+        <createTable tableName="logs">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="action" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="consumer" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="contract_id" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_on" type="datetime(6)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="dat_claims" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="mode" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="provider" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="purpose" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="recipient_agent" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="request_id" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="resource_id" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="resource_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="sender_agent" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="stage" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="connector_url" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2024-06-05-10" author="vuk">
+        <createView viewName="logs_summary_daily" replaceIfExists="true">
+        <![CDATA[
+            SELECT DATE_FORMAT((CURDATE() - INTERVAL seq.day DAY), '%b %d') AS dataLabel,
+                   (CURDATE() - INTERVAL seq.day DAY)                       AS dateRange,
+                   u.email                                                  AS email,
+                   l.stage                                                  AS stage,
+                   l.created_on                                             AS created_on
+            FROM logs l
+                     JOIN user u ON u.connector_url = l.connector_url
+                     JOIN (SELECT 0 AS day
+                           UNION ALL
+                           SELECT 1 AS day1
+                           UNION ALL
+                           SELECT 2 AS day2
+                           UNION ALL
+                           SELECT 3 AS day3
+                           UNION ALL
+                           SELECT 4 AS day4
+                           UNION ALL
+                           SELECT 5 AS day5
+                           UNION ALL
+                           SELECT 6 AS day6) seq;
+            ]]>
+    </createView>
+    </changeSet>
+
+    <changeSet id="2024-06-05-11" author="vuk">
+        <createView viewName="logs_summary_hourly" replaceIfExists="true">
+        <![CDATA[
+            SELECT DATE_FORMAT((NOW() - INTERVAL seq.hour HOUR), '%b %d %H:00') AS dataLabel,
+                   (NOW() - INTERVAL seq.hour HOUR)                             AS hourRange,
+                   u.email                                                      AS email,
+                   l.stage                                                      AS stage,
+                   l.created_on                                                 AS created_on
+            FROM logs l
+                     JOIN user u ON u.connector_url = l.connector_url
+                     JOIN (SELECT 0 AS hour
+                           UNION ALL
+                           SELECT 1 AS hour1
+                           UNION ALL
+                           SELECT 2 AS hour2
+                           UNION ALL
+                           SELECT 3 AS hour3
+                           UNION ALL
+                           SELECT 4 AS hour4
+                           UNION ALL
+                           SELECT 5 AS hour5
+                           UNION ALL
+                           SELECT 6 AS hour6
+                           UNION ALL
+                           SELECT 7 AS hour7
+                           UNION ALL
+                           SELECT 8 AS hour8
+                           UNION ALL
+                           SELECT 9 AS hour9
+                           UNION ALL
+                           SELECT 10 AS hour10
+                           UNION ALL
+                           SELECT 11 AS hour11
+                           UNION ALL
+                           SELECT 12 AS hour12
+                           UNION ALL
+                           SELECT 13 AS hour13
+                           UNION ALL
+                           SELECT 14 AS hour14
+                           UNION ALL
+                           SELECT 15 AS hour15
+                           UNION ALL
+                           SELECT 16 AS hour16
+                           UNION ALL
+                           SELECT 17 AS hour17
+                           UNION ALL
+                           SELECT 18 AS hour18
+                           UNION ALL
+                           SELECT 19 AS hour19
+                           UNION ALL
+                           SELECT 20 AS hour20
+                           UNION ALL
+                           SELECT 21 AS hour21
+                           UNION ALL
+                           SELECT 22 AS hour22
+                           UNION ALL
+                           SELECT 23 AS hour23) seq;
+            ]]>
+    </createView>
+    </changeSet>
+
+    <changeSet id="2024-06-05-12" author="vuk">
+        <createView viewName="summary" replaceIfExists="true">
+            SELECT date_format((curdate() - interval `seq`.`day` day), '%b %d') AS `dataLabel`,
+                   (curdate() - interval `seq`.`day` day)                       AS `dateRange`,
+                   (SELECT count(0)
+                    FROM `logs` `l`
+                    WHERE (`l`.`stage` = 'INGRESS')
+                      AND (`l`.`created_on` >= (curdate() - interval `seq`.`day` day))
+                      AND (`l`.`created_on` &lt; ((curdate() - interval `seq`.`day` day) + interval 1 day)) ) AS `ingressLogCount`,
+                (
+                    SELECT
+                        count(0)
+                    FROM
+                        `logs` `l`
+                    WHERE
+                        (`l`.`stage` = 'EGRESS')
+                        AND (`l`.`created_on` >= (curdate() - interval `seq`.`day` day))
+                        AND (`l`.`created_on` &lt; ((curdate() - interval `seq`.`day` day) + interval 1 day))
+                ) AS `egressLogCount`
+            FROM
+                (
+                SELECT
+                0 AS `day`
+                UNION ALL
+                SELECT
+                1 AS `1`
+                UNION ALL
+                SELECT
+                2 AS `2`
+                UNION ALL
+                SELECT
+                3 AS `3`
+                UNION ALL
+                SELECT
+                4 AS `4`
+                UNION ALL
+                SELECT
+                5 AS `5`
+                UNION ALL
+                SELECT
+                6 AS `6`
+                ) AS `seq`;
+        </createView>
+    </changeSet>
+
 
 </databaseChangeLog>
