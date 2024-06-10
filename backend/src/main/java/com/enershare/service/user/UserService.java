@@ -81,7 +81,7 @@ public class UserService {
         if (!existingUser.getEmail().equals(newEmail)) {
             Optional<User> userWithNewEmail = userRepository.findByEmail(newEmail);
             if (userWithNewEmail.isPresent() && !userWithNewEmail.get().equals(existingUser)) {
-                throw new IllegalArgumentException("Email already exists for another user");
+                throw new EmailAlreadyExistsException("Email already exists");
             }
         }
 

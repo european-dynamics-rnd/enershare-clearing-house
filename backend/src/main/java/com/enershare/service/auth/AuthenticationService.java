@@ -4,6 +4,7 @@ import com.enershare.dto.auth.AuthenticationRequest;
 import com.enershare.dto.auth.AuthenticationResponse;
 import com.enershare.dto.user.UserDTO;
 import com.enershare.enums.TokenType;
+import com.enershare.exception.AuthenticationException;
 import com.enershare.model.token.Token;
 import com.enershare.model.user.User;
 import com.enershare.repository.token.TokenRepository;
@@ -30,26 +31,32 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail()
-                        , request.getPassword()));
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail()
+                            , request.getPassword()));
+            var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
 
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        revokeAllTokensOfUser(user);
-        saveUserToken(user, jwtToken);
+            var jwtToken = jwtService.generateToken(user);
+            var refreshToken = jwtService.generateRefreshToken(user);
+            revokeAllTokensOfUser(user);
+            saveUserToken(user, jwtToken);
 
-        UserDTO userDTO = UserConverter.convertUserToDTO(user);
 
-        return AuthenticationResponse.
-                builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .user(userDTO)
-                .build();
+            UserDTO userDTO = UserConverter.convertUserToDTO(user);
 
+            return AuthenticationResponse.
+                    builder()
+                    .accessToken(jwtToken)
+                    .refreshToken(refreshToken)
+                    .user(userDTO)
+                    .build();
+        } catch (AuthenticationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AuthenticationException("Invalid email or password");
+        }
     }
 
     private void revokeAllTokensOfUser(User user) {

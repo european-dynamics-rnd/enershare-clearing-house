@@ -20,7 +20,6 @@
     </changeSet>
 
     <changeSet id="2024-06-05-3" author="vuk">
-        <!-- Create user table -->
         <createTable tableName="user">
             <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true"/>
@@ -54,40 +53,6 @@
                 columnName="id"
                 columnDataType="bigint"/>
 
-        <!-- Insert initial data into user table -->
-        <insert tableName="user">
-            <column name="id" value="52"/>
-            <column name="connector_url" value="admin"/>
-            <column name="email" value="admin"/>
-            <column name="firstname" value="admin"/>
-            <column name="lastname" value="admin"/>
-            <column name="password" value="$2a$10$.fNLQU3yKy9iyyPKxZYPpOWjGo6G3OflqOJ7nsDPxfyJrgxo9YIwq"/>
-            <column name="repeat_password" value=""/>
-            <column name="role" value="ADMIN"/>
-        </insert>
-
-        <insert tableName="user">
-            <column name="id" value="152"/>
-            <column name="connector_url" value="vuk@eurodyn.com"/>
-            <column name="email" value="vuk@eurodyn.com"/>
-            <column name="firstname" value="vuk"/>
-            <column name="lastname" value="topalovic"/>
-            <column name="password" value="$2a$10$ejpVZ9a2kifNLG2v6iGykuszB1H8Nr37xg.dK4vUOt8FbXQ5NeAPa"/>
-            <column name="repeat_password" value=""/>
-            <column name="role" value="USER"/>
-        </insert>
-
-        <insert tableName="user">
-            <column name="id" value="202"/>
-            <column name="connector_url" value="paok@gmail.com"/>
-            <column name="email" value="paok@gmail.com"/>
-            <column name="firstname" value="paok@gmail.com"/>
-            <column name="lastname" value="paok@gmail.com"/>
-            <column name="password" value="$2a$10$IhWlz9zpzV35Ti/FRHYxwu9t1IEM8CHBDi1Ilf.1HWEH/qbz8xViO"/>
-            <column name="repeat_password" value=""/>
-            <column name="role" value="USER"/>
-        </insert>
-
         <!-- Add charset and collation settings -->
         <sql>
             ALTER TABLE `user`
@@ -96,7 +61,6 @@
     </changeSet>
 
     <changeSet id="2024-06-05-4" author="vuk">
-        <!-- Create user_profiles table -->
         <createTable tableName="user_profiles">
             <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true"/>
@@ -121,30 +85,26 @@
             </column>
         </createTable>
 
-        <!-- Set auto increment for id column -->
         <addAutoIncrement
                 tableName="user_profiles"
                 columnName="id"
                 columnDataType="bigint"/>
 
-        <!-- Add unique constraint to user_id column -->
         <addUniqueConstraint
                 tableName="user_profiles"
                 columnNames="user_id"
-                constraintName="UK_e5h89rk3ijvdmaiig4srogdc6"/>
+                constraintName="FK_USER_PROFILES_USER_ID"/>
 
-        <!-- Add foreign key constraint to user_id column -->
         <addForeignKeyConstraint
                 baseTableName="user_profiles"
                 baseColumnNames="user_id"
-                constraintName="FK4np1ktrt8iwtncc4otmhfd6yn"
+                constraintName="UNIQUE_USER_ID"
                 referencedTableName="user"
                 referencedColumnNames="id"/>
 
     </changeSet>
 
     <changeSet id="2024-06-05-5" author="vuk">
-        <!-- Create users table -->
         <createTable tableName="users">
             <column name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true"/>
@@ -157,13 +117,11 @@
             </column>
         </createTable>
 
-        <!-- Set auto increment for id column -->
         <addAutoIncrement
                 tableName="users"
                 columnName="id"
                 columnDataType="bigint"/>
 
-        <!-- Add charset and collation settings -->
         <sql>
             ALTER TABLE `users`
                 CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
@@ -171,19 +129,16 @@
     </changeSet>
 
     <changeSet id="2024-06-05-6" author="vuk">
-        <!-- Create token_seq table -->
         <createTable tableName="token_seq">
             <column name="next_val" type="bigint">
                 <constraints nullable="true"/>
             </column>
         </createTable>
 
-        <!-- Insert initial data into token_seq table -->
         <insert tableName="token_seq">
             <column name="next_val" value="3551"/>
         </insert>
 
-        <!-- Add charset and collation settings -->
         <sql>
             ALTER TABLE `token_seq`
                 CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
