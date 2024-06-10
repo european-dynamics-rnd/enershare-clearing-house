@@ -48,16 +48,6 @@ public class LogsService {
         return logsRepository.findAll(spec, pageable);
     }
 
-    public long countIngressLogsByEmail(String email, SearchRequestDTO searchRequestDTO) {
-        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email, searchRequestDTO.getSearchCriteriaList());
-        return logsRepository.count(spec);
-    }
-
-    public long countEgressLogsByEmail(String email, SearchRequestDTO searchRequestDTO) {
-        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email, searchRequestDTO.getSearchCriteriaList());
-        return logsRepository.count(spec);
-    }
-
     public List<Logs> getLatestIngressLogs(String email, int count) {
         return logsRepository.findLatestIngressLogs(email, PageRequest.of(0, count));
     }

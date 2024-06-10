@@ -4,6 +4,7 @@ import com.enershare.dto.auth.AuthenticationRequest;
 import com.enershare.dto.auth.AuthenticationResponse;
 import com.enershare.dto.user.UserDTO;
 import com.enershare.enums.TokenType;
+import com.enershare.exception.ApplicationException;
 import com.enershare.exception.AuthenticationException;
 import com.enershare.model.token.Token;
 import com.enershare.model.user.User;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -31,31 +33,44 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail()
-                            , request.getPassword()));
-            var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
 
-            var jwtToken = jwtService.generateToken(user);
-            var refreshToken = jwtService.generateRefreshToken(user);
-            revokeAllTokensOfUser(user);
-            saveUserToken(user, jwtToken);
+        if ((request.getEmail() == null || request.getEmail().isEmpty()) && (request.getPassword() == null || request.getPassword().isEmpty())) {
+            throw new AuthenticationException("Email and password are required");
+        } else if (request.getEmail() == null || request.getEmail().isEmpty()) {
+            throw new AuthenticationException("Email is required");
+        } else if (request.getPassword() == null || request.getPassword().isEmpty()) {
+            throw new AuthenticationException("Password is required");
+        } else {
+            try {
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                request.getEmail()
+                                , request.getPassword()));
+                var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
+                        new AuthenticationException("User not found")
+                );
+
+                var jwtToken = jwtService.generateToken(user);
+                var refreshToken = jwtService.generateRefreshToken(user);
+                revokeAllTokensOfUser(user);
+                saveUserToken(user, jwtToken);
 
 
-            UserDTO userDTO = UserConverter.convertUserToDTO(user);
+                UserDTO userDTO = UserConverter.convertUserToDTO(user);
 
-            return AuthenticationResponse.
-                    builder()
-                    .accessToken(jwtToken)
-                    .refreshToken(refreshToken)
-                    .user(userDTO)
-                    .build();
-        } catch (AuthenticationException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new AuthenticationException("Invalid email or password");
+                return AuthenticationResponse.
+                        builder()
+                        .accessToken(jwtToken)
+                        .refreshToken(refreshToken)
+                        .user(userDTO)
+                        .build();
+            } catch (BadCredentialsException e) {
+                throw new AuthenticationException("Invalid email or password", e);
+            } catch (AuthenticationException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new ApplicationException("An error occurred during authentication", e);
+            }
         }
     }
 

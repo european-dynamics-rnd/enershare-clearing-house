@@ -6,7 +6,6 @@ import com.enershare.dto.logs.LogsDTO;
 import com.enershare.mapper.LogsMapper;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
-import com.enershare.service.auth.JwtService;
 import com.enershare.service.logs.LogsService;
 import com.enershare.util.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +25,6 @@ public class LogsController {
 
     private final LogsService logsService;
     private final LogsMapper logsMapper;
-    private final JwtService jwtService;
     private final LogsRepository logsRepository;
     private final RequestUtils requestUtils;
 
@@ -65,29 +63,12 @@ public class LogsController {
         return ResponseEntity.ok(egressLogs);
     }
 
-//    @PostMapping("/ingress/count")
-//    public ResponseEntity<Long> countIngressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-//        String token = jwtService.getJwt(request);
-//        String email = jwtService.getUserIdByToken(token);
-//        long count = logsService.countIngressLogsByEmail(email, searchRequestDTO);
-//        return ResponseEntity.ok(count);
-//    }
-//
-//    @PostMapping("/egress/count")
-//    public ResponseEntity<Long> countEgressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-//        String token = requestUtils.getTokenFromRequest(request);
-//        String email = requestUtils.getEmailFromToken(token);
-//        long count = logsService.countEgressLogsByEmail(email, searchRequestDTO);
-//        return ResponseEntity.ok(count);
-//    }
-
     @GetMapping("/latestIngressLogs")
     public ResponseEntity<List<Logs>> getLatestIngressLogs(HttpServletRequest request,
                                                            @RequestParam(defaultValue = "5") int count) {
         String token = requestUtils.getTokenFromRequest(request);
         String email = requestUtils.getEmailFromToken(token);
         List<Logs> latestIngressLogs = logsService.getLatestIngressLogs(email, count);
-
         return ResponseEntity.ok(latestIngressLogs);
     }
 
