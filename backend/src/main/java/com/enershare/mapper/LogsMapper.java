@@ -2,34 +2,29 @@ package com.enershare.mapper;
 
 import com.enershare.dto.logs.LogsDTO;
 import com.enershare.model.logs.Logs;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+import org.mapstruct.NullValueCheckStrategy;
 
 import java.util.Map;
 
-@Component
-public class LogsMapper {
-    public Logs mapConsumerDTOToEntity(LogsDTO logsDTO) {
-        Logs logs = new Logs();
-        logs.setConsumer(logsDTO.getConsumer());
-        logs.setProvider(logsDTO.getProvider());
-        logs.setSenderAgent(logsDTO.getSenderAgent());
-        logs.setRecipientAgent(logsDTO.getRecipientAgent());
-        logs.setContractId(logsDTO.getContractId());
-        logs.setResourceId(logsDTO.getRequestParameters().getResourceId());
-        logs.setResourceType(logsDTO.getRequestParameters().getResourceType());
-        logs.setAction(logsDTO.getRequestParameters().getAction());
-
-        // Accessing context parameters
-        if (logsDTO.getContextParameters() != null) {
-            Map<String, Object> contextParams = logsDTO.getContextParameters();
-            logs.setPurpose((String) contextParams.get("purpose")); // Assuming purpose is a string
-            logs.setDatClaims((String) contextParams.get("datClaims")); // Assuming datClaims is a string
-        }
-
-        logs.setMode(logsDTO.getMode());
-        logs.setStage(logsDTO.getStage());
-        logs.setRequestId(logsDTO.getRequestId());
-        return logs;
+@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+public interface LogsMapper {
+    @Named("getPurposeFromContext")
+    static String getPurposeFromContext(Map<String, Object> contextParameters) {
+        return (String) contextParameters.get("purpose");
     }
+
+    @Named("getDatClaimsFromContext")
+    static String getDatClaimsFromContext(Map<String, Object> contextParameters) {
+        return (String) contextParameters.get("datClaims");
+    }
+
+    @Mapping(target = "purpose", source = "contextParameters", qualifiedByName = "getPurposeFromContext")
+    @Mapping(target = "datClaims", source = "contextParameters", qualifiedByName = "getDatClaimsFromContext")
+    Logs mapConsumerDTOToEntity(LogsDTO logsDTO);
+
+    LogsDTO mapEntityToDTO(Logs logs);
 }
 
