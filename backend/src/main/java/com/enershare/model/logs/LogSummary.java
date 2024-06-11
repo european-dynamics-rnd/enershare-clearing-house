@@ -4,7 +4,7 @@ import com.enershare.dto.logs.LogSummaryDTO;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @SqlResultSetMapping(
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
                 targetClass = LogSummaryDTO.class,
                 columns = {
                         @ColumnResult(name = "dataLabel", type = String.class),
-                        @ColumnResult(name = "dateRange", type = LocalDateTime.class),
+                        @ColumnResult(name = "dateRange", type = Instant.class),
                         @ColumnResult(name = "ingressLogCount", type = Integer.class),
                         @ColumnResult(name = "egressLogCount", type = Integer.class)
                 }

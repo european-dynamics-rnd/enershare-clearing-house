@@ -21,7 +21,6 @@ public class LogsService {
 
     private final LogsRepository logsRepository;
 
-
     public void createLog(Logs logs) {
         logsRepository.save(logs);
     }

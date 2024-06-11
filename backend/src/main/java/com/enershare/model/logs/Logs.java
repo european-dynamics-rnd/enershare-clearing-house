@@ -7,9 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CurrentTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -75,7 +74,6 @@ public class Logs {
     @JsonProperty("requestId")
     private String requestId;
 
-    @CurrentTimestamp
     @Column(name = "created_on")
-    private LocalDateTime createdOn;
+    private Instant createdOn;
 }

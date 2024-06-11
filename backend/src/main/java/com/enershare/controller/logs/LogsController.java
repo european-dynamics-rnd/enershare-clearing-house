@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ public class LogsController {
     @PostMapping("/create")
     public ResponseEntity<Void> createLog(@RequestBody LogsDTO logsDTO) {
         Logs logs = logsMapper.mapConsumerDTOToEntity(logsDTO);
+        logs.setCreatedOn(Instant.now());
         logsService.createLog(logs);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
