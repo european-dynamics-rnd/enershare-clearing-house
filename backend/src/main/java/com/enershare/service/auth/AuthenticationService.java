@@ -4,7 +4,6 @@ import com.enershare.dto.auth.AuthenticationRequest;
 import com.enershare.dto.auth.AuthenticationResponse;
 import com.enershare.dto.user.UserDTO;
 import com.enershare.enums.TokenType;
-import com.enershare.exception.ApplicationException;
 import com.enershare.exception.AuthenticationException;
 import com.enershare.model.token.Token;
 import com.enershare.model.user.User;
@@ -66,10 +65,6 @@ public class AuthenticationService {
                         .build();
             } catch (BadCredentialsException e) {
                 throw new AuthenticationException("Invalid email or password", e);
-            } catch (AuthenticationException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new ApplicationException("An error occurred during authentication", e);
             }
         }
     }
