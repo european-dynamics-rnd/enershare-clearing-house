@@ -16,3 +16,4 @@ public class LogSummaryDTO {
     private int egressLogCount;
 
 }
+

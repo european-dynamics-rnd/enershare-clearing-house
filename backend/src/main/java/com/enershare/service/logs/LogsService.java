@@ -1,7 +1,9 @@
 package com.enershare.service.logs;
 
 import com.enershare.dto.common.SearchRequestDTO;
+import com.enershare.dto.logs.LogsDTO;
 import com.enershare.filtering.specification.LogsSpecification;
+import com.enershare.mapper.LogsMapper;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +22,12 @@ import java.util.Optional;
 public class LogsService {
 
     private final LogsRepository logsRepository;
+    private final LogsMapper logsMapper;
 
-    public void createLog(Logs logs) {
+    public void createLog(LogsDTO logsDTO) {
+        Logs logs = logsMapper.mapConsumerDTOToEntity(logsDTO);
         logsRepository.save(logs);
+
     }
 
     public Optional<Logs> getLogById(Long id) {
@@ -54,5 +59,6 @@ public class LogsService {
     public List<Logs> getLatestEgressLogs(String email, int count) {
         return logsRepository.findLatestEgressLogs(email, PageRequest.of(0, count));
     }
+
 
 }

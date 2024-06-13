@@ -3,7 +3,6 @@ package com.enershare.controller.logs;
 import com.enershare.dto.common.SearchRequestDTO;
 import com.enershare.dto.logs.LogSummaryDTO;
 import com.enershare.dto.logs.LogsDTO;
-import com.enershare.mapper.LogsMapper;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
 import com.enershare.service.logs.LogsService;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,15 +23,12 @@ import java.util.Optional;
 public class LogsController {
 
     private final LogsService logsService;
-    private final LogsMapper logsMapper;
     private final LogsRepository logsRepository;
     private final RequestUtils requestUtils;
 
     @PostMapping("/create")
     public ResponseEntity<Void> createLog(@RequestBody LogsDTO logsDTO) {
-        Logs logs = logsMapper.mapConsumerDTOToEntity(logsDTO);
-        logs.setCreatedOn(Instant.now());
-        logsService.createLog(logs);
+        logsService.createLog(logsDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

@@ -1,9 +1,6 @@
 package com.enershare.dto.logs;
 
-import com.enershare.dto.request.RequestParametersDTO;
 import lombok.Data;
-
-import java.util.Map;
 
 @Data
 public class LogsDTO {
@@ -13,7 +10,7 @@ public class LogsDTO {
     private String recipientAgent;
     private String contractId;
     private RequestParametersDTO requestParameters;
-    private Map<String, Object> contextParameters;
+    private ContextParametersDTO contextParameters;
     private String mode;
     private String stage;
     private String requestId;

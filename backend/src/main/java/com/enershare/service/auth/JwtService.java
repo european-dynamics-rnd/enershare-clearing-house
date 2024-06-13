@@ -98,6 +98,7 @@ public class JwtService {
         }
         return null;
     }
+
     public String getUserIdByToken(String token) {
         if (token == null) {
             return "";
@@ -110,4 +111,6 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+
 }
