@@ -6,7 +6,6 @@ import com.enershare.dto.logs.LogsDTO;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
 import com.enershare.service.logs.LogsService;
-import com.enershare.util.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +23,6 @@ public class LogsController {
 
     private final LogsService logsService;
     private final LogsRepository logsRepository;
-    private final RequestUtils requestUtils;
 
     @PostMapping("/create")
     public ResponseEntity<Void> createLog(@RequestBody LogsDTO logsDTO) {
@@ -46,16 +44,14 @@ public class LogsController {
 
     @PostMapping("/ingress")
     public ResponseEntity<Page<Logs>> getIngressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-        String token = requestUtils.getTokenFromRequest(request);
-        String email = requestUtils.getEmailFromToken(token);
+        String email = logsService.getEmailFromRequest(request);
         Page<Logs> ingressLogs = logsService.getIngressLogsByEmail(email, searchRequestDTO);
         return ResponseEntity.ok(ingressLogs);
     }
 
     @PostMapping("/egress")
     public ResponseEntity<Page<Logs>> getEgressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-        String token = requestUtils.getTokenFromRequest(request);
-        String email = requestUtils.getEmailFromToken(token);
+        String email = logsService.getEmailFromRequest(request);
         Page<Logs> egressLogs = logsService.getEgressLogsByEmail(email, searchRequestDTO);
         return ResponseEntity.ok(egressLogs);
     }
@@ -63,8 +59,7 @@ public class LogsController {
     @GetMapping("/latestIngressLogs")
     public ResponseEntity<List<Logs>> getLatestIngressLogs(HttpServletRequest request,
                                                            @RequestParam(defaultValue = "5") int count) {
-        String token = requestUtils.getTokenFromRequest(request);
-        String email = requestUtils.getEmailFromToken(token);
+        String email = logsService.getEmailFromRequest(request);
         List<Logs> latestIngressLogs = logsService.getLatestIngressLogs(email, count);
         return ResponseEntity.ok(latestIngressLogs);
     }
@@ -72,25 +67,21 @@ public class LogsController {
     @GetMapping("/latestEgressLogs")
     public ResponseEntity<List<Logs>> getLatestEgressLogs(HttpServletRequest request,
                                                           @RequestParam(defaultValue = "5") int count) {
-        String token = requestUtils.getTokenFromRequest(request);
-        String email = requestUtils.getEmailFromToken(token);
+        String email = logsService.getEmailFromRequest(request);
         List<Logs> latestEgressLogs = logsService.getLatestEgressLogs(email, count);
         return ResponseEntity.ok(latestEgressLogs);
     }
 
     @GetMapping("/summary")
     public ResponseEntity<List<LogSummaryDTO>> getSummary(HttpServletRequest request) {
-        System.out.println("getSummary method called");
-        String token = requestUtils.getTokenFromRequest(request);
-        String email = requestUtils.getEmailFromToken(token);
+        String email = logsService.getEmailFromRequest(request);
         List<LogSummaryDTO> summaries = logsRepository.getCustomLogSummary(email);
         return ResponseEntity.ok().body(summaries);
     }
 
     @GetMapping("/summaryHours")
     public ResponseEntity<List<LogSummaryDTO>> getLastTenHoursSummary(HttpServletRequest request) {
-        String token = requestUtils.getTokenFromRequest(request);
-        String email = requestUtils.getEmailFromToken(token);
+        String email = logsService.getEmailFromRequest(request);
         List<LogSummaryDTO> summaries = logsRepository.getCustomLogSummaryLastTenHours(email);
         return ResponseEntity.ok().body(summaries);
     }

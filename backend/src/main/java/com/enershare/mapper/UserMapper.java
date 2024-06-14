@@ -15,6 +15,11 @@ public abstract class UserMapper {
 
     public abstract UserDTO map(User user);
 
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "firstname", source = "firstname")
+    @Mapping(target = "lastname", source = "lastname")
+    @Mapping(target = "role", source = "role")
     public abstract void updateUserDTO(User user, @MappingTarget UserDTO dto);
 
     @Mapping(source = "password", target = "password", qualifiedByName = "passwordEncoder")

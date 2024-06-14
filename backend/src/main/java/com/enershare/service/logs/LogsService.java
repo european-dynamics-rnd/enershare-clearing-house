@@ -6,6 +6,8 @@ import com.enershare.filtering.specification.LogsSpecification;
 import com.enershare.mapper.LogsMapper;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
+import com.enershare.service.auth.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,7 @@ public class LogsService {
 
     private final LogsRepository logsRepository;
     private final LogsMapper logsMapper;
+    private final JwtService jwtService;
 
     public void createLog(LogsDTO logsDTO) {
         Logs logs = logsMapper.mapConsumerDTOToEntity(logsDTO);
@@ -60,5 +63,18 @@ public class LogsService {
         return logsRepository.findLatestEgressLogs(email, PageRequest.of(0, count));
     }
 
+    public String getTokenFromRequest(HttpServletRequest request) {
+        return jwtService.getJwt(request);
+    }
+
+    public String getEmailFromToken(String token) {
+        return jwtService.getUserIdByToken(token);
+    }
+
+    // this function encapsulates getTokenFromRequest and getEmailFromToken
+    public String getEmailFromRequest(HttpServletRequest request) {
+        String token = getTokenFromRequest(request);
+        return getEmailFromToken(token);
+    }
 
 }

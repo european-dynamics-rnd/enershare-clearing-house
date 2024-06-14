@@ -5,11 +5,11 @@ import com.enershare.dto.auth.AuthenticationResponse;
 import com.enershare.dto.user.UserDTO;
 import com.enershare.enums.TokenType;
 import com.enershare.exception.AuthenticationException;
+import com.enershare.mapper.UserMapper;
 import com.enershare.model.token.Token;
 import com.enershare.model.user.User;
 import com.enershare.repository.token.TokenRepository;
 import com.enershare.repository.user.UserRepository;
-import com.enershare.util.converter.UserConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,6 +30,7 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
@@ -55,7 +56,7 @@ public class AuthenticationService {
                 saveUserToken(user, jwtToken);
 
 
-                UserDTO userDTO = UserConverter.convertUserToDTO(user);
+                UserDTO userDTO = userMapper.map(user);
 
                 return AuthenticationResponse.
                         builder()
