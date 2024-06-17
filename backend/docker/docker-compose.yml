@@ -1,11 +1,11 @@
-version: "3.5"
+version: "3.7"
 services:
 
   enershare-backend:
     environment:
       - JAVA_OPTS=-Xms256m -Xmx512m
     build:
-      context: enershare-backend
+      context: ./enershare-backend
       args:
         DB_IP: enersharemysql
         DB_PORT: 3306
@@ -26,6 +26,8 @@ services:
   mysql:
     image: mysql:latest
     container_name: enersharemysql
+    volumes:
+      - mysql_data:/var/lib/mysql
     ports:
       - "3307:3306"
     environment:
@@ -47,6 +49,20 @@ services:
       - "4824:80"
     networks:
       - enershare
+  enershare-frontend:
+    build:
+      context: ./enershare-frontend
+      dockerfile: Dockerfile
+    image: enershare-frontend
+    container_name: enershare-frontend
+    ports:
+      - "4200:80"
+    restart: unless-stopped
+    networks:
+      - enershare
 networks:
   enershare:
-    external: true
+    name: enershare
+    driver: bridge
+volumes:
+  mysql_data:
