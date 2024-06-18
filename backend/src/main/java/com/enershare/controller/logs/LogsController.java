@@ -5,11 +5,11 @@ import com.enershare.dto.logs.LogSummaryDTO;
 import com.enershare.dto.logs.LogsDTO;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
+import com.enershare.service.auth.AuthenticationService;
 import com.enershare.service.logs.LogsService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,11 +23,11 @@ public class LogsController {
 
     private final LogsService logsService;
     private final LogsRepository logsRepository;
+    private final AuthenticationService authenticationService;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createLog(@RequestBody LogsDTO logsDTO) {
-        logsService.createLog(logsDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Void> createLog(@RequestBody LogsDTO logsDTO, @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        return logsService.createLogWithBasicAuthentication(authHeader, () -> logsService.createLog(logsDTO));
     }
 
     @GetMapping("/{id}")

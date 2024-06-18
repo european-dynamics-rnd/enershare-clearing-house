@@ -6,6 +6,7 @@ import com.enershare.filtering.specification.LogsSpecification;
 import com.enershare.mapper.LogsMapper;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
+import com.enershare.service.auth.AuthenticationService;
 import com.enershare.service.auth.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,11 +28,12 @@ public class LogsService {
     private final LogsRepository logsRepository;
     private final LogsMapper logsMapper;
     private final JwtService jwtService;
+    private final AuthenticationService authenticationService;
 
+    //Basic creation of log without authentication
     public void createLog(LogsDTO logsDTO) {
         Logs logs = logsMapper.mapConsumerDTOToEntity(logsDTO);
         logsRepository.save(logs);
-
     }
 
     public Optional<Logs> getLogById(Long id) {
@@ -75,6 +78,10 @@ public class LogsService {
     public String getEmailFromRequest(HttpServletRequest request) {
         String token = getTokenFromRequest(request);
         return getEmailFromToken(token);
+    }
+
+    public ResponseEntity<Void> createLogWithBasicAuthentication(String authHeader, Runnable createLogAction) {
+        return authenticationService.authenticateAndExecute(authHeader, createLogAction);
     }
 
 }

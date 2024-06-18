@@ -16,17 +16,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+    private static final String VALID_USERNAME = "enershare";
+    private static final String VALID_PASSWORD = "enersh@r3";
     private final UserRepository userRepository;
-
     private final TokenRepository tokenRepository;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -118,5 +124,49 @@ public class AuthenticationService {
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
         }
+    }
+
+    public ResponseEntity<Void> authenticateAndExecute(String authHeader, Runnable action) {
+        String[] credentials = decodeAuthHeader(authHeader);
+        if (credentials == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        String username = credentials[0];
+        String password = credentials[1];
+
+        if (!isValidCredentials(username, password)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        action.run(); // Execute the provided action
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    private String[] decodeAuthHeader(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Basic ")) {
+            return null;
+        }
+
+        try {
+            String base64Credentials = authHeader.substring("Basic ".length()).trim();
+            byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
+            String credentials = new String(credDecoded, StandardCharsets.UTF_8);
+
+            final String[] values = credentials.split(":", 2);
+
+            if (values.length != 2) {
+                return null;
+            }
+
+            return values;
+        } catch (IllegalArgumentException e) {
+            // This catches exceptions from Base64 decoding
+            return null;
+        }
+    }
+
+    private boolean isValidCredentials(String username, String password) {
+        return VALID_USERNAME.equals(username) && VALID_PASSWORD.equals(password);
     }
 }
