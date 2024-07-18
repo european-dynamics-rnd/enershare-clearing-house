@@ -1,0 +1,91 @@
+.login {
+
+  .outer {
+    background-color: rgba(0, 0, 0, 0.4);
+    background-blend-mode: overlay;
+    background-image: url('../../img/background.png');
+    position: absolute;
+    background-repeat: no-repeat;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    display: block;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center center;
+
+  }
+
+
+  .card {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5%;
+
+
+    .text-white {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .placeholder-white::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  .form-control{
+
+    &:focus{
+      border: 1px solid $white-color;
+      border-left: none;
+
+      @include box-shadow(none);
+      outline: 0 !important;
+      color: $black-color;
+
+      & + .input-group-append .input-group-text,
+      & ~ .input-group-append .input-group-text,
+      & + .input-group-prepend .input-group-text,
+      & ~ .input-group-prepend .input-group-text{
+        border: 1px solid $white-color;
+        border-left: none;
+        background-color: $transparent-bg;
+      }
+    }
+  }
+
+  .logo{
+    position: relative;
+    padding: $padding-login-logo-vertical $padding-login-logo-horizontal;
+    z-index: 4;
+
+    a.logo-mini{
+      @extend .animation-transition-general;
+    }
+
+    a.logo-mini{
+      opacity: 1;
+      float: left;
+      width: 150px;
+      text-align: center;
+      margin-left: 10px;
+      margin-right: 12px;
+    }
+
+
+
+    &:after{
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 15px;
+      height: 1px;
+      width: calc(100% - 30px);
+      background-color: $opacity-5;
+
+    }
+
+
+
+  }
+
+}

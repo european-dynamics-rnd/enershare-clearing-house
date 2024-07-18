@@ -1,0 +1,15 @@
+.pagination{
+
+  .page-item.active .page-link{
+    background-color: $enershare-primary-color;
+    border-color: $enershare-primary-color;
+  }
+
+  .page-link{
+    color: $enershare-primary-color;
+  }
+}
+
+.pagination > li.page-item.active > a.page-link > span {
+  display: none;
+}

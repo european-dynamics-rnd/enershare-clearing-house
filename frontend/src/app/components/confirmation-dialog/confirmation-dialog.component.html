@@ -1,0 +1,15 @@
+<div class="confirmation-modal">
+  <div class="modal-header">
+    <h4 class="modal-title">{{ title }}</h4>
+    <button type="button" class="close custom-close-button" aria-label="Close" (click)="dismiss('cancel click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p><strong>{{ message }}</strong></p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-simple" (click)="dismiss('cancel click')">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="close('Yes click')">Yes</button>
+  </div>
+</div>

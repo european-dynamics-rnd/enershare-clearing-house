@@ -1,0 +1,31 @@
+@media (min-width: 1525px) and (max-width: 1765px) {
+  .col-custom-xl-3 {
+    -ms-flex: 0 0 10%;
+    flex: 0 0 10%;
+    max-width: 10%;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1524px) {
+  .col-custom-xl-2 {
+    -ms-flex: 0 0 12%;
+    flex: 0 0 12%;
+    max-width: 12%;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1324px) {
+  .col-custom-xl-1 {
+    -ms-flex: 0 0 14%;
+    flex: 0 0 14%;
+    max-width: 14%;
+  }
+}
+
+@media (min-width: 990px) and (max-width: 1044px) {
+  .col-custom-l {
+    -ms-flex: 0 0 20%;
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+}

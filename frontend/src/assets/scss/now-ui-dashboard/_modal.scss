@@ -1,0 +1,29 @@
+
+.confirmation-modal {
+
+  .modal-content {
+    border-radius: 10px;
+  }
+
+  .modal-header {
+    border-bottom: none;
+    .modal-title{
+      margin-top: auto;
+    }
+  }
+
+  .modal-footer {
+    border-top: none;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .custom-close-button {
+    border: none;
+    background: transparent;
+    outline: none;
+    padding: 0;
+    margin: 0;
+  }
+
+}

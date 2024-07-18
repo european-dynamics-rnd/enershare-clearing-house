@@ -1,0 +1,69 @@
+<div class="panel-header panel-header-sm"></div>
+<div class="main-content">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="card-title">Users</h4>
+          <button (click)="createNew()" type="button" class="btn btn-primary">Create</button>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead class="text-enershare">
+              <th scope="col">Id</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Connector Url</th>
+              <th scope="col">Role</th>
+              <th scope="col" class="text-right">Actions</th>
+              </thead>
+              <tbody>
+              <tr *ngFor="let user of users">
+                <td>{{user.id}}</td>
+                <td>{{user.firstname}}</td>
+                <td>{{user.lastname}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.connectorUrl}}</td>
+                <td>{{user.role}}</td>
+                <td class="text-right">
+                  <button type="button" title="Edit" class="btn btn-primary btn-sm button-spacing" (click)="edit(user.id)">
+                    <i class="fa fa-pencil-alt"></i>
+                  </button>
+                  <button type="button" title="Delete" class="btn btn-primary btn-sm" (click)="delete(user.id)">
+                    <i class="fa fa-times"></i>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-between p-2">
+              <ngb-pagination
+                [collectionSize]="pageRequest.collectionSize"
+                [(page)]="pageRequest.page"
+                [pageSize]="pageRequest.pageSize"
+                (pageChange)="refreshUsers()"
+                [boundaryLinks]="true"
+              >
+              </ngb-pagination>
+
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="pageSizeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {{ pageRequest.pageSize }} items per page
+                </button>
+                <div class="dropdown-menu" aria-labelledby="pageSizeDropdown">
+                  <button class="dropdown-item" (click)="setPageSize(10)">10 items per page</button>
+                  <button class="dropdown-item" (click)="setPageSize(20)">20 items per page</button>
+                  <button class="dropdown-item" (click)="setPageSize(30)">30 items per page</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,120 @@
+<div class="panel-header panel-header-sm">
+</div>
+<div class="main-content">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="title">{{ title }}</h5>
+        </div>
+        <div class="card-body pb-4">
+          <form #userForm="ngForm" (ngSubmit)="createOrUpdateUser()">
+            <div class="row">
+              <div class="col-md-6 pr-1 pr-sm-3 pl-3 pr-3">
+                <div class="form-group">
+                  <label for="firstname">First Name</label>
+                  <input class="form-control" name="firstname" id="firstname"
+                         type="text" [(ngModel)]="user.firstname" placeholder="First Name" required>
+                  <small class="text-danger" *ngIf="userForm.controls['firstname'].errors?.required">First Name is required</small>
+                </div>
+              </div>
+              <div class="col-md-6 pl-sm-3 pr-sm-1 pr-md-3 pr-sm-3 pl-3 pr-3">
+                <div class="form-group">
+                  <label for="lastname">Last Name</label>
+                  <input class="form-control" name="lastname" id="lastname"
+                         type="text" [(ngModel)]="user.lastname" placeholder="Last Name" required>
+                  <small class="text-danger" *ngIf="userForm.controls['lastname'].errors?.required">Last Name is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-1 pr-sm-3 pl-3 pr-3">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input class="form-control" name="email" id="email"
+                         type="email" [(ngModel)]="user.email" placeholder="Email" required
+                         pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                  <small class="text-danger" *ngIf="userForm.controls['email']?.errors?.required">Email is required</small>
+                  <small class="text-danger" *ngIf="userForm.controls['email']?.errors?.pattern">Invalid email format</small>
+                </div>
+              </div>
+              <div class="col-md-6 pl-sm-3 pr-sm-1 pr-md-3 pr-sm-3 pl-3 pr-3">
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input class="form-control" name="password" id="password"
+                         type="password" [(ngModel)]="user.password" placeholder="Password" pattern="^(?=.*[A-Za-z]).{8,}$">
+                  <small class="text-danger" *ngIf="userForm.controls['password']?.errors?.pattern">Password must be at least 8 characters  and contain at least one letter.</small>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-1 pr-sm-3 pl-3 pr-3" *ngIf="showRole">
+                <div class="form-group">
+                  <label for="role">Role</label>
+                  <select class="form-control" name="role" id="role" [(ngModel)]="user.role" required>
+                    <option value="ADMIN">Admin</option>
+                    <option value="USER">User</option>
+                  </select>
+                  <small class="text-danger" *ngIf="userForm.controls['role'].errors?.required">Role is required</small>
+                </div>
+              </div>
+              <div class="col-md-6 pr-1 pr-sm-3 pl-3 pr-3">
+                <div class="form-group">
+                  <label for="connectorUrl">Connector Url</label>
+                  <input class="form-control" name="connectorUrl" id="connectorUrl"
+                         type="text" [(ngModel)]="user.connectorUrl" placeholder="Connector Url" required
+                         [readonly]="readonlyConnectorUrl">
+                  <small class="text-danger" *ngIf="userForm.controls['connectorUrl'].errors?.required">Connector Url is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="row justify-content-end">
+              <div class="col-4 col-sm-4 col-md-3 col-custom-l col-lg-2 col-xl-1 col-custom-xl-1 col-custom-xl-2 col-custom-xl-3 col-md-1 pr-1 pl-sm-3">
+                <button type="reset" class="btn btn-simple btn-block mt-4 w-100 rounded-pill" (click)="cancel()">Cancel</button>
+              </div>
+              <div class="col-4 col-sm-4 col-md-3 col-custom-l col-lg-2 col-xl-1 col-custom-xl-1 col-custom-xl-2 col-custom-xl-3 pl-1 pl-sm-3 pr-sm-3 pr-md-3 ">
+                <button type="submit" class="btn btn-primary btn-block mt-4 w-100 rounded-pill" [disabled]="!userForm.valid">{{ buttonText }}</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-md-4">
+       <div class="card card-user">
+         <div class="image">
+           <img src="./assets/img/header.jpg" alt="...">
+         </div>
+         <div class="card-body">
+           <div class="author">
+             <a href="#">
+               <img class="avatar border-gray" src="./assets/img/mike.jpg" alt="...">
+               <h5 class="title">Mike Andrew</h5>
+             </a>
+             <p class="description">
+               michael24
+             </p>
+           </div>
+           <p class="description text-center">
+             "Lamborghini Mercy
+             <br> Your chick she so thirsty
+             <br> I'm in that two seat Lambo"
+           </p>
+         </div>
+         <hr>
+         <div class="button-container">
+           <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
+             <i class="fab fa-facebook-f"></i>
+           </button>
+           <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
+             <i class="fab fa-twitter"></i>
+           </button>
+           <button href="#" class="btn btn-neutral btn-icon btn-round btn-lg">
+             <i class="fab fa-google-plus-g"></i>
+           </button>
+         </div>
+       </div>
+     </div>-->
+  </div>
+</div>
+
