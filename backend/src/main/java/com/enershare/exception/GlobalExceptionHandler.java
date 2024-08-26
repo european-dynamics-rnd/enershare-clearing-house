@@ -1,5 +1,7 @@
 package com.enershare.exception;
 
+import com.enershare.dto.response.ErrorResponse;
+import com.enershare.utils.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,20 +16,30 @@ public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<String> handleAuthenticationException(AuthenticationException ex) {
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
         logger.warn("Authentication failed: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+        String code = ResponseUtils.generateCode(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ErrorResponse(code, ex.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<String> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
         logger.warn("Email already exists: {}", ex.getMessage());
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+        String code = ResponseUtils.generateCode(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ErrorResponse(code, ex.getMessage()), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEmailNotFoundException(EmailNotFoundException ex) {
+        logger.warn("Email not found: {}", ex.getMessage());
+        String code = ResponseUtils.generateCode(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ErrorResponse(code, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         logger.error("Unexpected error: {}", ex.getMessage(), ex);
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        String code = ResponseUtils.generateCode(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ErrorResponse(code, ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

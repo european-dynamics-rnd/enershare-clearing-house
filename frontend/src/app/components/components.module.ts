@@ -12,6 +12,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { UserFormComponent } from './users/user-form/user-form.component';
 import { UserListComponent } from './users/user-list/user-list.component';
 import {ConfirmationDialogComponent} from "./confirmation-dialog/confirmation-dialog.component";
+import { RegisterUserComponent } from './register-user/register-user.component';
 
 @NgModule({
     imports: [
@@ -20,7 +21,8 @@ import {ConfirmationDialogComponent} from "./confirmation-dialog/confirmation-di
         NgbModule,
         FontAwesomeModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+      
     ],
   declarations: [
     FooterComponent,
@@ -29,7 +31,8 @@ import {ConfirmationDialogComponent} from "./confirmation-dialog/confirmation-di
     RegisterComponent,
     UserFormComponent,
     UserListComponent,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    RegisterUserComponent
   ],
   exports: [
     FooterComponent,

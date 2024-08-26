@@ -8,11 +8,13 @@ import {LoginComponent} from "./components/login/login.component";
 import {AuthGuard} from "./guards/auth.guard";
 import {DashboardComponent} from "./components/dashboard/dashboard.component";
 import {RegisterComponent} from "./components/register/register.component";
+import { RegisterUserComponent } from './components/register-user/register-user.component';
 
 const routes: Routes =[
   {path:'',
     redirectTo:'login',
-    pathMatch:'full'
+    pathMatch:'full',
+    
   },
 
   {
@@ -24,6 +26,11 @@ const routes: Routes =[
     path: 'register',
     redirectTo: 'dashboard',
     pathMatch: 'full'
+  },
+
+  {
+    path: 'register-user',
+    component: RegisterUserComponent
   },
 
   {

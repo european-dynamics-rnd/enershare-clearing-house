@@ -1,6 +1,9 @@
 package com.enershare.controller.user;
 
+import com.enershare.dto.response.SuccessResponse;
 import com.enershare.dto.user.UserDTO;
+import com.enershare.exception.EmailAlreadyExistsException;
+import com.enershare.exception.EmailNotFoundException;
 import com.enershare.service.auth.JwtService;
 import com.enershare.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -60,20 +63,16 @@ public class UserController {
         return userService.getObject(id);
     }
 
-//    @PutMapping("/update")
-//    public ResponseEntity<String> updateUser(@RequestBody UserDTO userDTO) {
-//        try {
-//            userService.updateUser(userDTO);
-//            return ResponseEntity.ok("User updated successfully");
-//        } catch (Exception e) {
-//            logger.error("Error updating user. UserDTO: {}", userDTO, e);
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("403 Forbidden: Insufficient permissions");
-//        }
-//    }
-
     @PutMapping("/update")
     public void updateUser(@RequestBody UserDTO userDTO) {
         userService.updateUser(userDTO);
     }
-    
+
+    @PostMapping("/register-user")
+    public ResponseEntity<SuccessResponse> registerUser(@RequestBody UserDTO userDTO) {
+        return userService.registerUser(userDTO);
+    }
+
+
+
 }

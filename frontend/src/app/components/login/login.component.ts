@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {AuthenticationRequest} from "../../dtos/authenticationRequest";
 import {AuthenticationResponse} from "../../dtos/authenticationResponse";
 import {User} from "../../dtos/user";
+import { NotificationService } from '../../services/notification/notification.service'
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,8 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   constructor(private fb: FormBuilder,
               private authService: AuthenticationService,
-              private router: Router,) { }
+              private router: Router,
+              private notificationservice: NotificationService) { }
 
   ngOnInit(): void {
     // this.loginForm = this.fb.group({
@@ -56,11 +58,16 @@ export class LoginComponent implements OnInit {
         console.error('Login error:', err);
         if (err.error.validationErrors) {
           this.errorMsg = err.error.validationErrors;
+        } else if (err.error.message) {
+          this.notificationservice.error(err.error.message);
         } else {
           this.errorMsg.push(err.error.error);
         }
       }
     );
+  }
+  navigateToRegister() {
+    this.router.navigate(['/register-user']);
   }
 
   // hideShowPass(){

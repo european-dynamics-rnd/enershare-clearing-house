@@ -6,7 +6,7 @@
       </div>
     </a>
   </div>
-  <div class="outer d-flex align-items-center  min-vh-100">
+  <div class="outer d-flex align-items-center min-vh-100">
     <div class="container pb-5">
       <div class="row">
         <div class="col-xs-7 col-6 col-sm-7 col-md-6 col-lg-5 col-xl-5 mx-auto">
@@ -36,14 +36,11 @@
                     </div>
                     <input class="form-control bg-transparent text-white placeholder-white" name="Password"
                            type="password" [(ngModel)]="authRequest.password" placeholder="Password">
-                    <!--<div class="input-group-append">
-                      <span (click)="hideShowPass()" class="input-group-text text-white fa {{eyeIcon}}"></span>
-                    </div>-->
                   </div>
                 </div>
                 <small class="text-white">*Password is required</small>
                 <button (click)="login()" type="submit" class="btn btn-login btn-block mt-4 w-100 rounded-pill">Login</button>
-<!--                <div class="text-center pt-4 text-muted">Don't have account?<a routerLink ="/register">Register</a></div>-->
+                <button (click)="navigateToRegister()" type="button" class="btn btn-outline-register btn-block mt-2 w-100 rounded-pill">Register</button>
               </form>
             </div>
           </div>
@@ -52,38 +49,3 @@
     </div>
   </div>
 </div>
-<!--<div class="outer">
-  <div class="container">
-    <div class="row">
-      <div class="offset-md-2 col-lg-5 col-md-7 offset-lg-4 offset-md-3">
-        <div class="panel border bg-white">
-          <div class="panel-heading">
-            <h3 class="pt-3 font-weight-bold">Login</h3>
-          </div>
-          <div class="panel-body p-3">
-            <form [formGroup]="loginForm">
-              <div class="form-group pt-3">
-                <div class="input-field" [class.error]="loginForm.controls['username'].dirty && loginForm.hasError('required','username')">
-                  <span class="fa fa-user p-2"></span>
-                  <input formControlName="username" type="text" placeholder="Username">
-                </div>
-              </div>
-              <small *ngIf="loginForm.controls['username'].dirty && loginForm.hasError('required','username')" class="text-danger">*Username is required</small>
-              <div class="form-group pt-3">
-                <div class="input-field" [class.error]="loginForm.controls['password'].dirty && loginForm.hasError('required','password')">
-                  <span class="fa fa-lock p-2"></span>
-                  <input formControlName="password" [type]="type" placeholder="Password">
-                  <span (click)="hideShowPass()" class="fa {{eyeIcon}}"></span>
-                </div>
-              </div>
-              <small *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required','password')" class="text-danger">*Password is required</small>
-              <button (click)="onLogin()" type="submit" class="btn btn-login btn-block mt-4 w-100">Login</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>-->
-
-

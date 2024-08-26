@@ -24,24 +24,25 @@ export class TokenInterceptor implements HttpInterceptor {
     request = this.addToken(request, this.authService.getAccessToken());
 
     return next.handle(request).pipe(
-      catchError((err:any)=>{
+      catchError((err)=>{
         if(err instanceof HttpErrorResponse){
           if(err.status === 403){
-            return this.handleUnAuthorizedError(request,next);
+             return this.handleUnAuthorizedError(request,next);
           }
         }
-        return throwError(()=> new Error("some other error"))
+        return throwError(err)
       })
-    )
+    );
   }
-  private addToken(request: HttpRequest<any>, token: string): HttpRequest<any> {
-    if(token){
+  private addToken(request: HttpRequest<any>, token: string | null): HttpRequest<any> {
+    if (token) {
       return request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
         }
       });
     }
+    return request;
   }
 
   private handleUnAuthorizedError(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
