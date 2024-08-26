@@ -4,8 +4,6 @@ import {AuthenticationResponse} from "../../../dtos/authenticationResponse";
 import {environment} from "../../../../environments/environment";
 import {BehaviorSubject, Observable, throwError} from "rxjs";
 import {User} from "../../../dtos/user";
-import {catchError} from "rxjs/operators";
-import {NotificationService} from "../../notification/notification.service";
 
 
 
@@ -29,19 +27,12 @@ export class AuthenticationService {
   public resetTokenRenewalStatus(): void {
     this._tokenRenewalQueue.next(false);
   }
-  constructor(private http: HttpClient,
-              private notificationService: NotificationService) { }
+  constructor(private http: HttpClient) { }
 
 
   onLogin(email: string, password: string) {
-    return this.http.post(`${environment.serverUrl}/auth/authenticate`, { email, password })
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-         let errorMessage = error?.error
-          this.notificationService.error(errorMessage);
-          return throwError(error);
-        })
-      );
+    return this.http.post(`${environment.serverUrl}/auth/authenticate`, { email, password });
+    
   }
 
   logOut(){

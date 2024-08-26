@@ -42,4 +42,11 @@ public class GlobalExceptionHandler {
         String code = ResponseUtils.generateCode(HttpStatus.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(new ErrorResponse(code, ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(com.enershare.exception.AuthenticationException.class)
+    public ResponseEntity<Object> handleCustomAuthenticationException(com.enershare.exception.AuthenticationException ex) {
+        return ResponseEntity
+                .status(HttpStatus.valueOf(ex.getCode()))
+                .body(new ErrorResponse(String.valueOf(ex.getCode()), ex.getMessage())); // Convert code to String
+    }
 }

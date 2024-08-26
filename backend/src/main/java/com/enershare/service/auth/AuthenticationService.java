@@ -35,11 +35,11 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
         if ((request.getEmail() == null || request.getEmail().isEmpty()) && (request.getPassword() == null || request.getPassword().isEmpty())) {
-            throw new AuthenticationException("Email and password are required");
+            throw new AuthenticationException("Email and password are required",501);
         } else if (request.getEmail() == null || request.getEmail().isEmpty()) {
-            throw new AuthenticationException("Email is required");
+            throw new AuthenticationException("Email is required",502);
         } else if (request.getPassword() == null || request.getPassword().isEmpty()) {
-            throw new AuthenticationException("Password is required");
+            throw new AuthenticationException("Password is required",503);
         } else {
             try {
                 authenticationManager.authenticate(
@@ -47,7 +47,7 @@ public class AuthenticationService {
                                 request.getEmail()
                                 , request.getPassword()));
                 var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
-                        new AuthenticationException("User not found")
+                        new AuthenticationException("User not found",404)
                 );
 
                 var jwtToken = jwtService.generateToken(user);
@@ -65,7 +65,7 @@ public class AuthenticationService {
                         .user(userDTO)
                         .build();
             } catch (BadCredentialsException e) {
-                throw new AuthenticationException("Invalid email or password", e);
+                throw new AuthenticationException("Invalid email or password",401, e);
             }
         }
     }

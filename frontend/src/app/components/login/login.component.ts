@@ -56,16 +56,40 @@ export class LoginComponent implements OnInit {
       },
       (err: any) => {
         console.error('Login error:', err);
-        if (err.error.validationErrors) {
-          this.errorMsg = err.error.validationErrors;
-        } else if (err.error.message) {
-          this.notificationservice.error(err.error.message);
+        
+        if (err.error && err.error.code) {
+          switch (err.error.code) {
+            case '501':
+              this.notificationservice.error('Email and password are required.');
+              break;
+            case '502':
+              this.notificationservice.error('Email is required.');
+              break;
+            case '503':
+              this.notificationservice.error('Password is required.');
+              break;
+            case '504':
+              this.notificationservice.error('Invalid email or password.');
+              break;
+            default:
+              this.notificationservice.error('Incorrect User Credentials.');
+              break;
+          }
         } else {
-          this.errorMsg.push(err.error.error);
+          this.notificationservice.error('An error occurred during login.');
         }
       }
     );
   }
+      
+  //     (err: any) => {
+  //       console.error('Login error:', err);
+  //       if(err.error.message) {
+  //         this.notificationservice.error(err.error.message);
+  //       }
+  //     }
+  //   );
+  // }
   navigateToRegister() {
     this.router.navigate(['/register-user']);
   }
