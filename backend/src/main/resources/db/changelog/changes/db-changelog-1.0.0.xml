@@ -54,10 +54,7 @@
                 columnDataType="bigint"/>
 
         <!-- Add charset and collation settings -->
-        <sql>
-            ALTER TABLE `user`
-                CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-        </sql>
+
     </changeSet>
 
     <changeSet id="2024-06-05-4" author="vuk">
@@ -122,10 +119,6 @@
                 columnName="id"
                 columnDataType="bigint"/>
 
-        <sql>
-            ALTER TABLE `users`
-                CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-        </sql>
     </changeSet>
 
     <changeSet id="2024-06-05-6" author="vuk">
@@ -139,10 +132,6 @@
             <column name="next_val" value="3551"/>
         </insert>
 
-        <sql>
-            ALTER TABLE `token_seq`
-                CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-        </sql>
     </changeSet>
 
     <changeSet id="2024-06-05-7" author="vuk">
@@ -230,6 +219,5 @@
             </column>
         </createTable>
     </changeSet>
-    
 
 </databaseChangeLog>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2024-09-04-1" author="vuk">
+        <sql>
+            ALTER TABLE `user`
+                CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2024-09-04-2" author="vuk">
+        <sql>
+            ALTER TABLE `users`
+                CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2024-09-04-3" author="vuk">
+        <sql>
+            ALTER TABLE `token_seq`
+                CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

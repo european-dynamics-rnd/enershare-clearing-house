@@ -25,33 +25,40 @@ export class RegisterUserComponent implements OnInit {
   ngOnInit(): void {}
 
   register(): void {
-    if (this.validateForm()) {
-      this.usersService.registerUser(this.registerUser).subscribe(
-        response => {
-          if (response.error) {
-            this.notificationService.error(response.error.message);
-          } else {
-            this.notificationService.success('Registration successful!');
-            setTimeout(() => this.router.navigate(['/login']), 2000); // Navigate after 2 seconds
-          }
-        },
-        error => {
-          // This block should generally handle network-level errors
-          console.error('HTTP error:', error);
-          this.notificationService.error('Registration failed. Please try again later.');
-        }
-      );
-    } else {
-      this.notificationService.error('Please correct the errors in the form.');
-    }
-  }
-  
 
-  private validateForm(): boolean {
-    const { firstname, lastname, email, password } = this.registerUser;
-    return firstname.length > 0 &&
-           lastname.length > 0 &&
-           email.length > 0 &&
-           password.length >= 6;
+    // Client-side validation
+    if (!this.registerUser.firstname || !this.registerUser.lastname || !this.registerUser.email || !this.registerUser.password) {
+      this.notificationService.error('All fields are required.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.registerUser.email)) {
+      this.notificationService.error('Invalid email format.');
+      return;
+    }
+
+    if (this.registerUser.password.length < 6) {
+      this.notificationService.error('Password must be at least 6 characters long.');
+      return;
+    }
+
+    this.usersService.registerUser(this.registerUser).subscribe(
+      response => {
+        if (response.error) {
+          this.notificationService.error(response.error.message);
+        } else {
+          this.notificationService.success('Registration successful!');
+          setTimeout(() => this.router.navigate(['/login']), 2000); // Navigate after 2 seconds
+        }
+      },
+      error => {
+        // This block should generally handle network-level errors
+        console.error('HTTP error:', error);
+        this.notificationService.error('Registration failed. Please try again later.');
+      }
+    );
+
   }
+
 }

@@ -2,6 +2,7 @@ package com.enershare.service.user;
 
 import com.enershare.dto.response.SuccessResponse;
 import com.enershare.dto.user.UserDTO;
+import com.enershare.enums.Role;
 import com.enershare.exception.EmailAlreadyExistsException;
 import com.enershare.exception.EmailNotFoundException;
 import com.enershare.mapper.UserMapper;
@@ -22,8 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Service
@@ -88,7 +91,18 @@ public class UserService {
     }
 
     public ResponseEntity<SuccessResponse> registerUser(UserDTO userDTO) {
+        userDTO.setRole(Role.USER);
         validateAndUpdateConnectorUrl(userDTO);
+
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new EmailAlreadyExistsException("User is already registered on Clearing House.");
+        }
+
+        Optional<User> dbUser = this.userRepository.findByEmail(userDTO.getEmail());
+        if(dbUser.isPresent()){
+
+        }
+
         createUser(userDTO);
         SuccessResponse successResponse = new SuccessResponse("200", "User registered successfully.");
 

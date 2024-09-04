@@ -38,32 +38,9 @@ export class UsersService {
     return this.http.get(`${environment.serverUrl}/user/by-id?id=${id}`);
   }
 
-  registerUser(user: { firstname: string; lastname: string; email: string; password: string }): Observable<any> {
-    console.log('Registering user:', user);
-  
-    // Client-side validation
-    if (!user.firstname || !user.lastname || !user.email || !user.password) {
-      return of({ error: { message: 'All fields are required.' } });
-    }
-  
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(user.email)) {
-      return of({ error: { message: 'Invalid email format.' } });
-    }
-  
-    if (user.password.length < 6) {
-      return of({ error: { message: 'Password must be at least 6 characters long.' } });
-    }
-  
-    // Create user with an empty connectorUrl
-    const userWithConnectorUrl = {
-      ...user,
-      role: 'USER',
-      connectorUrl: ''
-    };
-  
-    // Post the user registration data
-    return this.http.post(`${environment.serverUrl}/user/register-user`, userWithConnectorUrl).pipe(
+  registerUser(user: any): Observable<any> {
+
+    return this.http.post(`${environment.serverUrl}/user/register-user`, user).pipe(
       map((response: any) => {
 
         return response;
@@ -77,4 +54,4 @@ export class UsersService {
       })
     );
   }
-}  
+}
