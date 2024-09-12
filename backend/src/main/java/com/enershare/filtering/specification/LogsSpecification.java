@@ -29,7 +29,7 @@ public class LogsSpecification {
             userSubquery.where(criteriaBuilder.and(
                     criteriaBuilder.equal(userRoot.get("connectorUrl"), root.get("consumer")),
                     criteriaBuilder.equal(userRoot.get("email"), email),
-                    criteriaBuilder.equal(userRoot.get("mode"), "INGRESS")
+                    criteriaBuilder.equal(root.get("mode"), "INGRESS")
             ));
             return getPredicate(searchCriteriaList, root, criteriaBuilder, predicates, userSubquery);
         };
@@ -46,7 +46,7 @@ public class LogsSpecification {
             userSubquery.where(criteriaBuilder.and(
                     criteriaBuilder.equal(userRoot.get("connectorUrl"), root.get("provider")),
                     criteriaBuilder.equal(userRoot.get("email"), email),
-                    criteriaBuilder.equal(userRoot.get("mode"), "EGRESS")
+                    criteriaBuilder.equal(root.get("mode"), "EGRESS")
             ));
             return getPredicate(searchCriteriaList, root, criteriaBuilder, predicates, userSubquery);
         };
