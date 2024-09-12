@@ -95,7 +95,7 @@ public class CustomLogsRepositoryImpl implements CustomLogsRepository {
                 "JOIN user u ON u.connector_url = l.provider " +
                 "WHERE  l.created_on >= DATE_SUB(CURDATE(), INTERVAL seq.day DAY) " +
                 "AND l.created_on < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL seq.day DAY), INTERVAL 1 DAY) " +
-                "AND l.stage = 'INGRESS'" +
+                "AND l.stage = 'EGRESS'" +
                 "AND u.email = :email) AS egressLogCount " +
                 "FROM " +
                 "(SELECT 0 AS day " +
