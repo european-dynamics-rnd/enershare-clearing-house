@@ -25,10 +25,10 @@ export class EgressLogsComponent implements OnInit {
 
   filterDate: NgbDateStruct;
 
-  searchRequest = new SearchRequest(0,10,'provider','asc',this.searchCriteriaList)
+  searchRequest = new SearchRequest(0,10,'createdOn','desc',this.searchCriteriaList)
 
   filters = {
-    provider: '',
+    consumer: '',
     resourceId: '',
     resourceType: '',
     contractId: '',
@@ -94,9 +94,9 @@ export class EgressLogsComponent implements OnInit {
 
     this.searchRequest.searchCriteriaList = this.searchCriteriaList;
 
-    this.egressLogsService.getSearchLogs(this.searchRequest).subscribe(ingressLogs => {
-      this.filteredLogs = ingressLogs.content;
-      this.collectionSize = ingressLogs.totalElements;
+    this.egressLogsService.getSearchLogs(this.searchRequest).subscribe(egressLogs => {
+      this.filteredLogs = egressLogs.content;
+      this.collectionSize = egressLogs.totalElements;
     });
 
   }

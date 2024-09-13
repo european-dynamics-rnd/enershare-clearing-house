@@ -24,7 +24,7 @@ export class IngressLogsComponent implements OnInit {
 
   filterDate: NgbDateStruct;
 
-  searchRequest = new SearchRequest(0,10,'provider','asc',this.searchCriteriaList)
+  searchRequest = new SearchRequest(0,10,'createdOn','desc',this.searchCriteriaList)
 
   filters = {
     provider: '',
