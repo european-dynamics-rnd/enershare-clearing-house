@@ -33,6 +33,11 @@
     .stats{
       color: $dark-gray;
     }
+
+    .stats:hover{
+      color: $black-bg;
+      cursor: pointer;
+    }
   }
 
   .dropdown{

@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {AuthenticationService} from "../../services/system/auth/auth.service";
-import {AuthenticationRequest} from "../../dtos/authenticationRequest";
+import {Component, OnInit} from '@angular/core';
 import {Logs} from "../../dtos/logs";
 import {LogSummary} from "../../dtos/logSummary";
 import {DashboardService} from "../../services/dashboard/dashboard.service";
+import {Subject} from "rxjs";
+import {ChartType} from "chart.js";
 
 
 @Component({
@@ -14,59 +13,67 @@ import {DashboardService} from "../../services/dashboard/dashboard.service";
 })
 export class DashboardComponent implements OnInit {
   //Dashboard chart initialization
-    public bigDashboardChartData: Array<any>;
-    public bigDashboardChartOptions: any;
-    public bigDashboardChartLabels: Array<any>;
-    public bigDashboardChartColors: Array<any>
-    public bigDashboardChartType;
+  bigDashboardChartData: Array<any>;
+  bigDashboardChartOptions: any;
+  bigDashboardChartLabels: Array<any>;
+  bigDashboardChartColors: Array<any>
+  bigDashboardChartType: ChartType;
 
-    //Ingress chart initialization
-    public ingressChartType;
-    public ingressChartData: Array<any>;
-    public ingressChartOptions: any;
-    public ingressChartLabels: Array<any>;
-    public ingressChartColors: Array<any>
+  //Ingress chart initialization
+  ingressChartType: ChartType;
+  ingressChartData: Array<any>;
+  ingressChartOptions: any;
+  ingressChartLabels: Array<any>;
+  ingressChartColors: Array<any>
 
-    //Egress chart initialization
-    public egressChartType;
-    public egressChartData: Array<any>;
-    public egressChartOptions: any;
-    public egressChartLabels: Array<any>;
-    public egressChartColors: Array<any>
+  //Egress chart initialization
+  egressChartType: ChartType;
+  egressChartData: Array<any>;
+  egressChartOptions: any;
+  egressChartLabels: Array<any>;
+  egressChartColors: Array<any>
 
-    //Last Ten hours chart initialization
-    public lastTenHoursChartType;
-    public lastTenHoursChartData: Array<any>;
-    public lastTenHoursChartOptions: any;
-    public lastTenHoursChartLabels: Array<any>;
-    public lastTenHoursChartColors: Array<any>
-
-
-    public gradientStroke;
-    public chartColor;
-    public canvas: any;
-    public ctx;
-    public gradientFill;
+  //Last Ten hours chart initialization
+  lastTenHoursChartType:ChartType;
+  lastTenHoursChartData: Array<any>;
+  lastTenHoursChartOptions: any;
+  lastTenHoursChartLabels: Array<any>;
+  lastTenHoursChartColors: Array<any>
 
 
-    public ingressChartOptionsConfiguration: any;
-    public egressChartOptionsConfiguration: any;
+  private gradientStroke;
+  private chartColor;
+  private canvas: any;
+  private ctx;
+  private gradientFill;
 
 
-  // events
+  private ingressChartOptionsConfiguration: any;
+  private egressChartOptionsConfiguration: any;
+
+  private loadDataToAllCharts = new Subject<void>();
+  private loadDataToIngressCharts = new Subject<void>();
+  private loadDataToEgressCharts = new Subject<void>();
+
+  private labels: string[];
+  private ingressCounts: number[];
+  private egressCounts: number[];
+
 
   page = 1;
   pageSize = 5;
   ingressLogs: Logs[];
   egressLogs: Logs[];
 
-  public chartClicked(e:any):void {
+
+  public chartClicked(e: any): void {
     console.log(e);
   }
 
-  public chartHovered(e:any):void {
+  public chartHovered(e: any): void {
     console.log(e);
   }
+
   public hexToRGB(hex, alpha) {
     var r = parseInt(hex.slice(1, 3), 16),
       g = parseInt(hex.slice(3, 5), 16),
@@ -78,22 +85,23 @@ export class DashboardComponent implements OnInit {
       return "rgb(" + r + ", " + g + ", " + b + ")";
     }
   }
-  authRequest: AuthenticationRequest = {email: '', password: ''};
-
-  public logs:any=[];
-  message = 'test';
   constructor(
-    private http: HttpClient,
-    private authService: AuthenticationService,
     private dashboardService: DashboardService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
-    this.getSummary();
+
+    this.loadDataToAllCharts.subscribe(() => {
+      this.setDataToIngressChart();
+      this.setDataToEgressChart();
+      this.setDataToDashboardChart();
+    });
+
+    this.getSummary(this.loadDataToAllCharts);
     this.getLastTenHoursSummary();
     this.getLatestIngressLogs();
     this.getLatestEgressLogs();
-
 
 
     this.chartColor = "#FFFFFF";
@@ -229,14 +237,14 @@ export class DashboardComponent implements OnInit {
 
 
     this.ingressChartOptionsConfiguration = {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    stepSize: 1,
-                    beginAtZero:true,
-                }
-            }],
-        }
+      scales: {
+        yAxes: [{
+          ticks: {
+            stepSize: 1,
+            beginAtZero: true,
+          }
+        }],
+      }
     };
 
     this.egressChartOptionsConfiguration = {
@@ -244,7 +252,7 @@ export class DashboardComponent implements OnInit {
         yAxes: [{
           ticks: {
             stepSize: 1,
-              beginAtZero:true,
+            beginAtZero: true,
           }
         }],
       }
@@ -341,12 +349,12 @@ export class DashboardComponent implements OnInit {
     this.ctx = this.canvas.getContext("2d");
 
     const gradientFillSendLogs = this.ctx.createLinearGradient(0, 170, 0, 50);
-      gradientFillSendLogs.addColorStop(0, "rgba(128, 182, 244, 0)");
-      gradientFillSendLogs.addColorStop(1, this.hexToRGB('#f96332', 0.6));
+    gradientFillSendLogs.addColorStop(0, "rgba(128, 182, 244, 0)");
+    gradientFillSendLogs.addColorStop(1, this.hexToRGB('#f96332', 0.6));
 
     const gradientFillReceivedLogs = this.ctx.createLinearGradient(0, 170, 0, 50);
-      gradientFillReceivedLogs.addColorStop(0, "rgba(128, 182, 244, 0)");
-      gradientFillReceivedLogs.addColorStop(1, this.hexToRGB('#18ce0f', 0.6));
+    gradientFillReceivedLogs.addColorStop(0, "rgba(128, 182, 244, 0)");
+    gradientFillReceivedLogs.addColorStop(1, this.hexToRGB('#18ce0f', 0.6));
 
     this.gradientFill = this.ctx.createLinearGradient(0, 170, 0, 50);
     this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
@@ -375,12 +383,12 @@ export class DashboardComponent implements OnInit {
       }
     ];
     this.lastTenHoursChartColors = [
-        {
-            backgroundColor: "#60e759",
-            borderColor: "#18ce0f",
-            pointBorderColor: "#FFF",
-            pointBackgroundColor: "#18ce0f",
-        },
+      {
+        backgroundColor: "#60e759",
+        borderColor: "#18ce0f",
+        pointBorderColor: "#FFF",
+        pointBackgroundColor: "#18ce0f",
+      },
       {
         backgroundColor: "#f6a86a",
         borderColor: "#f98c32",
@@ -402,21 +410,21 @@ export class DashboardComponent implements OnInit {
     this.lastTenHoursChartLabels = labels;
 
     this.lastTenHoursChartOptions = {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    stepSize: 1,
-                    beginAtZero:true,
-                }
-            }],
-        }
+      scales: {
+        yAxes: [{
+          ticks: {
+            stepSize: 1,
+            beginAtZero: true,
+          }
+        }],
+      }
     }
 
     this.lastTenHoursChartType = 'bar';
   }
 
   private formatDate(date: Date): string {
-    const options: Intl.DateTimeFormatOptions = { month: 'short', day: '2-digit' };
+    const options: Intl.DateTimeFormatOptions = {month: 'short', day: '2-digit'};
     return date.toLocaleDateString('en-US', options);
   }
 
@@ -433,37 +441,17 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  getSummary() {
+  getSummary(subject: Subject<void>) {
     this.dashboardService.getSummary().subscribe(
       (data: LogSummary[]) => {
         console.log(data); // Log the response for debugging
 
         // Extract the labels and counts from the received data
-        const labels = data.map(item => item.dataLabel);
-        const ingressCounts = data.map(item => item.ingressLogCount);
-        const egressCounts = data.map(item => item.egressLogCount);
+        this.labels = data.map(item => item.dataLabel);
+        this.ingressCounts = data.map(item => item.ingressLogCount);
+        this.egressCounts = data.map(item => item.egressLogCount);
 
-        // Log the extracted data for further debugging
-        console.log('Labels:', labels);
-        console.log('Ingress Counts:', ingressCounts);
-        console.log('Egress Counts:', egressCounts);
-
-        // Update the chart data arrays
-        this.bigDashboardChartLabels = labels;
-        this.bigDashboardChartData = [
-          { data: ingressCounts, label: 'Ingress Logs' },
-          { data: egressCounts, label: 'Egress Logs' }
-        ];
-        this.ingressChartLabels = labels;
-        this.ingressChartData = [
-          { data: ingressCounts, label: 'Ingress Logs' }
-        ];
-
-        this.egressChartLabels = labels;
-        this.egressChartData = [
-          { data: egressCounts, label: 'Egress Logs' }
-        ];
-
+        subject.next();
       },
       (error) => {
         console.error('Error fetching custom log summaries:', error);
@@ -478,9 +466,9 @@ export class DashboardComponent implements OnInit {
         // Extract the labels and counts from the received data
         const labels = data.map(item => {
           const date = new Date(item.dateRange);
-          const month = date.toLocaleString('en-US', { month: 'short' });
-          const day = date.toLocaleString('en-US', { day: '2-digit' });
-          const hour = date.toLocaleString('en-US', { hour: '2-digit', hour12: false });
+          const month = date.toLocaleString('en-US', {month: 'short'});
+          const day = date.toLocaleString('en-US', {day: '2-digit'});
+          const hour = date.toLocaleString('en-US', {hour: '2-digit', hour12: false});
           const minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
 
           // Log each part of the date for debugging
@@ -501,8 +489,8 @@ export class DashboardComponent implements OnInit {
         // Update the chart data arrays
         this.lastTenHoursChartLabels = labels;
         this.lastTenHoursChartData = [
-          { data: ingressCounts, label: 'Ingress Logs' },
-          { data: egressCounts, label: 'Egress Logs' }
+          {data: ingressCounts, label: 'Ingress Logs'},
+          {data: egressCounts, label: 'Egress Logs'}
         ];
       },
       (error) => {
@@ -527,9 +515,47 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  // convertToLocalTime(utcTime: string): string {
-  //   return moment.utc(utcTime).tz(this.localTimezone).format('MMM DD HH:00');
-  // }
+  setDataToIngressChart() {
+    this.ingressChartLabels = this.labels;
+    this.ingressChartData = [
+      {data: this.ingressCounts, label: 'Ingress Logs'}
+    ];
+  }
 
+  setDataToEgressChart() {
+    this.egressChartLabels = this.labels;
+    this.egressChartData = [
+      {data: this.egressCounts, label: 'Egress Logs'}
+    ];
+  }
 
+  setDataToDashboardChart() {
+    // Update the chart data arrays
+    this.bigDashboardChartLabels = this.labels;
+    this.bigDashboardChartData = [
+      {data: this.ingressCounts, label: 'Ingress Logs'},
+      {data: this.egressCounts, label: 'Egress Logs'}
+    ];
+  }
+
+  refreshIngressChart() {
+    this.loadDataToIngressCharts.subscribe(() => {
+      this.setDataToIngressChart();
+    });
+
+    this.getSummary(this.loadDataToIngressCharts);
+  }
+
+  refreshEgressChart() {
+    this.loadDataToEgressCharts.subscribe(() => {
+      this.setDataToEgressChart();
+    });
+
+    this.getSummary(this.loadDataToEgressCharts);
+  }
+
+  refreshLast10HourChart() {
+    this.getLastTenHoursSummary()
+  }
 }
+
