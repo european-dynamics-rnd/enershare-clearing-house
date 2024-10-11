@@ -1,3 +1,4 @@
+This license item refers solely to the Front-End implementation that is based on Creative Tim (www.creative-tim.com).
 MIT License
 
 Copyright (c) 2017 Creative Tim (www.creative-tim.com)
