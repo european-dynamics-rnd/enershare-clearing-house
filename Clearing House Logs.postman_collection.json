@@ -1,0 +1,172 @@
+{
+	"info": {
+		"_postman_id": "f8f90f36-005c-441c-a301-741224a9c38d",
+		"name": "Clearing House Logs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2491804",
+		"_collection_link": "https://lively-sunset-8211.postman.co/workspace/Engineering~f2391c68-4c40-40e7-a9a6-394301251838/collection/2491804-f8f90f36-005c-441c-a301-741224a9c38d?action=share&source=collection_link&creator=2491804"
+	},
+	"item": [
+		{
+			"name": "free-resource",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:enershare:connectors:MeterDataService-1:resources:Resource-1\",\r\n    \"providerConnectorID\": \"urn:ids:enershare:connectors:MeterDataService-1\",\r\n    \"providerParticipantIDSID\": \"urn:ids:enershare:participants:Participant-1\",\r\n    \"artifactsIds\": [\"urn:ids:enershare:connectors:MeterDataService-1:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"free\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "free-resource",
+					"host": [
+						"free-resource"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "onsale",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:enershare:connectors:MeterDataService-1:resources:Resource-1\",\r\n    \"providerConnectorID\": \"urn:ids:enershare:connectors:MeterDataService-1\",\r\n    \"providerParticipantIDSID\": \"urn:ids:enershare:participants:Participant-1\",\r\n    \"artifactsIds\": [\"urn:ids:enershare:connectors:MeterDataService-1:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"free\": false,\r\n    \"hash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d70\",\r\n    \"status\": \"onSale\",\r\n    \"price\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "onsale",
+					"host": [
+						"onsale"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Purchased",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:enershare:connectors:MeterDataService-1:resources:Resource-1\",\r\n    \"artifactsIds\": [\"urn:ids:enershare:connectors:MeterDataService-1:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"consumerParticipantIDSID\": \"urn:ids:enershare:participants:Participant-2\",\r\n    \"hash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d70\",\r\n    \"status\": \"Purchased\",\r\n    \"price\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "purchased",
+					"host": [
+						"purchased"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AuctionOpened",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:enershare:connectors:MeterDataService-1:resources:Resource-1\",\r\n    \"providerConnectorID\": \"urn:ids:enershare:connectors:MeterDataService-1\",\r\n    \"providerParticipantIDSID\": \"urn:ids:enershare:participants:Participant-1\",\r\n    \"artifactsIds\": [\"urn:ids:enershare:connectors:MeterDataService-1:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"free\": false,\r\n    \"hash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d70\",\r\n    \"endDate\": 1728385326,\r\n    \"status\": \"AuctionOpened\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "auction-opened",
+					"host": [
+						"auction-opened"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AuctionClosed",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:enershare:connectors:MeterDataService-1:resources:Resource-1\",\r\n    \"consumerParticipantIDSID\": \"urn:ids:enershare:participants:Participant-2\",\r\n    \"artifactsIds\": [\"urn:ids:enershare:connectors:MeterDataService-1:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"hash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d70\",\r\n    \"winnerBidHash\": \"0x22222222222222222222222222222222222222222222222222222222222222\",\r\n    \"status\": \"AuctionClosed\",\r\n    \"bids\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "auction-closed",
+					"host": [
+						"auction-closed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BidPlaced",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:enershare:connectors: MeterDataService-3:resources:Resource-3\",\r\n    \"providerConnectorID\": \"urn:ids:enershare:connectors:MeterDataService-3\",\r\n    \"providerParticipantIDSID\": \"urn:ids:enershare:participants:Participant-3\",\r\n    \"free\": false,\r\n    \"artifactsIds\": [\"urn:ids:enershare:connectors:MeterDataService-3:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"auctionHash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d70\",\r\n    \"hash\": \"0x11111111111111111111111111111111111111111111111111111111111111\",\r\n    \"status\": \"BidPlaced\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "bid-placed",
+					"host": [
+						"bid-placed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BidAccepted",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:enershare:connectors:MeterDataService-2:resources:Resource-2\",\r\n    \"consumerParticipantIDSID\": \"urn:ids:enershare:participants:Participant-1\",\r\n    \"free\": false,\r\n    \"artifactsIds\": [\"urn:ids:enershare:connectors:MeterDataService-2:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"auctionHash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d70\",\r\n    \"hash\": \"0x22222222222222222222222222222222222222222222222222222222222222\",\r\n    \"status\": \"BidAccepted\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "bid-accepted",
+					"host": [
+						"bid-accepted"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
