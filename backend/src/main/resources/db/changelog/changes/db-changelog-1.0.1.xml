@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2024-06-05-10" author="vuk">
+        <createTable tableName="bids">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="resource_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="free" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="auction_hash" type="varchar(255)">
+                <constraints nullable="true"/> <!-- New field added -->
+            </column>
+            <column name="hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="artifacts_ids" type="varchar(255)">
+                <constraints nullable="true"/> <!-- Made nullable -->
+            </column>
+            <column name="consumer_participant_id" type="varchar(255)">
+                <constraints nullable="true"/> <!-- New field added -->
+            </column>
+            <column name="provider_connector_id" type="varchar(255)">
+                <constraints nullable="true"/> <!-- New field added -->
+            </column>
+            <column name="provider_participant_id" type="varchar(255)">
+                <constraints nullable="true"/> <!-- New field added -->
+            </column>
+        </createTable>
+
+        <addAutoIncrement
+                tableName="bids"
+                columnName="id"
+                columnDataType="bigint"/>
+    </changeSet>
+
+
+    <changeSet id="2024-06-05-11" author="vuk">
+        <createTable tableName="auctions">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="resource_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider_connector_id" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="provider_participant_id" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="artifacts_ids" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="free" type="boolean">
+                <constraints nullable="true"/>
+            </column>
+            <column name="hash" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="end_date" type="datetime(6)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="bids" type="integer(50)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="consumer_participant_id" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="winner_bid_hash" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <addAutoIncrement
+                tableName="auctions"
+                columnName="id"
+                columnDataType="bigint"/>
+    </changeSet>
+
+    <changeSet id="2024-06-05-12" author="vuk">
+        <createTable tableName="resources">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="resource_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider_connector_id" type="varchar(255)">
+                <constraints nullable="true"/> <!-- Made nullable -->
+            </column>
+            <column name="consumer_participant_id" type="varchar(255)">
+                <constraints nullable="true"/> <!-- Made nullable -->
+            </column>
+            <column name="provider_participant_id" type="varchar(255)">
+                <constraints nullable="true"/> <!-- Made nullable -->
+            </column>
+            <column name="artifacts_ids" type="varchar(255)">
+                <constraints nullable="true"/> <!-- Modify if using a join table -->
+            </column>
+            <column name="free" type="boolean">
+                <constraints nullable="true"/> <!-- Made nullable -->
+            </column>
+            <column name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hash" type="varchar(255)">
+                <constraints nullable="true"/> <!-- Made nullable -->
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="true"/> <!-- Made nullable -->
+            </column>
+            <column name="price" type="integer">
+                <constraints nullable="true"/> <!-- Made nullable -->
+            </column>
+            <column name="type" type="varchar(50)">
+                <constraints nullable="true"/> <!-- Made nullable -->
+            </column>
+        </createTable>
+
+        <addAutoIncrement
+                tableName="resources"
+                columnName="id"
+                columnDataType="bigint"/>
+    </changeSet>
+
+
+</databaseChangeLog>
