@@ -25,7 +25,7 @@ public class ResourceService {
     private final ResourceMapper resourceMapper;
 
     public void createResource(ResourceDTO resourceDTO) {
-        Resource resource = resourceMapper.mapResourceDTOToEntity(resourceDTO);
+        Resource resource = resourceMapper.mapDTOToEntity(resourceDTO);
         resourceRepository.save(resource);
     }
 
@@ -33,23 +33,26 @@ public class ResourceService {
         return resourceRepository.findById(id);
     }
 
-    public Page<Resource> getResourcesByCriteria(SearchRequestDTO searchRequestDTO) {
+    public Page<Resource> getResourcesByCriteria(String email, SearchRequestDTO searchRequestDTO) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(searchRequestDTO.getDirection()), searchRequestDTO.getSort());
         Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(), sortOrder);
-        Specification<Resource> spec = ResourceSpecification.filterResources(searchRequestDTO.getSearchCriteriaList());
+        Specification<Resource> spec = ResourceSpecification.resourcesByEmail(email,searchRequestDTO.getSearchCriteriaList());
         return resourceRepository.findAll(spec, pageable);
     }
 
-    public List<Resource> getLatestResources(int count) {
-        Pageable pageable = PageRequest.of(0, count);
-        return resourceRepository.findLatestResources(pageable);
+    public List<Resource> getLatestResources(String email,int count) {
+        return resourceRepository.findLatestResources(email, PageRequest.of(0, count));
     }
 
     public List<Resource> getAllResourcesSortedByCreatedOn() {
         return resourceRepository.findAll(Sort.by(Sort.Direction.DESC, "createdOn"));
     }
 
-    public List<Resource> getResourcesByType(String type) {
-        return resourceRepository.findByType(type);
+    public List<Resource> getResourcesByUserEmail(String email){
+        return resourceRepository.findResourcesByUserEmail(email);
+    }
+
+    public List<Resource> getResourcesByStatus(String status) {
+        return resourceRepository.findByStatus(status);
     }
 }

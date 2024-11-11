@@ -14,7 +14,7 @@ public abstract class LogsMapper {
     @Mapping(target = "resourceType", source = "requestParameters.resourceType")
     @Mapping(target = "action", source = "requestParameters.action")
     @Mapping(target = "createdOn", expression = "java(java.time.Instant.now())")
-    public abstract Logs mapConsumerDTOToEntity(LogsDTO logsDTO);
+    public abstract Logs mapDTOToEntity(LogsDTO logsDTO);
 
     public abstract LogsDTO mapEntityToDTO(Logs logs);
 }

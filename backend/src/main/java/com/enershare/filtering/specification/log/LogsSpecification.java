@@ -1,4 +1,4 @@
-package com.enershare.filtering.specification;
+package com.enershare.filtering.specification.log;
 
 import com.enershare.filtering.SearchCriteria;
 import com.enershare.model.logs.Logs;
