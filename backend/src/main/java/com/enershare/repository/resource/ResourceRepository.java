@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ResourceRepository extends JpaRepository<Resource, Long>, JpaSpecificationExecutor<Resource> {
+public interface ResourceRepository extends JpaRepository<Resource, String>, JpaSpecificationExecutor<Resource> {
     @Query("SELECT r from Resource r " +
     "JOIN User u on u.connectorUrl = r.providerConnectorId" +
     " WHERE u.email = :email " +

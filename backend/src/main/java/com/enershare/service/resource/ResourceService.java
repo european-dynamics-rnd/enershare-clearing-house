@@ -29,7 +29,7 @@ public class ResourceService {
         resourceRepository.save(resource);
     }
 
-    public Optional<Resource> getResourceById(Long id) {
+    public Optional<Resource> getResourceById(String id) {
         return resourceRepository.findById(id);
     }
 

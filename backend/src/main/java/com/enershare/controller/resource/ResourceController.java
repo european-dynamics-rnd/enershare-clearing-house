@@ -22,7 +22,7 @@ public class ResourceController {
     private  final UserEmailService userEmailService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Resource> getResource(@PathVariable Long id) {
+    public ResponseEntity<Resource> getResource(@PathVariable String id) {
         Optional<Resource> resourceOptional = resourceService.getResourceById(id);
         return resourceOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
