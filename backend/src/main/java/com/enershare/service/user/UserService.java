@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -99,8 +98,7 @@ public class UserService {
         }
 
         Optional<User> dbUser = this.userRepository.findByEmail(userDTO.getEmail());
-        if(dbUser.isPresent()){
-
+        if (dbUser.isPresent()) {
         }
 
         createUser(userDTO);
@@ -127,6 +125,7 @@ public class UserService {
                 .lastname(userDTO.getLastname())
                 .email(userDTO.getEmail())
                 .connectorUrl(userDTO.getConnectorUrl())
+                .participantId(userDTO.getParticipantId())  // Add participant ID
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .role(userDTO.getRole())
                 .build();
@@ -142,6 +141,7 @@ public class UserService {
         existingUser.setLastname(userDTO.getLastname());
         existingUser.setRole(userDTO.getRole());
         existingUser.setConnectorUrl(userDTO.getConnectorUrl());
+        existingUser.setParticipantId(userDTO.getParticipantId());
 
         if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
@@ -163,9 +163,11 @@ public class UserService {
         for (Map<String, Object> connector : components) {
             String owner = (String) connector.get("owner");
             String idsid = (String) connector.get("idsid");
+            String participant = (String) connector.get("participant");
 
             if (userDTO.getEmail().equalsIgnoreCase(owner)) {
                 userDTO.setConnectorUrl(idsid);
+                userDTO.setParticipantId(participant);  // Set the participant ID
                 found = true;
                 break;
             }
@@ -178,7 +180,8 @@ public class UserService {
 
     private Map<String, Object> readJsonMap(String json) {
         try {
-            return objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {});
+            return objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {
+            });
         } catch (JsonProcessingException e) {
             log.error("Error processing JSON response: {}", e.getMessage(), e);
             throw new RuntimeException("Error processing JSON response", e);

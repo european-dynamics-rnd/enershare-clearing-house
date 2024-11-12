@@ -167,7 +167,8 @@
             </column>
         </createTable>
         <sql>INSERT INTO `logs_seq` (`next_val`)
-             VALUES (1);</sql>
+            VALUES (1);
+        </sql>
     </changeSet>
 
     <changeSet id="2024-06-05-9" author="vuk">
@@ -218,6 +219,14 @@
                 <constraints nullable="true"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="2024-11-12-1" author="vuk">
+        <addColumn tableName="user">
+            <column name="participant_id" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>
