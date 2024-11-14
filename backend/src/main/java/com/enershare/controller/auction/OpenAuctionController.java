@@ -26,28 +26,11 @@ public class OpenAuctionController {
         auctionService.createAuction(auctionDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Auction> getOpenAuction(@PathVariable Long id) {
-        Optional<Auction> auctionOptional = auctionService.getAuctionById(id);
-        return auctionOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
     @GetMapping
     public ResponseEntity<List<Auction>> getAllOpenAuctions() {
         List<Auction> openAuctionsList = auctionService.getAllAuctionsByStatus("AuctionOpened"); // Retrieve open auctions
         return openAuctionsList.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(openAuctionsList);
     }
 
-    @PostMapping("/search")
-    public ResponseEntity<Page<Auction>> getOpenAuctionsByCriteria(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-        Page<Auction> auctions = auctionService.getAuctionsByCriteria(searchRequestDTO);
-        return ResponseEntity.ok(auctions);
-    }
 
-    @GetMapping("/latest")
-    public ResponseEntity<List<Auction>> getLatestOpenAuctions(@RequestParam(defaultValue = "5") int count) {
-        List<Auction> latestOpenAuctions = auctionService.getLatestAuctionsByStatus("AuctionOpened", count); // Get latest open auctions
-        return ResponseEntity.ok(latestOpenAuctions);
-    }
 }

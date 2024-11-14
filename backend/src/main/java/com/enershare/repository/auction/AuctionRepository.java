@@ -5,9 +5,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction, Long>, JpaSpecificationExecutor<Auction> {
@@ -16,7 +18,20 @@ public interface AuctionRepository extends JpaRepository<Auction, Long>, JpaSpec
 
     List<Auction> findByResourceId(String resourceId);
 
-    @Query("SELECT a FROM Auction a ORDER BY a.createdOn DESC")
-    List<Auction> findLatestAuctions(String string, Pageable pageable);
+    Optional<Auction> findByHash(String hash);
+
+    @Query("SELECT a from Auction a " +
+            "JOIN User u on u.participantId = a.providerParticipantId" +
+            " WHERE u.email = :email " +
+            "ORDER BY a.createdOn DESC ")
+    List<Auction> findLatestProposedAuctions(@Param("email") String email,Pageable pageable);
+
+    @Query("SELECT a from Auction a " +
+            "JOIN User u on u.participantId = a.consumerParticipantId" +
+            " WHERE u.email = :email " +
+            "ORDER BY a.createdOn DESC ")
+    List<Auction> findLatestWonAuctions(@Param("email") String email,Pageable pageable);
+
+
 
 }

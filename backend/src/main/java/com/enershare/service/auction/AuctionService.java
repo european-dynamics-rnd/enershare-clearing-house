@@ -26,20 +26,37 @@ public class AuctionService {
 
     public void createAuction(AuctionDTO auctionDTO) {
         Auction auction = auctionMapper.mapAuctionDTOToEntity(auctionDTO);
-        auctionRepository.save(auction);
+
+        // Check if an entry with the same hash already exists
+        Optional<Auction> existingAuction = auctionRepository.findByHash(auction.getHash());
+
+        if (existingAuction.isPresent()) {
+            // Update the existing auction using the mapper
+            auctionMapper.updateEntityFromDTO(auctionDTO, existingAuction.get());
+            auctionRepository.save(existingAuction.get());
+        } else {
+            // Save as a new auction
+            auctionRepository.save(auction);
+        }
     }
 
     public Optional<Auction> getAuctionById(Long id) {
         return auctionRepository.findById(id);
     }
 
-    public Page<Auction> getAuctionsByCriteria(SearchRequestDTO searchRequestDTO) {
+    public Page<Auction> getProposedAuctionsByCriteria(String email,SearchRequestDTO searchRequestDTO) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(searchRequestDTO.getDirection()), searchRequestDTO.getSort());
         Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(), sortOrder);
-        Specification<Auction> spec = AuctionSpecification.filterAuctions(searchRequestDTO.getSearchCriteriaList());
+        Specification<Auction> spec = AuctionSpecification.proposedAuctionsByEmail(email,searchRequestDTO.getSearchCriteriaList());
         return auctionRepository.findAll(spec, pageable);
     }
 
+    public Page<Auction> getWonAuctionsByCriteria(String email,SearchRequestDTO searchRequestDTO) {
+        Sort sortOrder = Sort.by(Sort.Direction.fromString(searchRequestDTO.getDirection()), searchRequestDTO.getSort());
+        Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(), sortOrder);
+        Specification<Auction> spec = AuctionSpecification.wonAuctionsByEmail(email,searchRequestDTO.getSearchCriteriaList());
+        return auctionRepository.findAll(spec, pageable);
+    }
     public List<Auction> getAllAuctionsSortedByCreatedOn() {
         return auctionRepository.findAll(Sort.by(Sort.Direction.DESC, "createdOn"));
     }
@@ -48,8 +65,15 @@ public class AuctionService {
         return auctionRepository.findByStatus(status); // Retrieve auctions by status
     }
 
-    public List<Auction> getLatestAuctionsByStatus(String status, int count) {
+    public List<Auction> getLatestProposedAuctions(String email ,int count) {
         Pageable pageable = PageRequest.of(0, count, Sort.by(Sort.Direction.DESC, "createdOn")); // Sort by createdOn
-        return auctionRepository.findLatestAuctions(status, pageable);
+        return auctionRepository.findLatestProposedAuctions(email,pageable);
     }
+
+    public List<Auction> getLatestWonAuctions(String email,int count) {
+        Pageable pageable = PageRequest.of(0, count, Sort.by(Sort.Direction.DESC, "createdOn")); // Sort by createdOn
+        return auctionRepository.findLatestWonAuctions(email,pageable);
+    }
+
+
 }

@@ -1,9 +1,6 @@
 package com.enershare.model.purchase;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +27,7 @@ public class Purchase {
     @Column(name = "artifacts_ids")
     private String artifactsIds;
 
-    @JsonAlias("consumer_participant_id")
+    @Column(name="consumer_participant_id")
     private String consumerParticipantId ;
 
     @Column(name = "hash")

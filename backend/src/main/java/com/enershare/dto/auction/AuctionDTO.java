@@ -1,5 +1,8 @@
 package com.enershare.dto.auction;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,17 +20,35 @@ import java.util.Optional;
 @NoArgsConstructor
 public class AuctionDTO {
 
-    private String resourceID;
+    @JsonProperty("resourceID")
+    @JsonAlias("resourceId")
+    @NotBlank(message = "Resource Id is required")
+    private String resourceId;
+
     private List<String> artifactsIds;
+
+    @NotBlank(message = "Hash is required")
     private String hash;
+
     private String status;
-    private Instant createdOn;
-    // Optional fields for differences between JSON structures
-    private Optional<String> consumerParticipantIDSID = Optional.empty();
-    private Optional<String> providerConnectorID = Optional.empty();
-    private Optional<String> providerParticipantIDSID = Optional.empty();
-    private Optional<String> winnerBidHash = Optional.empty();
-    private Optional<Boolean> free = Optional.empty();
-    private Optional<Integer> bids = Optional.empty();
-    private Optional<Long> endDate = Optional.empty();
+
+    @JsonProperty("consumerParticipantIDSID")
+    @JsonAlias("consumerParticipantId")
+    private String consumerParticipantId;
+
+    @JsonProperty("providerConnectorID")
+    @JsonAlias("providerConnectorId")
+    private String providerConnectorId;
+
+    @JsonProperty("providerParticipantIDSID")
+    @JsonAlias("providerParticipantId")
+    private String providerParticipantId;
+
+    private String winnerBidHash;
+
+    private Boolean free;
+
+    private Integer bids;
+
+    private Long endDate;
 }
