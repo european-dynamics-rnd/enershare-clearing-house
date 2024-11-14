@@ -34,7 +34,7 @@ public abstract class AuctionMapper {
 
     @Named("longToInstant")
     Instant longToInstant(Long timestamp) {
-        return timestamp != null ? Instant.ofEpochMilli(timestamp) : null;
+        return timestamp != null ? Instant.ofEpochSecond(timestamp) : null;
     }
 
     @Named("instantToLong")
