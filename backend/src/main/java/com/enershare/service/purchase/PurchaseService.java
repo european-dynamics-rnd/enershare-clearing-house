@@ -1,9 +1,11 @@
 package com.enershare.service.purchase;
 
 import com.enershare.dto.common.SearchRequestDTO;
+import com.enershare.dto.purchase.AmountDTO;
 import com.enershare.dto.purchase.PurchaseDTO;
 import com.enershare.filtering.specification.purchase.PurchaseSpecification;
 import com.enershare.mapper.PurchaseMapper;
+import com.enershare.model.purchase.Amount;
 import com.enershare.model.purchase.Purchase;
 import com.enershare.repository.purchase.PurchaseRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,5 +52,17 @@ public class PurchaseService {
 
     public List<Purchase> getLatestPurchases(String email, int count) {
         return purchaseRepository.findLatestPurchases(email, PageRequest.of(0, count));
+    }
+
+    public List<Purchase> getLatestPurchasedResources(String email, int count) {
+        return purchaseRepository.findLatestPurchasedResources(email, PageRequest.of(0, count));
+    }
+
+    public List<AmountDTO> getExpenses(String email) {
+        return  purchaseRepository.getExpenseLastYearByMonth(email);
+    }
+
+    public List<AmountDTO> getIncomes(String email) {
+        return  purchaseRepository.getIncomesLastYearByMonth(email);
     }
 }

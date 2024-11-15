@@ -1,7 +1,10 @@
 package com.enershare.controller.purchase;
 
 import com.enershare.dto.common.SearchRequestDTO;
+import com.enershare.dto.logs.LogSummaryDTO;
+import com.enershare.dto.purchase.AmountDTO;
 import com.enershare.dto.purchase.PurchaseDTO;
+import com.enershare.model.purchase.Amount;
 import com.enershare.model.purchase.Purchase;
 import com.enershare.service.purchase.PurchaseService;
 import com.enershare.service.user.UserEmailService;
@@ -61,6 +64,27 @@ public class PurchaseController {
         String email = userEmailService.getEmailFromRequest(request);
         List<Purchase> latestResources = purchaseService.getLatestPurchases(email,count);
         return ResponseEntity.ok(latestResources);
+    }
+
+    @GetMapping("/latest-purchased")
+    public ResponseEntity<List<Purchase>> getLatestPurchased(HttpServletRequest request,@RequestParam(defaultValue = "5") int count) {
+        String email = userEmailService.getEmailFromRequest(request);
+        List<Purchase> latestResources = purchaseService.getLatestPurchasedResources(email,count);
+        return ResponseEntity.ok(latestResources);
+    }
+
+    @GetMapping("/expenses")
+    public ResponseEntity<List<AmountDTO>> getExpenses(HttpServletRequest request) {
+        String email = userEmailService.getEmailFromRequest(request);
+        List<AmountDTO> summaries = purchaseService.getExpenses(email);
+        return ResponseEntity.ok().body(summaries);
+    }
+
+    @GetMapping("/incomes")
+    public ResponseEntity<List<AmountDTO>> getIncomes(HttpServletRequest request) {
+        String email = userEmailService.getEmailFromRequest(request);
+        List<AmountDTO> summaries = purchaseService.getIncomes(email);
+        return ResponseEntity.ok().body(summaries);
     }
 
 
