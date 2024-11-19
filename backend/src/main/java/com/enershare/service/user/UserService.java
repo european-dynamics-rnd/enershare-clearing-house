@@ -144,6 +144,7 @@ public class UserService {
         }
 
         existingUser.setUsername(userDTO.getUsername());
+        existingUser.setEmail(userDTO.getEmail());
         existingUser.setFirstname(userDTO.getFirstname());
         existingUser.setLastname(userDTO.getLastname());
         existingUser.setRole(userDTO.getRole());

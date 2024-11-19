@@ -37,26 +37,26 @@ public class LogsService {
         return logsRepository.findAllLogsOrderByCreatedOnDesc();
     }
 
-    public Page<Logs> getIngressLogsByEmail(String email, SearchRequestDTO searchRequestDTO) {
+    public Page<Logs> getIngressLogsByUsername(String username, SearchRequestDTO searchRequestDTO) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(searchRequestDTO.getDirection()), searchRequestDTO.getSort());
         Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(), sortOrder);
-        Specification<Logs> spec = LogsSpecification.ingressLogsByEmail(email, searchRequestDTO.getSearchCriteriaList());
+        Specification<Logs> spec = LogsSpecification.ingressLogsByUsername(username, searchRequestDTO.getSearchCriteriaList());
         return logsRepository.findAll(spec, pageable);
     }
 
-    public Page<Logs> getEgressLogsByEmail(String email, SearchRequestDTO searchRequestDTO) {
+    public Page<Logs> getEgressLogsByUsername(String username, SearchRequestDTO searchRequestDTO) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(searchRequestDTO.getDirection()), searchRequestDTO.getSort());
         Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(), sortOrder);
-        Specification<Logs> spec = LogsSpecification.egressLogsByEmail(email, searchRequestDTO.getSearchCriteriaList());
+        Specification<Logs> spec = LogsSpecification.egressLogsByUsername(username, searchRequestDTO.getSearchCriteriaList());
         return logsRepository.findAll(spec, pageable);
     }
 
-    public List<Logs> getLatestIngressLogs(String email, int count) {
-        return logsRepository.findLatestIngressLogs(email, PageRequest.of(0, count));
+    public List<Logs> getLatestIngressLogs(String username, int count) {
+        return logsRepository.findLatestIngressLogs(username, PageRequest.of(0, count));
     }
 
-    public List<Logs> getLatestEgressLogs(String email, int count) {
-        return logsRepository.findLatestEgressLogs(email, PageRequest.of(0, count));
+    public List<Logs> getLatestEgressLogs(String username, int count) {
+        return logsRepository.findLatestEgressLogs(username, PageRequest.of(0, count));
     }
 
 

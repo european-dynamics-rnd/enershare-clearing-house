@@ -6,7 +6,7 @@ import com.enershare.dto.logs.LogsDTO;
 import com.enershare.model.logs.Logs;
 import com.enershare.repository.logs.LogsRepository;
 import com.enershare.service.logs.LogsService;
-import com.enershare.service.user.UserEmailService;
+import com.enershare.service.user.UsernameService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,7 @@ import java.util.Optional;
 public class LogsController {
 
     private final LogsService logsService;
-    private final UserEmailService userEmailService;
+    private final UsernameService usernameService;
     private final LogsRepository logsRepository;
 
     @PostMapping("/create")
@@ -46,45 +46,45 @@ public class LogsController {
 
     @PostMapping("/ingress")
     public ResponseEntity<Page<Logs>> getIngressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-        String email = userEmailService.getEmailFromRequest(request);
-        Page<Logs> ingressLogs = logsService.getIngressLogsByEmail(email, searchRequestDTO);
+        String username = usernameService.getUsernameFromRequest(request);
+        Page<Logs> ingressLogs = logsService.getIngressLogsByUsername(username, searchRequestDTO);
         return ResponseEntity.ok(ingressLogs);
     }
 
     @PostMapping("/egress")
     public ResponseEntity<Page<Logs>> getEgressLogs(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-        String email = userEmailService.getEmailFromRequest(request);
-        Page<Logs> egressLogs = logsService.getEgressLogsByEmail(email, searchRequestDTO);
+        String username = usernameService.getUsernameFromRequest(request);
+        Page<Logs> egressLogs = logsService.getEgressLogsByUsername(username, searchRequestDTO);
         return ResponseEntity.ok(egressLogs);
     }
 
     @GetMapping("/latestIngressLogs")
     public ResponseEntity<List<Logs>> getLatestIngressLogs(HttpServletRequest request,
                                                            @RequestParam(defaultValue = "5") int count) {
-        String email = userEmailService.getEmailFromRequest(request);
-        List<Logs> latestIngressLogs = logsService.getLatestIngressLogs(email, count);
+        String username = usernameService.getUsernameFromRequest(request);
+        List<Logs> latestIngressLogs = logsService.getLatestIngressLogs(username, count);
         return ResponseEntity.ok(latestIngressLogs);
     }
 
     @GetMapping("/latestEgressLogs")
     public ResponseEntity<List<Logs>> getLatestEgressLogs(HttpServletRequest request,
                                                           @RequestParam(defaultValue = "5") int count) {
-        String email = userEmailService.getEmailFromRequest(request);
-        List<Logs> latestEgressLogs = logsService.getLatestEgressLogs(email, count);
+        String username = usernameService.getUsernameFromRequest(request);
+        List<Logs> latestEgressLogs = logsService.getLatestEgressLogs(username, count);
         return ResponseEntity.ok(latestEgressLogs);
     }
 
     @GetMapping("/summary")
     public ResponseEntity<List<LogSummaryDTO>> getSummary(HttpServletRequest request) {
-        String email = userEmailService.getEmailFromRequest(request);
-        List<LogSummaryDTO> summaries = logsRepository.getCustomLogSummary(email);
+        String username = usernameService.getUsernameFromRequest(request);
+        List<LogSummaryDTO> summaries = logsRepository.getCustomLogSummary(username);
         return ResponseEntity.ok().body(summaries);
     }
 
     @GetMapping("/summaryHours")
     public ResponseEntity<List<LogSummaryDTO>> getLastTenHoursSummary(HttpServletRequest request) {
-        String email = userEmailService.getEmailFromRequest(request);
-        List<LogSummaryDTO> summaries = logsRepository.getCustomLogSummaryLastTenHours(email);
+        String username = usernameService.getUsernameFromRequest(request);
+        List<LogSummaryDTO> summaries = logsRepository.getCustomLogSummaryLastTenHours(username);
         return ResponseEntity.ok().body(summaries);
     }
 

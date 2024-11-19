@@ -18,17 +18,17 @@ public interface LogsRepository extends JpaRepository<Logs, Long>, CustomLogsRep
 
     @Query("SELECT l FROM Logs l " +
             "JOIN User u ON u.connectorUrl = l.consumer " +
-            "WHERE u.email = :email " +
+            "WHERE u.username = :username " +
             "AND l.mode = 'INGRESS'" +
             "ORDER BY l.createdOn DESC")
-    List<Logs> findLatestIngressLogs(@Param("email") String email, Pageable pageable);
+    List<Logs> findLatestIngressLogs(@Param("username") String username, Pageable pageable);
 
     @Query("SELECT l FROM Logs l " +
             "JOIN User u ON u.connectorUrl = l.provider " +
-            "WHERE u.email = :email " +
+            "WHERE u.username = :username " +
             "AND l.mode = 'EGRESS'" +
             "ORDER BY l.createdOn DESC")
-    List<Logs> findLatestEgressLogs(@Param("email") String email, Pageable pageable);
+    List<Logs> findLatestEgressLogs(@Param("username") String username, Pageable pageable);
 
 }
 

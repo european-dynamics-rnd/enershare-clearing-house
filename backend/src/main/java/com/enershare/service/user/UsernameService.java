@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserEmailService {
+public class UsernameService {
 
     private final JwtService jwtService;
 
@@ -15,13 +15,13 @@ public class UserEmailService {
         return jwtService.getJwt(request);
     }
 
-    public String getEmailFromToken(String token) {
+    public String getUsernameFromToken(String token) {
         return jwtService.getUserIdByToken(token);
     }
 
-    // this function encapsulates getTokenFromRequest and getEmailFromToken
-    public String getEmailFromRequest(HttpServletRequest request) {
+    // this function encapsulates getTokenFromRequest and getUserNameFromToken
+    public String getUsernameFromRequest(HttpServletRequest request) {
         String token = getTokenFromRequest(request);
-        return getEmailFromToken(token);
+        return getUsernameFromToken(token);
     }
 }

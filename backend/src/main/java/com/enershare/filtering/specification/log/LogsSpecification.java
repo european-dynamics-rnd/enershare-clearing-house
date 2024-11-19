@@ -18,7 +18,7 @@ import java.util.List;
 public class LogsSpecification {
 
 
-    public static Specification<Logs> ingressLogsByEmail(String email, List<SearchCriteria> searchCriteriaList) {
+    public static Specification<Logs> ingressLogsByUsername(String username, List<SearchCriteria> searchCriteriaList) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -28,14 +28,14 @@ public class LogsSpecification {
             userSubquery.select(userRoot);
             userSubquery.where(criteriaBuilder.and(
                     criteriaBuilder.equal(userRoot.get("connectorUrl"), root.get("consumer")),
-                    criteriaBuilder.equal(userRoot.get("email"), email),
+                    criteriaBuilder.equal(userRoot.get("username"), username),
                     criteriaBuilder.equal(root.get("mode"), "INGRESS")
             ));
             return getPredicate(searchCriteriaList, root, criteriaBuilder, predicates, userSubquery);
         };
     }
 
-    public static Specification<Logs> egressLogsByEmail(String email, List<SearchCriteria> searchCriteriaList) {
+    public static Specification<Logs> egressLogsByUsername(String username, List<SearchCriteria> searchCriteriaList) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -45,7 +45,7 @@ public class LogsSpecification {
             userSubquery.select(userRoot);
             userSubquery.where(criteriaBuilder.and(
                     criteriaBuilder.equal(userRoot.get("connectorUrl"), root.get("provider")),
-                    criteriaBuilder.equal(userRoot.get("email"), email),
+                    criteriaBuilder.equal(userRoot.get("username"), username),
                     criteriaBuilder.equal(root.get("mode"), "EGRESS")
             ));
             return getPredicate(searchCriteriaList, root, criteriaBuilder, predicates, userSubquery);

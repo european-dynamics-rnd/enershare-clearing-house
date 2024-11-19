@@ -12,7 +12,7 @@ public class CustomLogsRepositoryImpl implements CustomLogsRepository {
     private EntityManager entityManager;
 
     @Override
-    public List<LogSummaryDTO> getCustomLogSummaryLastTenHours(String email) {
+    public List<LogSummaryDTO> getCustomLogSummaryLastTenHours(String username) {
         String queryStr = "SELECT " +
                 "DATE_FORMAT(DATE_SUB(DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-%d %H:00:00'), INTERVAL (seq.hour) HOUR), '%b %d %H:00') AS dataLabel, " +
                 "DATE_SUB(DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-%d %H:00:00'), INTERVAL (seq.hour) HOUR) AS dateRange, " +
@@ -21,13 +21,13 @@ public class CustomLogsRepositoryImpl implements CustomLogsRepository {
                 "WHERE l.created_on >= DATE_SUB(DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-%d %H:00:00'), INTERVAL (seq.hour) HOUR) " +
                 "AND l.created_on < DATE_SUB(DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 HOUR), '%Y-%m-%d %H:00:00'), INTERVAL (seq.hour) HOUR) " +
                 "AND l.mode = 'INGRESS'" +
-                "AND u.email = :email) AS ingressLogCount, " +
+                "AND u.username = :username) AS ingressLogCount, " +
                 "(SELECT COUNT(*) FROM logs l " +
                 "JOIN user u ON u.connector_url = l.provider " +
                 "WHERE l.created_on >= DATE_SUB(DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-%d %H:00:00'), INTERVAL (seq.hour) HOUR) " +
                 "AND l.created_on < DATE_SUB(DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 HOUR), '%Y-%m-%d %H:00:00'), INTERVAL (seq.hour) HOUR) " +
                 "AND l.mode = 'EGRESS'" +
-                "AND u.email = :email) AS egressLogCount " +
+                "AND u.username = :username) AS egressLogCount " +
                 "FROM " +
                 "(SELECT 0 AS hour " +
                 "UNION ALL SELECT 1 " +
@@ -42,7 +42,7 @@ public class CustomLogsRepositoryImpl implements CustomLogsRepository {
                 "ORDER BY seq.hour DESC";
 
         Query query = entityManager.createNativeQuery(queryStr, "LogSummaryDTOMapping");
-        query.setParameter("email", email);
+        query.setParameter("username", username);
         return query.getResultList();
     }
 
@@ -81,7 +81,7 @@ public class CustomLogsRepositoryImpl implements CustomLogsRepository {
 
 
     @Override
-    public List<LogSummaryDTO> getCustomLogSummary(String email) {
+    public List<LogSummaryDTO> getCustomLogSummary(String username) {
         String queryStr = "SELECT " +
                 "DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL seq.day DAY), '%b %d') AS dataLabel, " +
                 "DATE_SUB(CURDATE(), INTERVAL seq.day DAY) AS dateRange, " +
@@ -90,13 +90,13 @@ public class CustomLogsRepositoryImpl implements CustomLogsRepository {
                 "WHERE l.created_on >= DATE_SUB(CURDATE(), INTERVAL seq.day DAY) " +
                 "AND l.created_on < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL seq.day DAY), INTERVAL 1 DAY) " +
                 "AND l.mode = 'INGRESS'" +
-                "AND u.email = :email) AS ingressLogCount, " +
+                "AND u.username = :username) AS ingressLogCount, " +
                 "(SELECT COUNT(*) FROM logs l " +
                 "JOIN user u ON u.connector_url = l.provider " +
                 "WHERE  l.created_on >= DATE_SUB(CURDATE(), INTERVAL seq.day DAY) " +
                 "AND l.created_on < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL seq.day DAY), INTERVAL 1 DAY) " +
                 "AND l.mode = 'EGRESS'" +
-                "AND u.email = :email) AS egressLogCount " +
+                "AND u.username = :username) AS egressLogCount " +
                 "FROM " +
                 "(SELECT 0 AS day " +
                 "UNION ALL SELECT 1 " +
@@ -111,7 +111,7 @@ public class CustomLogsRepositoryImpl implements CustomLogsRepository {
                 "UNION ALL SELECT 10) AS seq";
 
         Query query = entityManager.createNativeQuery(queryStr, "LogSummaryDTOMapping");
-        query.setParameter("email", email);
+        query.setParameter("username", username);
         return query.getResultList();
     }
 
