@@ -177,5 +177,13 @@
 
     </changeSet>
 
+    <changeSet id="2024-11-15-4" author="vuk">
+        <addColumn tableName="user">
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>

@@ -37,8 +37,9 @@ public class User implements UserDetails {
 
     private String connectorUrl;
 
-    @Column(name = "participant_id", length = 255)
     private String participantId;
+
+    private String username;
 
     @Enumerated(EnumType.STRING)
     private Role role;

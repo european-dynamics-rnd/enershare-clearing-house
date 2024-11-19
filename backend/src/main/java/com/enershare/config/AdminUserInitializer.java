@@ -18,11 +18,12 @@ public class AdminUserInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        if (!userRepository.existsByEmail("admin")) {
+        if (!userRepository.existsByUsername("admin")) {
             UserDTO adminUserDTO = new UserDTO();
             adminUserDTO.setFirstname("admin");
             adminUserDTO.setLastname("admin");
             adminUserDTO.setEmail("admin");
+            adminUserDTO.setUsername("admin");
             adminUserDTO.setConnectorUrl("admin");
             adminUserDTO.setPassword("admin");
             adminUserDTO.setRole(Role.ADMIN);

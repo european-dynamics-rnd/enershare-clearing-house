@@ -30,8 +30,8 @@ export class AuthenticationService {
   constructor(private http: HttpClient) { }
 
 
-  onLogin(email: string, password: string) {
-    return this.http.post(`${environment.serverUrl}/auth/authenticate`, { email, password });
+  onLogin(username: string, password: string) {
+    return this.http.post(`${environment.serverUrl}/auth/authenticate`, { username, password });
     
   }
 

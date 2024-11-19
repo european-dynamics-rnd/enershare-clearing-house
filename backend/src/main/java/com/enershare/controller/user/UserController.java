@@ -2,8 +2,6 @@ package com.enershare.controller.user;
 
 import com.enershare.dto.response.SuccessResponse;
 import com.enershare.dto.user.UserDTO;
-import com.enershare.exception.EmailAlreadyExistsException;
-import com.enershare.exception.EmailNotFoundException;
 import com.enershare.service.auth.JwtService;
 import com.enershare.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,9 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Slf4j
@@ -73,6 +72,17 @@ public class UserController {
         return userService.registerUser(userDTO);
     }
 
+    @GetMapping("/fetch-available-participants")
+    public ResponseEntity<List<String>> getAllParticipantIds() {
+        List<String> allParticipantIds = userService.getAllParticipantIds();
+        return ResponseEntity.ok(allParticipantIds);
+    }
+
+    @GetMapping("/fetch-available-connectors/{participantId}")
+    public ResponseEntity<List<String>> getAvailableConnectors(@PathVariable("participantId") String participantId) {
+        List<String> availableConnectors = userService.getAvailableConnectors(participantId);
+        return ResponseEntity.ok(availableConnectors);
+    }
 
 
 }

@@ -1,0 +1,6 @@
+/* Styling for the select options */
+.form-control option {
+    background-color: #343a40; /* Dark background for the options */
+    color: white; /* White text color for the options */
+}
+

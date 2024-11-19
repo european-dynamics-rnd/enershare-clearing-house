@@ -34,20 +34,20 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
-        if ((request.getEmail() == null || request.getEmail().isEmpty()) && (request.getPassword() == null || request.getPassword().isEmpty())) {
-            throw new AuthenticationException("Email and password are required",501);
-        } else if (request.getEmail() == null || request.getEmail().isEmpty()) {
-            throw new AuthenticationException("Email is required",502);
+        if ((request.getUsername() == null || request.getUsername().isEmpty()) && (request.getPassword() == null || request.getPassword().isEmpty())) {
+            throw new AuthenticationException("Username and password are required", 501);
+        } else if (request.getUsername() == null || request.getUsername().isEmpty()) {
+            throw new AuthenticationException("Username is required", 502);
         } else if (request.getPassword() == null || request.getPassword().isEmpty()) {
-            throw new AuthenticationException("Password is required",503);
+            throw new AuthenticationException("Password is required", 503);
         } else {
             try {
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
-                                request.getEmail()
+                                request.getUsername()
                                 , request.getPassword()));
-                var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() ->
-                        new AuthenticationException("User not found",404)
+                var user = userRepository.findByUsername(request.getUsername()).orElseThrow(() ->
+                        new AuthenticationException("User not found", 404)
                 );
 
                 var jwtToken = jwtService.generateToken(user);
@@ -65,7 +65,7 @@ public class AuthenticationService {
                         .user(userDTO)
                         .build();
             } catch (BadCredentialsException e) {
-                throw new AuthenticationException("Invalid email or password",401, e);
+                throw new AuthenticationException("Invalid username or password", 401, e);
             }
         }
     }
@@ -98,14 +98,14 @@ public class AuthenticationService {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException, java.io.IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
-        final String userEmail;
+        final String username;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return;
         }
         refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(refreshToken);
-        if (userEmail != null) {
-            var user = this.userRepository.findByEmail(userEmail).orElseThrow();
+        username = jwtService.extractUsername(refreshToken);
+        if (username != null) {
+            var user = this.userRepository.findByUsername(username).orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllTokensOfUser(user);

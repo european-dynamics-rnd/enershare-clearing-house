@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/**", "/health-page", "/logs/create", "/error", "/user/register-user", "/auctions/**", "/bids/**", "/resources/**", "/purchases/**")
+                .requestMatchers("/auth/**", "/health-page", "/logs/create", "/error", "/user/register-user", "/auctions/**", "/bids/**", "/resources/**", "/purchases/**", "/user/fetch-available-participants", "/user/fetch-available-connectors*", "/user/fetch-available-connectors/*")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

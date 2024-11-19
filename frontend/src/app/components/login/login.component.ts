@@ -14,10 +14,10 @@ import { NotificationService } from '../../services/notification/notification.se
 })
 export class LoginComponent implements OnInit {
 
-  email = '';
+  username = '';
   password = '';
 
-  authRequest: AuthenticationRequest = {email: '', password: ''};
+  authRequest: AuthenticationRequest = {username: '', password: ''};
   errorMsg: Array<string> = [];
   user: User;
 
@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.errorMsg = [];
-    this.authService.onLogin(this.authRequest.email, this.authRequest.password).subscribe(
+    this.authService.onLogin(this.authRequest.username, this.authRequest.password).subscribe(
       (res: AuthenticationResponse) => {
         this.authService.storeAccessToken(res.accessToken);
         this.authService.storeRefreshToken(res.refreshToken);
@@ -60,16 +60,16 @@ export class LoginComponent implements OnInit {
         if (err.error && err.error.code) {
           switch (err.error.code) {
             case '501':
-              this.notificationservice.error('Email and password are required.');
+              this.notificationservice.error('Username and password are required.');
               break;
             case '502':
-              this.notificationservice.error('Email is required.');
+              this.notificationservice.error('Username is required.');
               break;
             case '503':
               this.notificationservice.error('Password is required.');
               break;
             case '504':
-              this.notificationservice.error('Invalid email or password.');
+              this.notificationservice.error('Invalid Username or password.');
               break;
             default:
               this.notificationservice.error('Incorrect User Credentials.');

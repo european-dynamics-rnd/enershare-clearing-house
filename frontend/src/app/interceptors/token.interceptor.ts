@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse} from '@angular/common/http';
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
-import { AuthenticationService } from "../services/system/auth/auth.service";
-import {catchError, filter, finalize, switchMap, take} from "rxjs/operators";
-import {Router} from "@angular/router";
-import {AuthenticationResponse} from "../dtos/authenticationResponse";
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { AuthenticationService } from '../services/system/auth/auth.service';
+import { catchError, filter, finalize, switchMap, take } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { AuthenticationResponse } from '../dtos/authenticationResponse';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -13,27 +13,28 @@ export class TokenInterceptor implements HttpInterceptor {
   private tokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   constructor(private authService: AuthenticationService,
-              private router: Router) {}
+    private router: Router) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    if (request.url.endsWith('/auth/authenticate') || request.url.endsWith("/auth/refresh-token") || request.url.endsWith('/register')) {
+    if (this.isPublicRoute(request)) {
       return next.handle(request);
     }
 
     request = this.addToken(request, this.authService.getAccessToken());
 
     return next.handle(request).pipe(
-      catchError((err)=>{
-        if(err instanceof HttpErrorResponse){
-          if(err.status === 403){
-             return this.handleUnAuthorizedError(request,next);
+      catchError((err) => {
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 403) {
+            return this.handleUnauthorizedError(request, next);
           }
         }
-        return throwError(err)
+        return throwError(err);
       })
     );
   }
+
   private addToken(request: HttpRequest<any>, token: string | null): HttpRequest<any> {
     if (token) {
       return request.clone({
@@ -45,7 +46,17 @@ export class TokenInterceptor implements HttpInterceptor {
     return request;
   }
 
-  private handleUnAuthorizedError(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
+  private isPublicRoute(request: HttpRequest<any>): boolean {
+    const publicUrls = [
+      '/auth/authenticate', 
+      '/auth/refresh-token', 
+      '/register', 
+      '/fetch-available-participants', 
+      '/fetch-available-connectors'
+    ];
+    return publicUrls.some(url => request.url.includes(url));
+  }
+  private handleUnauthorizedError(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
     if (!this.isRefreshing) {
       this.isRefreshing = true;
       this.tokenSubject.next(null);

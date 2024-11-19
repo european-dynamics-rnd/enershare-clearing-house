@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,16 +28,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse(code, ex.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
-        logger.warn("Email already exists: {}", ex.getMessage());
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex) {
+        logger.warn("Username already exists: {}", ex.getMessage());
         String code = ResponseUtils.generateCode(HttpStatus.CONFLICT);
         return new ResponseEntity<>(new ErrorResponse(code, ex.getMessage()), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(EmailNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleEmailNotFoundException(EmailNotFoundException ex) {
-        logger.warn("Email not found: {}", ex.getMessage());
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        logger.warn("Username not found: {}", ex.getMessage());
         String code = ResponseUtils.generateCode(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(new ErrorResponse(code, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
@@ -52,7 +53,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleCustomAuthenticationException(com.enershare.exception.AuthenticationException ex) {
         return ResponseEntity
                 .status(HttpStatus.valueOf(ex.getCode()))
-                .body(new ErrorResponse(String.valueOf(ex.getCode()), ex.getMessage())); // Convert code to String
+                .body(new ErrorResponse(String.valueOf(ex.getCode()), ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -64,5 +65,18 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("400", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ParticipantAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleParticipantAlreadyExistsException(ParticipantAlreadyExistsException ex) {
+        logger.warn("Participant already exists: {}", ex.getMessage());
+        String code = ResponseUtils.generateCode(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ErrorResponse(code, ex.getMessage()), HttpStatus.CONFLICT);
     }
 }

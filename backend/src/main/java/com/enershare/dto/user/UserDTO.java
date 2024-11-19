@@ -32,6 +32,7 @@ public class UserDTO extends BaseDTO {
     private String connectorUrl;
 
     private String participantId;
-    
+
+    private String username;
 
 }

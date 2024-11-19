@@ -3,8 +3,8 @@ package com.enershare.service.user;
 import com.enershare.dto.response.SuccessResponse;
 import com.enershare.dto.user.UserDTO;
 import com.enershare.enums.Role;
-import com.enershare.exception.EmailAlreadyExistsException;
-import com.enershare.exception.EmailNotFoundException;
+import com.enershare.exception.ParticipantAlreadyExistsException;
+import com.enershare.exception.UsernameAlreadyExistsException;
 import com.enershare.mapper.UserMapper;
 import com.enershare.model.user.User;
 import com.enershare.repository.user.UserRepository;
@@ -14,18 +14,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -39,6 +44,7 @@ public class UserService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final String externalApiUrl;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public UserService(
@@ -47,7 +53,7 @@ public class UserService {
             PasswordEncoder passwordEncoder,
             RestTemplate restTemplate,
             ObjectMapper objectMapper,
-            @Value("${external.api.url}") String externalApiUrl
+            @Value("${external.api.url}") String externalApiUrl, JdbcTemplate jdbcTemplate
     ) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
@@ -55,6 +61,7 @@ public class UserService {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         this.externalApiUrl = externalApiUrl;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public long getTotalUsers() {
@@ -78,10 +85,11 @@ public class UserService {
     }
 
     public void createUser(UserDTO userDTO) {
-        validateEmailUniqueness(userDTO.getEmail());
+        validateUsernameUniqueness(userDTO.getUsername());
         User user = buildUser(userDTO);
         userRepository.save(user);
     }
+
 
     public void updateUser(UserDTO userDTO) {
         User existingUser = findUserById(userDTO.getId());
@@ -91,19 +99,17 @@ public class UserService {
 
     public ResponseEntity<SuccessResponse> registerUser(UserDTO userDTO) {
         userDTO.setRole(Role.USER);
-        validateAndUpdateConnectorUrl(userDTO);
 
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new EmailAlreadyExistsException("User is already registered on Clearing House.");
-        }
+        // Validate the selected participantId and connectorUrl
+        validateParticipantAndConnector(userDTO.getParticipantId(), userDTO.getConnectorUrl());
 
-        Optional<User> dbUser = this.userRepository.findByEmail(userDTO.getEmail());
-        if (dbUser.isPresent()) {
-        }
+        // Check username uniqueness
+        validateUsernameUniqueness(userDTO.getUsername());
 
+        // Save the new user
         createUser(userDTO);
-        SuccessResponse successResponse = new SuccessResponse("200", "User registered successfully.");
 
+        SuccessResponse successResponse = new SuccessResponse("200", "User registered successfully.");
         return new ResponseEntity<>(successResponse, HttpStatus.OK);
     }
 
@@ -113,9 +119,9 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
-    private void validateEmailUniqueness(String email) {
-        if (userRepository.existsByEmail(email)) {
-            throw new EmailAlreadyExistsException("Email already exists");
+    private void validateUsernameUniqueness(String username) {
+        if (userRepository.existsByUsername(username)) {
+            throw new UsernameAlreadyExistsException("Username already exists");
         }
     }
 
@@ -125,18 +131,19 @@ public class UserService {
                 .lastname(userDTO.getLastname())
                 .email(userDTO.getEmail())
                 .connectorUrl(userDTO.getConnectorUrl())
-                .participantId(userDTO.getParticipantId())  // Add participant ID
+                .participantId(userDTO.getParticipantId())
+                .username(userDTO.getUsername())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .role(userDTO.getRole())
                 .build();
     }
 
     private void updateUserDetails(User existingUser, UserDTO userDTO) {
-        if (!existingUser.getEmail().equals(userDTO.getEmail())) {
-            validateEmailUniqueness(userDTO.getEmail());
+        if (!existingUser.getUsername().equals(userDTO.getUsername())) {
+            validateUsernameUniqueness(userDTO.getUsername());
         }
 
-        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setUsername(userDTO.getUsername());
         existingUser.setFirstname(userDTO.getFirstname());
         existingUser.setLastname(userDTO.getLastname());
         existingUser.setRole(userDTO.getRole());
@@ -159,24 +166,19 @@ public class UserService {
         Map<String, Object> responseMap = readJsonMap(responseBody);
         List<Map<String, Object>> components = getComponentsFromResponse(responseMap);
 
-        boolean found = false;
-        for (Map<String, Object> connector : components) {
-            String owner = (String) connector.get("owner");
-            String idsid = (String) connector.get("idsid");
-            String participant = (String) connector.get("participant");
-
-            if (userDTO.getEmail().equalsIgnoreCase(owner)) {
-                userDTO.setConnectorUrl(idsid);
-                userDTO.setParticipantId(participant);  // Set the participant ID
-                found = true;
-                break;
-            }
+        if (components.isEmpty()) {
+            throw new RuntimeException("No components found in API response");
         }
 
-        if (!found) {
-            throw new EmailNotFoundException("No matching connector URL found for the provided email");
-        }
+        // Use the first component to update the UserDTO
+        Map<String, Object> firstConnector = components.get(0);
+        String idsid = (String) firstConnector.get("idsid");
+        String participant = (String) firstConnector.get("participant");
+
+        userDTO.setConnectorUrl(idsid);
+        userDTO.setParticipantId(participant); // Set the participant ID
     }
+
 
     private Map<String, Object> readJsonMap(String json) {
         try {
@@ -195,4 +197,105 @@ public class UserService {
         }
         return components;
     }
+
+    public List<Map<String, Object>> fetchRegisteredUsers() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            // Fetch the response as a Map to handle nested structure
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
+                    externalApiUrl,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<Map<String, Object>>() {
+                    }
+            );
+
+            Map<String, Object> responseBody = response.getBody();
+
+            // Extract "participants" if present
+            if (responseBody != null && responseBody.containsKey("participants")) {
+                Object participants = responseBody.get("participants");
+
+                if (participants instanceof List) {
+                    return (List<Map<String, Object>>) participants;
+                }
+            }
+        } catch (HttpClientErrorException e) {
+            System.err.println("HTTP error fetching participants: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Unexpected error: " + e.getMessage());
+        }
+
+        return List.of();
+    }
+
+    public List<String> getAllParticipantIds() {
+        List<Map<String, Object>> allParticipants = fetchRegisteredUsers();
+
+        return allParticipants.stream()
+                .map(participant -> (String) participant.get("id"))
+                .filter(Objects::nonNull) // Ensure IDs are not null
+                .collect(Collectors.toList());
+    }
+
+
+    public List<String> getAvailableConnectors(String participantId) {
+        return extractConnectorIds(fetchConnectorsForParticipant(participantId));
+    }
+
+    private List<Map<String, Object>> fetchConnectorsForParticipant(String participantId) {
+        if (participantId == null || participantId.isBlank()) {
+            log.warn("Participant ID is missing");
+            throw new IllegalArgumentException("Participant ID cannot be null or empty");
+        }
+
+        try {
+            // Fetch the API response
+            ResponseEntity<String> response = restTemplate.getForEntity(externalApiUrl, String.class);
+            String responseBody = response.getBody();
+
+            if (responseBody == null || responseBody.isEmpty()) {
+                throw new RuntimeException("Empty response from API");
+            }
+
+            Map<String, Object> responseMap = readJsonMap(responseBody);
+            List<Map<String, Object>> components = getComponentsFromResponse(responseMap);
+
+            // Filter connectors by the participantId
+            List<Map<String, Object>> filteredConnectors = components.stream()
+                    .filter(connector -> participantId.equals(connector.get("participant")))
+                    .collect(Collectors.toList());
+
+            // If no connectors found, log and return an empty list
+            if (filteredConnectors.isEmpty()) {
+                log.warn("No connectors found for participantId: {}", participantId);
+            }
+
+            return filteredConnectors;
+
+        } catch (HttpClientErrorException.NotFound e) {
+            log.warn("No connectors found for participant {}: {}", participantId, e.getMessage());
+            return List.of(); // Return an empty list if not found
+        } catch (Exception e) {
+            log.error("Unexpected error fetching connectors for participant {}: {}", participantId, e.getMessage());
+            throw new RuntimeException("Unexpected error while fetching connectors", e);
+        }
+    }
+
+    // Extract the connector IDs from the response
+    private List<String> extractConnectorIds(List<Map<String, Object>> connectors) {
+        return connectors.stream()
+                .map(connector -> (String) connector.get("idsid")) // Assuming 'idsid' is the connector ID
+                .filter(id -> id != null)
+                .collect(Collectors.toList());
+    }
+
+    private void validateParticipantAndConnector(String participantId, String connectorUrl) {
+        if (userRepository.existsByParticipantIdAndConnectorUrl(participantId, connectorUrl)) {
+            throw new ParticipantAlreadyExistsException("Participant ID for this connector URL already exists");
+        }
+    }
+
+
 }
