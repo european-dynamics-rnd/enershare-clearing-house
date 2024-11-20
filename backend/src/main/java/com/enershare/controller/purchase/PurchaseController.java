@@ -25,7 +25,7 @@ public class PurchaseController {
     private final PurchaseService purchaseService;
     private final UsernameService usernameService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> createPurchase(@Valid @RequestBody PurchaseDTO purchaseDTO) {
         purchaseService.createPurchase(purchaseDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);

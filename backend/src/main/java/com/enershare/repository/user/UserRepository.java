@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
-    @Query("SELECT new com.enershare.dto.user.UserDTO(u.id, u.firstname, u.lastname, u.email,u.connectorUrl,u.role,u.username) FROM User u ")
+    @Query("SELECT new com.enershare.dto.user.UserDTO(u.id,u.username ,u.firstname, u.lastname, u.email,u.participantId,u.connectorUrl,u.role) FROM User u ")
     Page<UserDTO> getUsers(Pageable pageable);
 
     @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM User u WHERE u.username = :username")

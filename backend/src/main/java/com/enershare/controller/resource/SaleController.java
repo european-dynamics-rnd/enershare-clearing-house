@@ -18,7 +18,7 @@ public class SaleController {
 
     private final ResourceService resourceService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> createSaleResource(@Valid @RequestBody ResourceDTO resourceDTO) {
         resourceDTO.setStatus("onSale");
         resourceService.createResource(resourceDTO);

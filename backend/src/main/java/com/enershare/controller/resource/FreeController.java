@@ -22,7 +22,7 @@ public class FreeController {
 
     private final ResourceService resourceService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> createFreeResource(@Valid @RequestBody ResourceDTO resourceDTO) {
         resourceDTO.setStatus("free");
         resourceService.createResource(resourceDTO);

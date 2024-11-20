@@ -35,4 +35,17 @@ public class UserDTO extends BaseDTO {
 
     private String username;
 
+    public UserDTO(Long id,String username, String firstname, String lastname, String email,String participantId, String connectorUrl, Role role) {
+        this.setId(id);
+        this.username =username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.participantId =participantId;
+        this.connectorUrl = connectorUrl;
+        this.role = role;
+
+
+    }
+
 }

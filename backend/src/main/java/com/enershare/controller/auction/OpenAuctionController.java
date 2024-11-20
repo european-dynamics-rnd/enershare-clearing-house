@@ -21,7 +21,7 @@ public class OpenAuctionController {
 
     private final AuctionService auctionService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> createOpenAuction(@RequestBody AuctionDTO auctionDTO) {
         auctionService.createAuction(auctionDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);

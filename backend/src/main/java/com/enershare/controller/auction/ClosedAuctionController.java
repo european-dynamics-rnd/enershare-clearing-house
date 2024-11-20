@@ -17,7 +17,7 @@ public class ClosedAuctionController {
 
     private final AuctionService auctionService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> createClosedAuction(@RequestBody AuctionDTO auctionDTO) {
         auctionService.createAuction(auctionDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
