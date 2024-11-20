@@ -22,7 +22,7 @@ public class PlacedBidController {
 
     private final BidService bidService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> createPlacedBid(@RequestBody BidDTO bidDTO) {
         // Set the status to open based on the incoming JSON
         bidService.createBid(bidDTO);

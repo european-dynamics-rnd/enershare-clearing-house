@@ -22,7 +22,7 @@ public class AcceptedBidController {
 
     private final BidService bidService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Void> createAcceptedBid(@RequestBody BidDTO bidDTO) {
         bidService.createBid(bidDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);

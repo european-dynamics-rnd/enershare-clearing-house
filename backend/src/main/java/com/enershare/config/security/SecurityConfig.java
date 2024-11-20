@@ -44,7 +44,6 @@ public class SecurityConfig {
                         "/resources/sale/crete",
                         "/purchases/create",
                         "/user/fetch-available-participants",
-                        "/user/fetch-available-connectors*",
                         "/user/fetch-available-connectors/*")
                 .permitAll()
                 .anyRequest()
