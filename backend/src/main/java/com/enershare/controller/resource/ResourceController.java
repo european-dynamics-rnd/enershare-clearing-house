@@ -19,7 +19,7 @@ import java.util.Optional;
 public class ResourceController {
 
     private final ResourceService resourceService;
-    private  final UsernameService usernameService;
+    private final UsernameService usernameService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Resource> getResource(@PathVariable String id) {
@@ -35,22 +35,22 @@ public class ResourceController {
 
     @GetMapping("/by-user")
     public ResponseEntity<List<Resource>> getResourcesByUser(HttpServletRequest request) {
-        String email = usernameService.getUsernameFromRequest(request);
-        List<Resource> resources = resourceService.getResourcesByUserEmail(email);
+        String username = usernameService.getUsernameFromRequest(request);
+        List<Resource> resources = resourceService.getResourcesByUsername(username);
         return resources.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(resources);
     }
 
     @PostMapping("/search")
     public ResponseEntity<Page<Resource>> getResourcesByCriteria(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-        String email = usernameService.getUsernameFromRequest(request);
-        Page<Resource> resources = resourceService.getResourcesByCriteria(email,searchRequestDTO);
+        String username = usernameService.getUsernameFromRequest(request);
+        Page<Resource> resources = resourceService.getResourcesByCriteria(username, searchRequestDTO);
         return ResponseEntity.ok(resources);
     }
 
     @GetMapping("/latest")
-    public ResponseEntity<List<Resource>> getLatestResources(HttpServletRequest request,@RequestParam(defaultValue = "5") int count) {
-        String email = usernameService.getUsernameFromRequest(request);
-        List<Resource> latestResources = resourceService.getLatestResources(email,count);
+    public ResponseEntity<List<Resource>> getLatestResources(HttpServletRequest request, @RequestParam(defaultValue = "5") int count) {
+        String username = usernameService.getUsernameFromRequest(request);
+        List<Resource> latestResources = resourceService.getLatestResources(username, count);
         return ResponseEntity.ok(latestResources);
     }
 

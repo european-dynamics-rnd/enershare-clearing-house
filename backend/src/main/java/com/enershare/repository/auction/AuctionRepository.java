@@ -22,16 +22,15 @@ public interface AuctionRepository extends JpaRepository<Auction, Long>, JpaSpec
 
     @Query("SELECT a from Auction a " +
             "JOIN User u on u.participantId = a.providerParticipantId" +
-            " WHERE u.email = :email " +
+            " WHERE u.username = :username " +
             "ORDER BY a.createdOn DESC ")
-    List<Auction> findLatestProposedAuctions(@Param("email") String email,Pageable pageable);
+    List<Auction> findLatestProposedAuctions(@Param("username") String username, Pageable pageable);
 
     @Query("SELECT a from Auction a " +
             "JOIN User u on u.participantId = a.consumerParticipantId" +
-            " WHERE u.email = :email " +
+            " WHERE u.username = :username " +
             "ORDER BY a.createdOn DESC ")
-    List<Auction> findLatestWonAuctions(@Param("email") String email,Pageable pageable);
-
+    List<Auction> findLatestWonAuctions(@Param("username") String username, Pageable pageable);
 
 
 }

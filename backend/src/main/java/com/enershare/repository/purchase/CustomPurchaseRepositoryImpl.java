@@ -7,13 +7,13 @@ import jakarta.persistence.Query;
 
 import java.util.List;
 
-public class CustomPurchaseRepositoryImpl implements CustomPurchaseRepository{
+public class CustomPurchaseRepositoryImpl implements CustomPurchaseRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public List<AmountDTO> getExpenseLastYearByMonth(String email) {
+    public List<AmountDTO> getExpenseLastYearByMonth(String username) {
         String queryStr = "SELECT " +
                 "DATE_FORMAT(DATE_SUB(DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-01 00:00:00'), INTERVAL seq.month MONTH), '%b %Y') AS dataLabel, " +
                 "DATE_SUB(DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-01 00:00:00'), INTERVAL seq.month MONTH) AS monthStart, " +
@@ -22,7 +22,7 @@ public class CustomPurchaseRepositoryImpl implements CustomPurchaseRepository{
                 "JOIN user u ON u.participant_id = p.consumer_participant_id " +
                 "WHERE p.created_on >= DATE_SUB(DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-01 00:00:00'), INTERVAL seq.month MONTH) " +
                 "AND p.created_on < DATE_SUB(DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 MONTH), '%Y-%m-01 00:00:00'), INTERVAL seq.month MONTH)" +
-                "AND u.email = :email) AS price " +
+                "AND u.username = :username) AS price " +
                 "FROM " +
                 "(SELECT 0 AS month " +
                 "UNION ALL SELECT 1 " +
@@ -39,13 +39,13 @@ public class CustomPurchaseRepositoryImpl implements CustomPurchaseRepository{
                 "ORDER BY seq.month DESC";
 
         Query query = entityManager.createNativeQuery(queryStr, "MonthlyAmountSummaryDTOMapping");
-        query.setParameter("email", email);
+        query.setParameter("username", username);
         return query.getResultList();
     }
 
 
     @Override
-    public List<AmountDTO> getIncomesLastYearByMonth(String email) {
+    public List<AmountDTO> getIncomesLastYearByMonth(String username) {
         String queryStr = "SELECT " +
                 "DATE_FORMAT(DATE_SUB(DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-01 00:00:00'), INTERVAL seq.month MONTH), '%b %Y') AS dataLabel, " +
                 "DATE_SUB(DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-01 00:00:00'), INTERVAL seq.month MONTH) AS monthStart, " +
@@ -56,7 +56,7 @@ public class CustomPurchaseRepositoryImpl implements CustomPurchaseRepository{
                 " JOIN user u ON u.participant_id = r.provider_participant_id " +
                 " WHERE p.created_on >= DATE_SUB(DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-01 00:00:00'), INTERVAL seq.month MONTH) " +
                 " AND p.created_on < DATE_SUB(DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 1 MONTH), '%Y-%m-01 00:00:00'), INTERVAL seq.month MONTH) " +
-                " AND u.email = :email) AS price " +
+                " AND u.username = :username) AS price " +
                 "FROM " +
                 "(SELECT 0 AS month " +
                 "UNION ALL SELECT 1 " +
@@ -73,7 +73,7 @@ public class CustomPurchaseRepositoryImpl implements CustomPurchaseRepository{
                 "ORDER BY seq.month DESC";
 
         Query query = entityManager.createNativeQuery(queryStr, "MonthlyAmountSummaryDTOMapping");
-        query.setParameter("email", email);
+        query.setParameter("username", username);
         return query.getResultList();
     }
 }

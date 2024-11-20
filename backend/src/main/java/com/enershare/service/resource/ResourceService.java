@@ -33,23 +33,23 @@ public class ResourceService {
         return resourceRepository.findById(id);
     }
 
-    public Page<Resource> getResourcesByCriteria(String email, SearchRequestDTO searchRequestDTO) {
+    public Page<Resource> getResourcesByCriteria(String username, SearchRequestDTO searchRequestDTO) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(searchRequestDTO.getDirection()), searchRequestDTO.getSort());
         Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(), sortOrder);
-        Specification<Resource> spec = ResourceSpecification.resourcesByEmail(email,searchRequestDTO.getSearchCriteriaList());
+        Specification<Resource> spec = ResourceSpecification.resourcesByUsername(username, searchRequestDTO.getSearchCriteriaList());
         return resourceRepository.findAll(spec, pageable);
     }
 
-    public List<Resource> getLatestResources(String email,int count) {
-        return resourceRepository.findLatestResources(email, PageRequest.of(0, count));
+    public List<Resource> getLatestResources(String username, int count) {
+        return resourceRepository.findLatestResources(username, PageRequest.of(0, count));
     }
 
     public List<Resource> getAllResourcesSortedByCreatedOn() {
         return resourceRepository.findAll(Sort.by(Sort.Direction.DESC, "createdOn"));
     }
 
-    public List<Resource> getResourcesByUserEmail(String email){
-        return resourceRepository.findResourcesByUserEmail(email);
+    public List<Resource> getResourcesByUsername(String username) {
+        return resourceRepository.findResourcesByUsername(username);
     }
 
     public List<Resource> getResourcesByStatus(String status) {

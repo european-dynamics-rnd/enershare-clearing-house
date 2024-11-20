@@ -10,7 +10,7 @@ import java.util.List;
 
 public class BidSpecification {
 
-    public static Specification<Bid> filterBids(List<SearchCriteria> searchCriteriaList) {
+    public static Specification<Bid> bidsByUsername(List<SearchCriteria> searchCriteriaList) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 

@@ -15,21 +15,21 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long>, JpaSp
 
     @Query("SELECT p from Purchase p " +
             "JOIN User u on u.participantId = p.consumerParticipantId" +
-            " WHERE u.email = :email " +
+            " WHERE u.username = :username " +
             "ORDER BY p.createdOn DESC ")
-    List<Purchase> findPurchasedByUserEmail(@Param("email") String email);
+    List<Purchase> findPurchasedByUsername(@Param("username") String username);
 
     @Query("SELECT p from Purchase p " +
             "JOIN User u on u.participantId = p.consumerParticipantId" +
-            " WHERE u.email = :email " +
+            " WHERE u.username = :username " +
             "ORDER BY p.createdOn DESC ")
-    List<Purchase> findLatestPurchases(@Param("email") String email, Pageable pageable);
+    List<Purchase> findLatestPurchases(@Param("username") String username, Pageable pageable);
 
 
     @Query("SELECT p FROM Purchase p " +
             "JOIN Resource r on r.resourceId = p.resourceId " +
             "JOIN User  u on u.participantId = r.providerParticipantId " +
-            "WHERE u.email = :email")
-    List<Purchase> findLatestPurchasedResources(@Param("email") String email,Pageable pageable);
+            "WHERE u.username = :username")
+    List<Purchase> findLatestPurchasedResources(@Param("username") String username, Pageable pageable);
 
 }

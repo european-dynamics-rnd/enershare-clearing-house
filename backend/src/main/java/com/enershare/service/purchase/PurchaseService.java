@@ -5,7 +5,6 @@ import com.enershare.dto.purchase.AmountDTO;
 import com.enershare.dto.purchase.PurchaseDTO;
 import com.enershare.filtering.specification.purchase.PurchaseSpecification;
 import com.enershare.mapper.PurchaseMapper;
-import com.enershare.model.purchase.Amount;
 import com.enershare.model.purchase.Purchase;
 import com.enershare.repository.purchase.PurchaseRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,30 +38,30 @@ public class PurchaseService {
         return purchaseRepository.findAll(Sort.by(Sort.Direction.DESC, "createdOn"));
     }
 
-    public List<Purchase> getPurchasesByUserEmail(String email) {
-        return purchaseRepository.findPurchasedByUserEmail(email);
+    public List<Purchase> getPurchasesByUsername(String username) {
+        return purchaseRepository.findPurchasedByUsername(username);
     }
 
-    public Page<Purchase> getPurchasesByCriteria(String email, SearchRequestDTO searchRequestDTO) {
+    public Page<Purchase> getPurchasesByCriteria(String username, SearchRequestDTO searchRequestDTO) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(searchRequestDTO.getDirection()), searchRequestDTO.getSort());
         Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(), sortOrder);
-        Specification<Purchase> spec = PurchaseSpecification.purchasesByEmail(email,searchRequestDTO.getSearchCriteriaList());
+        Specification<Purchase> spec = PurchaseSpecification.purchasesByUsername(username, searchRequestDTO.getSearchCriteriaList());
         return purchaseRepository.findAll(spec, pageable);
     }
 
-    public List<Purchase> getLatestPurchases(String email, int count) {
-        return purchaseRepository.findLatestPurchases(email, PageRequest.of(0, count));
+    public List<Purchase> getLatestPurchases(String username, int count) {
+        return purchaseRepository.findLatestPurchases(username, PageRequest.of(0, count));
     }
 
-    public List<Purchase> getLatestPurchasedResources(String email, int count) {
-        return purchaseRepository.findLatestPurchasedResources(email, PageRequest.of(0, count));
+    public List<Purchase> getLatestPurchasedResources(String username, int count) {
+        return purchaseRepository.findLatestPurchasedResources(username, PageRequest.of(0, count));
     }
 
-    public List<AmountDTO> getExpenses(String email) {
-        return  purchaseRepository.getExpenseLastYearByMonth(email);
+    public List<AmountDTO> getExpenses(String username) {
+        return purchaseRepository.getExpenseLastYearByMonth(username);
     }
 
-    public List<AmountDTO> getIncomes(String email) {
-        return  purchaseRepository.getIncomesLastYearByMonth(email);
+    public List<AmountDTO> getIncomes(String username) {
+        return purchaseRepository.getIncomesLastYearByMonth(username);
     }
 }

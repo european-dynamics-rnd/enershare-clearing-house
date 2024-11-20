@@ -36,7 +36,7 @@ public class BidService {
     public Page<Bid> getBidsByCriteria(SearchRequestDTO searchRequestDTO) {
         Sort sortOrder = Sort.by(Sort.Direction.fromString(searchRequestDTO.getDirection()), searchRequestDTO.getSort());
         Pageable pageable = PageRequest.of(searchRequestDTO.getPage(), searchRequestDTO.getPageSize(), sortOrder);
-        Specification<Bid> spec = BidSpecification.filterBids(searchRequestDTO.getSearchCriteriaList());
+        Specification<Bid> spec = BidSpecification.bidsByUsername(searchRequestDTO.getSearchCriteriaList());
         return bidRepository.findAll(spec, pageable);
     }
 

@@ -1,7 +1,6 @@
 package com.enershare.filtering.specification.resource;
 
 import com.enershare.filtering.SearchCriteria;
-import com.enershare.model.logs.Logs;
 import com.enershare.model.resource.Resource;
 import com.enershare.model.user.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -18,17 +17,17 @@ import java.util.List;
 
 public class ResourceSpecification {
 
-    public static Specification<Resource> resourcesByEmail(String email, List<SearchCriteria> searchCriteriaList) {
+    public static Specification<Resource> resourcesByUsername(String username, List<SearchCriteria> searchCriteriaList) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Add the existing logic for filtering based on email
+            // Add the existing logic for filtering based on username
             Subquery<User> userSubquery = query.subquery(User.class);
             Root<User> userRoot = userSubquery.from(User.class);
             userSubquery.select(userRoot);
             userSubquery.where(criteriaBuilder.and(
                     criteriaBuilder.equal(userRoot.get("connectorUrl"), root.get("providerConnectorId")),
-                    criteriaBuilder.equal(userRoot.get("email"), email)
+                    criteriaBuilder.equal(userRoot.get("username"), username)
             ));
             return getPredicate(searchCriteriaList, root, criteriaBuilder, predicates, userSubquery);
         };

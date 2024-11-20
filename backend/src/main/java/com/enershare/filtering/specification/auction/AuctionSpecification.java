@@ -17,32 +17,33 @@ import java.util.List;
 
 public class AuctionSpecification {
 
-    public static Specification<Auction> proposedAuctionsByEmail(String email, List<SearchCriteria> searchCriteriaList) {
+    public static Specification<Auction> proposedAuctionsByUsername(String username, List<SearchCriteria> searchCriteriaList) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Add the existing logic for filtering based on email
+            // Add the existing logic for filtering based on username
             Subquery<User> userSubquery = query.subquery(User.class);
             Root<User> userRoot = userSubquery.from(User.class);
             userSubquery.select(userRoot);
             userSubquery.where(criteriaBuilder.and(
                     criteriaBuilder.equal(userRoot.get("participantId"), root.get("providerParticipantId")),
-                    criteriaBuilder.equal(userRoot.get("email"), email)
+                    criteriaBuilder.equal(userRoot.get("username"), username)
             ));
             return getPredicate(searchCriteriaList, root, criteriaBuilder, predicates, userSubquery);
         };
     }
-    public static Specification<Auction> wonAuctionsByEmail(String email, List<SearchCriteria> searchCriteriaList) {
+
+    public static Specification<Auction> wonAuctionsByUsername(String username, List<SearchCriteria> searchCriteriaList) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Add the existing logic for filtering based on email
+            // Add the existing logic for filtering based on username
             Subquery<User> userSubquery = query.subquery(User.class);
             Root<User> userRoot = userSubquery.from(User.class);
             userSubquery.select(userRoot);
             userSubquery.where(criteriaBuilder.and(
                     criteriaBuilder.equal(userRoot.get("participantId"), root.get("consumerParticipantId")),
-                    criteriaBuilder.equal(userRoot.get("email"), email)
+                    criteriaBuilder.equal(userRoot.get("username"), username)
             ));
             return getPredicate(searchCriteriaList, root, criteriaBuilder, predicates, userSubquery);
         };

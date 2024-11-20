@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CustomPurchaseRepository {
 
-    List<AmountDTO> getExpenseLastYearByMonth(String email);
+    List<AmountDTO> getExpenseLastYearByMonth(String username);
 
-    public List<AmountDTO> getIncomesLastYearByMonth(String email);
+    public List<AmountDTO> getIncomesLastYearByMonth(String username);
 }

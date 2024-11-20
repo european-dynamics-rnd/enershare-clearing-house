@@ -13,16 +13,16 @@ import java.util.List;
 @Repository
 public interface ResourceRepository extends JpaRepository<Resource, String>, JpaSpecificationExecutor<Resource> {
     @Query("SELECT r from Resource r " +
-    "JOIN User u on u.connectorUrl = r.providerConnectorId" +
-    " WHERE u.email = :email " +
-    "ORDER BY r.createdOn DESC ")
-    List<Resource> findLatestResources(@Param("email") String email,Pageable pageable);
+            "JOIN User u on u.connectorUrl = r.providerConnectorId" +
+            " WHERE u.username = :username " +
+            "ORDER BY r.createdOn DESC ")
+    List<Resource> findLatestResources(@Param("username") String username, Pageable pageable);
 
     List<Resource> findByStatus(String type);
 
     @Query("SELECT r from Resource r " +
-    "JOIN User u on u.connectorUrl = r.providerConnectorId" +
-    " WHERE u.email = :email " +
-    "ORDER BY r.createdOn DESC ")
-    List<Resource> findResourcesByUserEmail(@Param("email") String email);
+            "JOIN User u on u.connectorUrl = r.providerConnectorId" +
+            " WHERE u.username = :username " +
+            "ORDER BY r.createdOn DESC ")
+    List<Resource> findResourcesByUsername(@Param("username") String username);
 }

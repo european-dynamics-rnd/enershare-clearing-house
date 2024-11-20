@@ -22,7 +22,7 @@ public class LogsSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Add the existing logic for filtering based on email
+            // Add the existing logic for filtering based on username
             Subquery<User> userSubquery = query.subquery(User.class);
             Root<User> userRoot = userSubquery.from(User.class);
             userSubquery.select(userRoot);
@@ -39,7 +39,7 @@ public class LogsSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Add the existing logic for filtering based on email
+            // Add the existing logic for filtering based on username
             Subquery<User> userSubquery = query.subquery(User.class);
             Root<User> userRoot = userSubquery.from(User.class);
             userSubquery.select(userRoot);

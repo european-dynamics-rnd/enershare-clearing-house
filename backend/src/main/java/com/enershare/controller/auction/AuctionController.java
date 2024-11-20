@@ -19,7 +19,7 @@ import java.util.Optional;
 public class AuctionController {
 
     private final AuctionService auctionService;
-    private  final UsernameService usernameService;
+    private final UsernameService usernameService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Auction> getAuction(@PathVariable Long id) {
@@ -35,28 +35,29 @@ public class AuctionController {
 
     @PostMapping("/search-proposed")
     public ResponseEntity<Page<Auction>> getProposedAuctionsByCriteria(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-        String email = usernameService.getUsernameFromRequest(request);
-        Page<Auction> auctions = auctionService.getProposedAuctionsByCriteria(email,searchRequestDTO);
+        String username = usernameService.getUsernameFromRequest(request);
+        Page<Auction> auctions = auctionService.getProposedAuctionsByCriteria(username, searchRequestDTO);
         return ResponseEntity.ok(auctions);
     }
 
     @PostMapping("/search-won")
     public ResponseEntity<Page<Auction>> getWonAuctionsByCriteria(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
         String email = usernameService.getUsernameFromRequest(request);
-        Page<Auction> auctions = auctionService.getWonAuctionsByCriteria(email,searchRequestDTO);
+        Page<Auction> auctions = auctionService.getWonAuctionsByCriteria(email, searchRequestDTO);
         return ResponseEntity.ok(auctions);
     }
 
     @GetMapping("/latest-proposed")
     public ResponseEntity<List<Auction>> getLatestProposedAuctions(HttpServletRequest request, @RequestParam(defaultValue = "5") int count) {
         String email = usernameService.getUsernameFromRequest(request);
-        List<Auction> latestOpenAuctions = auctionService.getLatestProposedAuctions(email,count);
+        List<Auction> latestOpenAuctions = auctionService.getLatestProposedAuctions(email, count);
         return ResponseEntity.ok(latestOpenAuctions);
     }
+
     @GetMapping("/latest-won")
-    public ResponseEntity<List<Auction>> getLatestWonAuctions(HttpServletRequest request,@RequestParam(defaultValue = "5") int count) {
+    public ResponseEntity<List<Auction>> getLatestWonAuctions(HttpServletRequest request, @RequestParam(defaultValue = "5") int count) {
         String email = usernameService.getUsernameFromRequest(request);
-        List<Auction> latestOpenAuctions = auctionService.getLatestWonAuctions(email,count);
+        List<Auction> latestOpenAuctions = auctionService.getLatestWonAuctions(email, count);
         return ResponseEntity.ok(latestOpenAuctions);
     }
 

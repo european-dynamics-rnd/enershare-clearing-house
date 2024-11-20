@@ -45,47 +45,45 @@ public class PurchaseController {
 
     @GetMapping("/by-user")
     public ResponseEntity<List<Purchase>> getPurchasesByUser(HttpServletRequest request) {
-        String email = usernameService.getUsernameFromRequest(request);
-        List<Purchase> purchases = purchaseService.getPurchasesByUserEmail(email);
+        String username = usernameService.getUsernameFromRequest(request);
+        List<Purchase> purchases = purchaseService.getPurchasesByUsername(username);
         return purchases.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(purchases);
     }
 
     @PostMapping("/search")
     public ResponseEntity<Page<Purchase>> getPurchasesByCriteria(HttpServletRequest request, @RequestBody SearchRequestDTO searchRequestDTO) {
-        String email = usernameService.getUsernameFromRequest(request);
-        Page<Purchase> purchases = purchaseService.getPurchasesByCriteria(email,searchRequestDTO);
+        String username = usernameService.getUsernameFromRequest(request);
+        Page<Purchase> purchases = purchaseService.getPurchasesByCriteria(username, searchRequestDTO);
         return ResponseEntity.ok(purchases);
     }
 
     @GetMapping("/latest")
-    public ResponseEntity<List<Purchase>> getLatestPurchases(HttpServletRequest request,@RequestParam(defaultValue = "5") int count) {
-        String email = usernameService.getUsernameFromRequest(request);
-        List<Purchase> latestResources = purchaseService.getLatestPurchases(email,count);
+    public ResponseEntity<List<Purchase>> getLatestPurchases(HttpServletRequest request, @RequestParam(defaultValue = "5") int count) {
+        String username = usernameService.getUsernameFromRequest(request);
+        List<Purchase> latestResources = purchaseService.getLatestPurchases(username, count);
         return ResponseEntity.ok(latestResources);
     }
 
     @GetMapping("/latest-purchased")
-    public ResponseEntity<List<Purchase>> getLatestPurchased(HttpServletRequest request,@RequestParam(defaultValue = "5") int count) {
-        String email = usernameService.getUsernameFromRequest(request);
-        List<Purchase> latestResources = purchaseService.getLatestPurchasedResources(email,count);
+    public ResponseEntity<List<Purchase>> getLatestPurchased(HttpServletRequest request, @RequestParam(defaultValue = "5") int count) {
+        String username = usernameService.getUsernameFromRequest(request);
+        List<Purchase> latestResources = purchaseService.getLatestPurchasedResources(username, count);
         return ResponseEntity.ok(latestResources);
     }
 
     @GetMapping("/expenses")
     public ResponseEntity<List<AmountDTO>> getExpenses(HttpServletRequest request) {
-        String email = usernameService.getUsernameFromRequest(request);
-        List<AmountDTO> summaries = purchaseService.getExpenses(email);
+        String username = usernameService.getUsernameFromRequest(request);
+        List<AmountDTO> summaries = purchaseService.getExpenses(username);
         return ResponseEntity.ok().body(summaries);
     }
 
     @GetMapping("/incomes")
     public ResponseEntity<List<AmountDTO>> getIncomes(HttpServletRequest request) {
-        String email = usernameService.getUsernameFromRequest(request);
-        List<AmountDTO> summaries = purchaseService.getIncomes(email);
+        String username = usernameService.getUsernameFromRequest(request);
+        List<AmountDTO> summaries = purchaseService.getIncomes(username);
         return ResponseEntity.ok().body(summaries);
     }
-
-
 
 
 }

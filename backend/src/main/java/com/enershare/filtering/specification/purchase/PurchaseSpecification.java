@@ -17,17 +17,17 @@ import java.util.List;
 
 public class PurchaseSpecification {
 
-    public static Specification<Purchase> purchasesByEmail(String email, List<SearchCriteria> searchCriteriaList) {
+    public static Specification<Purchase> purchasesByUsername(String username, List<SearchCriteria> searchCriteriaList) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Add the existing logic for filtering based on email
+            // Add the existing logic for filtering based on username
             Subquery<User> userSubquery = query.subquery(User.class);
             Root<User> userRoot = userSubquery.from(User.class);
             userSubquery.select(userRoot);
             userSubquery.where(criteriaBuilder.and(
                     criteriaBuilder.equal(userRoot.get("participantId"), root.get("consumerParticipantId")),
-                    criteriaBuilder.equal(userRoot.get("email"), email)
+                    criteriaBuilder.equal(userRoot.get("username"), username)
             ));
             return getPredicate(searchCriteriaList, root, criteriaBuilder, predicates, userSubquery);
         };
