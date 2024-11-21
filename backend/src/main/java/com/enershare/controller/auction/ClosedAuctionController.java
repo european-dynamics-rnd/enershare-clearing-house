@@ -23,7 +23,6 @@ public class ClosedAuctionController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-
     @GetMapping
     public ResponseEntity<List<Auction>> getAllClosedAuctions() {
         List<Auction> closedAuctionsList = auctionService.getAllAuctionsByStatus("AuctionClosed"); // Retrieve closed auctions

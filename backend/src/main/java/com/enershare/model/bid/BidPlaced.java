@@ -1,6 +1,5 @@
 package com.enershare.model.bid;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,28 +14,29 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "bids")
-public class Bid {
+@Table(name = "bid_placed")
+public class BidPlaced {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "resource_id", nullable = false)
-    @JsonProperty("resourceId")
     private String resourceId;
 
-    @Column(name = "consumer_participant_id")
-    @JsonProperty("consumerParticipantIDSID")
-    private String consumerParticipantIDSID;
+    @Column(name = "provider_connector_id", nullable = false)
+    private String providerConnectorId;
+
+    @Column(name = "provider_participant_id", nullable = false)
+    private String providerParticipantId;
 
     @Column(name = "free", nullable = false)
     private boolean free;
 
-    @Column(name = "artifacts_ids")
+    @Column(name = "artifacts_ids", nullable = true)
     private String artifactsIds;
 
-    @Column(name = "auction_hash")
+    @Column(name = "auction_hash", nullable = false)
     private String auctionHash;
 
     @Column(name = "hash", nullable = false)
@@ -45,7 +45,7 @@ public class Bid {
     @Column(name = "status", nullable = false)
     private String status;
 
-    @Column(name = "created_on", updatable = false) // Prevent updates after creation
-    @CreationTimestamp // Use Hibernate's annotation for auto-generating the timestamp
-    private Instant createdOn; // This field will hold the creation timestamp
+    @Column(name = "created_on", updatable = false)
+    @CreationTimestamp
+    private Instant createdOn; // Auto-generated creation timestamp
 }

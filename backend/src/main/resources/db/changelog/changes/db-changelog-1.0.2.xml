@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Remove the `bids` table -->
+    <changeSet id="2024-11-20-1" author="vuk">
+        <dropTable tableName="bids"/>
+    </changeSet>
+
+    <!-- Create the `bid_placed` table -->
+    <changeSet id="2024-11-20-2" author="vuk">
+        <createTable tableName="bid_placed">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="resource_id" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider_connector_id" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider_participant_id" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="free" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="artifacts_ids" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="auction_hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Create the `bid_accepted` table -->
+    <changeSet id="2024-11-20-3" author="vuk">
+        <createTable tableName="bid_accepted">
+            <column name="id" type="bigint">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="resource_id" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="consumer_participant_id" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="free" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="artifacts_ids" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="auction_hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Add auto-increment sequences for the new tables -->
+    <changeSet id="2024-11-20-4" author="vuk">
+        <addAutoIncrement
+                tableName="bid_placed"
+                columnName="id"
+                columnDataType="bigint"/>
+    </changeSet>
+
+    <changeSet id="2024-11-20-5" author="vuk">
+        <addAutoIncrement
+                tableName="bid_accepted"
+                columnName="id"
+                columnDataType="bigint"/>
+    </changeSet>
+
+</databaseChangeLog>
