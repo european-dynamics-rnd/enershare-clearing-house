@@ -26,7 +26,7 @@ public class BidPlacedSpecification {
             Root<User> userRoot = userSubquery.from(User.class);
             userSubquery.select(userRoot);
             userSubquery.where(criteriaBuilder.and(
-                    criteriaBuilder.equal(userRoot.get("participantId"), root.get("consumerParticipantId")),
+                    criteriaBuilder.equal(userRoot.get("participantId"), root.get("providerParticipantId")),
                     criteriaBuilder.equal(userRoot.get("username"), username)
             ));
 
