@@ -1,25 +1,37 @@
 ﻿# **Clearing House Deployment guide**
 
-To proceed with the installation of Clearing House, the user must use the */docker* folder of this repository that contains all the necessary configuration.
+Prerequisites:
+```
+Docker
+Git
+java 17
+Maven 3.8.x (or later)
+Node.js ^12.20.0 || ^14.15.0 || ^16.10.0
+```
 
 1. The first step is to clone this repository <https://github.com/european-dynamics-rnd/enershare-clearing-house> , by typing:
 ```
-cd /opt/clearing-house/
+
 git clone https://github.com/european-dynamics-rnd/enershare-clearing-house.git
 ```
-
-2. There is the docker-compose.yml file located under /opt/onenet-true-connector/backend/docker that contains all the configuration of the onenet fiware true connector containers. Go to that file by typing the command
+2. For backend, you should build the spring application running 
+following command<br>
+``mvn clean package``
+3. Copy the **enershare-0.0.1-SNAPSHOT.jar** file from the target folder to the **deployment/eneshare-backend** directory.
+4. In the **frontend/src/environments** folder, locate the environment.prod.ts file. Update it 
+by setting the **serverUrl** to the URL of your backend application. 
+5. After this you can build the angular project running the following commands
 ```
-cd /opt/onenet-true-connector/backend/docker
+npm install 
+ng build --configuration production
 ```
+6. Copy the dist folder to **deployment/enershare-frontend**
+7. In the Dockerfile located under **deployment/backend**, 
+configure the **cors.allowed-origins** setting by specifying the URL of your frontend application.
 
-3. :warning: At this step you must request from us a file with ".env" name and put it on the same folder /opt/onenet-true-connector/docker.
-Email us on the helias.karagozidis@eurodyn.com to get the ".env" file.
-
-4. After puting the ".env" file in position you can start the containers with the below commands  
-
+8.There is the docker-compose.yml file located under deployment directory. 
+Run following command to start the containers
 ```
-$docker-compose up –d
+$docker-compose up –d --build
 $docker-compose logs -f
 ```
-5. If no errors are seen, this means that clearing was successfully deployed on your premisses.

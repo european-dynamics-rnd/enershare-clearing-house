@@ -19,7 +19,7 @@ ENV DB_PASSWORD_ENV=${DB_PASSWORD}
 
 RUN touch ./entrypoint.sh
 RUN echo "java -jar ./app.jar  \
-    --cors.origin.url=https://enershare.eurodyn.com  \
+    --cors.allowed-origins=https://enershare.eurodyn.com  \
     --enershare.db.ip=${DB_IP_ENV}  \
     --enershare.db.port=${DB_PORT_ENV}  \
     --enershare.db.name=${DB_NAME_ENV}  \
