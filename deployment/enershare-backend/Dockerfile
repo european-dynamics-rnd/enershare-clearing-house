@@ -18,6 +18,12 @@ ENV DB_USERNAME_ENV=${DB_USERNAME}
 ENV DB_PASSWORD_ENV=${DB_PASSWORD}
 
 RUN touch ./entrypoint.sh
-RUN echo "java -jar ./app.jar --cors.origin.url=https://enershare.eurodyn.com --enershare.db.ip=${DB_IP_ENV} --enershare.db.port=${DB_PORT_ENV} --enershare.db.name=${DB_NAME_ENV} --enershare.db.username=${DB_USERNAME_ENV} --enershare.db.password=${DB_PASSWORD_ENV}" > ./entrypoint.sh
+RUN echo "java -jar ./app.jar  \
+    --cors.origin.url=https://enershare.eurodyn.com  \
+    --enershare.db.ip=${DB_IP_ENV}  \
+    --enershare.db.port=${DB_PORT_ENV}  \
+    --enershare.db.name=${DB_NAME_ENV}  \
+    --enershare.db.username=${DB_USERNAME_ENV}  \
+    --enershare.db.password=${DB_PASSWORD_ENV}" > ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 CMD ["sh", "./entrypoint.sh"]

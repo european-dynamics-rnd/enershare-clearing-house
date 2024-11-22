@@ -1,6 +1,7 @@
 package com.enershare.config;
 
 import com.enershare.repository.user.UserRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.*;
@@ -27,8 +29,9 @@ import static org.springframework.http.HttpHeaders.*;
 public class ApplicationConfig {
 
     private final UserRepository userRepository;
-    @Value("${cors.origin.url}")
-    private String corsOriginUrl;
+
+    @Value("${cors.allowed-origins}")
+    private List<String> allowedOrigins;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -58,7 +61,7 @@ public class ApplicationConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of(corsOriginUrl));
+        config.setAllowedOrigins(allowedOrigins);
         config.setAllowedHeaders(List.of(ORIGIN, CONTENT_TYPE, ACCEPT, AUTHORIZATION));
         config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH"));
 
