@@ -54,4 +54,12 @@ export class UsersService {
       })
     );
   }
+
+  getAvailableParticipants(): Observable<any> {
+    return this.http.get(`${environment.serverUrl}/user/fetch-available-participants`);
+  }
+
+  getConnectorsForSelectedParticipant(selectedParticipantId: string ): Observable<any> {
+    return this.http.get(`${environment.serverUrl}/user/fetch-available-connectors/${selectedParticipantId}`);
+  }
 }

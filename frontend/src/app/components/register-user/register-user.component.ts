@@ -3,6 +3,8 @@ import { UsersService } from '../../services/users/users.service';
 import { Router } from '@angular/router';
 import { NotificationService } from '../../services/notification/notification.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {environment} from "../../../environments/environment";
+
 
 interface RegisterUser {
   firstname: string;
@@ -54,10 +56,8 @@ export class RegisterUserComponent implements OnInit {
 
   // Fetch participants from the backend without sending the JWT
   fetchAvailableParticipants(): void {
-    const url = 'http://localhost:15111/api/user/fetch-available-participants';
-    const headers = new HttpHeaders(); // No Authorization header
 
-    this.httpClient.get<string[]>(url, { headers }).subscribe(
+   this.usersService.getAvailableParticipants().subscribe(
       (data) => {
         this.participantIds = data;
       },
@@ -71,22 +71,15 @@ export class RegisterUserComponent implements OnInit {
   onParticipantChange(): void {
     const selectedParticipantId = this.registerUser.participantId;
     if (selectedParticipantId) {
-      const connectorsUrl = `http://localhost:15111/api/user/fetch-available-connectors/${selectedParticipantId}`;
-      this.fetchAvailableConnectors(connectorsUrl);
+      this.usersService.getConnectorsForSelectedParticipant(selectedParticipantId).subscribe(
+        (data) => {
+          this.connectors = data;
+        },
+        (error) => {
+          this.handleHttpError(error, 'Failed to load connectors');
+        }
+      );
     }
-  }
-
-  fetchAvailableConnectors(url: string): void {
-    const headers = new HttpHeaders(); // No Authorization header
-
-    this.httpClient.get<string[]>(url, { headers }).subscribe(
-      (data) => {
-        this.connectors = data;
-      },
-      (error) => {
-        this.handleHttpError(error, 'Failed to load connectors');
-      }
-    );
   }
 
   register(): void {
