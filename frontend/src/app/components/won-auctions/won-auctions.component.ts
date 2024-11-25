@@ -61,9 +61,9 @@ export class WonAuctionsComponent implements OnInit {
 
   onDateFilterChange(value: NgbDateStruct) {
     if (value && typeof value === 'object' && 'year' in value && 'month' in value && 'day' in value) {
-      this.filters['createdOn'] =  new Date(Date.UTC(value.year, value.month - 1, value.day)).toISOString();
+      this.filters['endDate'] =  new Date(Date.UTC(value.year, value.month - 1, value.day)).toISOString();
     } else {
-      this.filters['createdOn'] = '';
+      this.filters['endDate'] = '';
     }
     this.searchWonAuction();
   }

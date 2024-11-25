@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface PurchaseRepository extends JpaRepository<Purchase, Long>, JpaSpecificationExecutor<Purchase>, CustomPurchaseRepository {
 
+    List<Purchase> findPurchaseByResourceId(String resourceId);
+
     @Query("SELECT p from Purchase p " +
             "JOIN User u on u.participantId = p.consumerParticipantId" +
             " WHERE u.username = :username " +

@@ -30,6 +30,7 @@ export class IngressLogsComponent implements OnInit {
     provider: '',
     resourceId: '',
     resourceType: '',
+    transactionStatus:'',
     contractId: '',
     createdOn: '',
     action: ''

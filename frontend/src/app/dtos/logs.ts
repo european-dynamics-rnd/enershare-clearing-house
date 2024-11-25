@@ -13,6 +13,7 @@ export class Logs  {
   stage : string;
   requestId : string;
   createdOn : Date;
+  transactionStatus: string
 
 }
 

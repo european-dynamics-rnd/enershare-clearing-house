@@ -76,4 +76,7 @@ public class Logs {
 
     @Column(name = "created_on")
     private Instant createdOn;
+
+    @Column(name = "transaction_status")
+    private String transactionStatus;
 }

@@ -31,6 +31,7 @@ export class EgressLogsComponent implements OnInit {
     consumer: '',
     resourceId: '',
     resourceType: '',
+    transactionStatus:'',
     contractId: '',
     createdOn: '',
     action: ''

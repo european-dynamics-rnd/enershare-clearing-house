@@ -94,4 +94,12 @@
                 columnDataType="bigint"/>
     </changeSet>
 
+    <changeSet id="add-transaction-status-column" author="christos.aslamatzidis">
+        <addColumn tableName="logs">
+            <column name="transaction_status" type="varchar(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

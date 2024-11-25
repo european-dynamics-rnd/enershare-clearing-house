@@ -27,9 +27,8 @@ public class LogsController {
     private final LogsRepository logsRepository;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createLog(@RequestBody LogsDTO logsDTO) {
-        logsService.createLog(logsDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<String> createLog(@RequestBody LogsDTO logsDTO) {
+       return logsService.createLog(logsDTO);
     }
 
     @GetMapping("/{id}")

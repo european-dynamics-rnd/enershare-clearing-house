@@ -25,6 +25,11 @@
                 <i *ngIf="sortingApplied && searchRequest?.sort === 'resourceType'" class="fa"
                    [ngClass]="{'fa-solid fa-arrow-up': searchRequest?.direction === 'asc', 'fa-solid fa-arrow-down': searchRequest.direction === 'desc'}"></i>
               </th>
+              <th scope="col" (click)="sortTable('transactionStatus')">
+                Transaction Status
+                <i *ngIf="sortingApplied && searchRequest?.sort === 'transactionStatus'" class="fa"
+                   [ngClass]="{'fa-solid fa-arrow-up': searchRequest?.direction === 'asc', 'fa-solid fa-arrow-down': searchRequest.direction === 'desc'}"></i>
+              </th>
               <th scope="col" (click)="sortTable('contractId')">
                 Contract Id
                 <i *ngIf="sortingApplied && searchRequest?.sort === 'contractId'" class="fa"
@@ -48,6 +53,8 @@
                 </th>
                 <th><input type="text" class="form-control"
                            (input)="onFilterChange('resourceType', $event.target.value)"></th>
+                <th><input type="text" class="form-control"
+                           (input)="onFilterChange('transactionStatus', $event.target.value)"></th>
                 <th><input type="text" class="form-control" (input)="onFilterChange('contractId', $event.target.value)">
                 </th>
                 <th>
@@ -77,6 +84,7 @@
                 <td>{{ log.consumer }}</td>
                 <td class="text-center">{{ log.resourceId }}</td>
                 <td class="text-center">{{ log.resourceType }}</td>
+                <td>{{log.transactionStatus}}</td>
                 <td>{{ log.contractId }}</td>
                 <td class="text-center">{{ log.createdOn | date : 'yyyy-MM-dd HH:mm'}}</td>
                 <td class="text-center">{{ log.action }}</td>
