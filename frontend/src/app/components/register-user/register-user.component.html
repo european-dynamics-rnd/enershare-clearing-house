@@ -1,4 +1,4 @@
-<div class="login">
+<div class="register">
   <div class="logo d-flex align-items-start">
     <a href="https://enershare.eu/" class="simple-text logo-mini" target="_blank">
       <div class="logo-img">
@@ -9,7 +9,7 @@
   <div class="outer d-flex align-items-center min-vh-100">
     <div class="container pb-5">
       <div class="row">
-        <div class="col-xs-7 col-6 col-sm-7 col-md-6 col-lg-5 col-xl-5 mx-auto">
+        <div class="col-12 col-md-10 col-lg-8 mx-auto">
           <div class="card pb-3 pt-3">
             <div class="card-header text-center">
               <div class="logo-container">
@@ -19,132 +19,177 @@
             </div>
             <div class="card-body">
               <form class="pr-3 pl-3 pt-3 pb-3" (ngSubmit)="register()" #registerForm="ngForm">
-                
-                <!-- First Name -->
-                <div class="form-group pt-3">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text text-white"><i class="fa fa-user"></i></span>
-                    </div>
-                    <input class="form-control bg-transparent text-white placeholder-white"
-                           name="firstname"
-                           type="text"
-                           [(ngModel)]="registerUser.firstname"
-                           #firstname="ngModel"
-                           placeholder="First Name"
-                           required>
-                  </div>
-                  <small class="text-white">*First Name is required</small>
-                </div>
-
-                <!-- Last Name -->
-                <div class="form-group pt-3">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text text-white"><i class="fa fa-user"></i></span>
-                    </div>
-                    <input class="form-control bg-transparent text-white placeholder-white"
-                           name="lastname"
-                           type="text"
-                           [(ngModel)]="registerUser.lastname"
-                           #lastname="ngModel"
-                           placeholder="Last Name"
-                           required>
-                  </div>
-                  <small class="text-white">*Last Name is required</small>
-                </div>
 
                 <!-- Username -->
                 <div class="form-group pt-3">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text text-white"><i class="fa fa-user"></i></span>
+                  <div class="row">
+                    <!-- Username -->
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text text-white"><i class="fa fa-user"></i></span>
+                        </div>
+                        <input class="form-control bg-transparent text-white placeholder-white"
+                               name="username"
+                               type="text"
+                               [(ngModel)]="registerUser.username"
+                               #username="ngModel"
+                               placeholder="Username"
+                               required>
+                      </div>
+                      <small class="text-white">*Username is required</small>
                     </div>
-                    <input class="form-control bg-transparent text-white placeholder-white"
-                           name="username"
-                           type="text"
-                           [(ngModel)]="registerUser.username"
-                           #username="ngModel"
-                           placeholder="Username"
-                           required>
-                  </div>
-                  <small class="text-white">*Username is required</small>
-                </div>
 
-                <!-- Email -->
-                <div class="form-group pt-3">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text text-white"><i class="fa fa-envelope"></i></span>
+                    <!-- Email -->
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text text-white"><i class="fa fa-envelope"></i></span>
+                        </div>
+                        <input class="form-control bg-transparent text-white placeholder-white"
+                               name="email"
+                               type="email"
+                               [(ngModel)]="registerUser.email"
+                               #email="ngModel"
+                               placeholder="Email"
+                               required>
+                      </div>
+                      <small class="text-white">*Email is required</small>
                     </div>
-                    <input class="form-control bg-transparent text-white placeholder-white"
-                           name="email"
-                           type="email"
-                           [(ngModel)]="registerUser.email"
-                           #email="ngModel"
-                           placeholder="Email"
-                           required>
                   </div>
-                  <small class="text-white">*Email is required</small>
                 </div>
 
                 <!-- Password -->
                 <div class="form-group pt-3">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-prepend input-group-text text-white"><i class="fa fa-lock"></i></span>
+                  <div class="row">
+                    <!-- Password -->
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-prepend input-group-text text-white"><i class="fa fa-lock"></i></span>
+                        </div>
+                        <input class="form-control bg-transparent text-white placeholder-white"
+                               name="password"
+                               type="password"
+                               [(ngModel)]="registerUser.password"
+                               #password="ngModel"
+                               placeholder="Password"
+                               required>
+                      </div>
+                      <small class="text-white">*Password is required</small>
                     </div>
-                    <input class="form-control bg-transparent text-white placeholder-white"
-                           name="password"
-                           type="password"
-                           [(ngModel)]="registerUser.password"
-                           #password="ngModel"
-                           placeholder="Password"
-                           required>
+
+                    <!-- Repeat Password -->
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-prepend input-group-text text-white"><i class="fa fa-lock"></i></span>
+                        </div>
+                        <input class="form-control bg-transparent text-white placeholder-white"
+                               name="repeatPassword"
+                               type="password"
+                               [(ngModel)]="registerUser.repeatPassword"
+                               (ngModelChange)="checkPasswords()"
+                               #repeatPassword="ngModel"
+                               placeholder="Repeat Password"
+                               required>
+                      </div>
+                      <small class="text-white">*Repeat password is required</small>
+                      <small class="text-white" *ngIf="!passwordsMatch">*Passwords do not match</small>
+                    </div>
                   </div>
-                  <small class="text-white">*Password is required and should be at least 6 characters</small>
                 </div>
 
-                <!-- Participant ID Combobox -->
+                <!-- First Name -->
                 <div class="form-group pt-3">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text text-white"><i class="fa fa-id-badge"></i></span>
+                  <div class="row">
+                    <!-- First Name -->
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text text-white"><i class="fa fa-user"></i></span>
+                        </div>
+                        <input class="form-control bg-transparent text-white placeholder-white"
+                               name="firstname"
+                               type="text"
+                               [(ngModel)]="registerUser.firstname"
+                               #firstname="ngModel"
+                               placeholder="First Name"
+                               required>
+                      </div>
+                      <small class="text-white">*First Name is required</small>
                     </div>
-                    <select class="form-control bg-transparent text-white placeholder-white"
-                            name="participant_id"
-                            [(ngModel)]="registerUser.participantId"
-                            #participantId="ngModel"
-                            (change)="onParticipantChange()"
-                            required>
-                      <option value="" disabled selected>Select Participant ID</option>
-                      <option *ngFor="let participant of participantIds" [value]="participant">{{ participant }}</option>
-                    </select>
+
+                    <!-- Last Name -->
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text text-white"><i class="fa fa-user"></i></span>
+                        </div>
+                        <input class="form-control bg-transparent text-white placeholder-white"
+                               name="lastname"
+                               type="text"
+                               [(ngModel)]="registerUser.lastname"
+                               #lastname="ngModel"
+                               placeholder="Last Name"
+                               required>
+                      </div>
+                      <small class="text-white">*Last Name is required</small>
+                    </div>
                   </div>
-                  <small class="text-white">*Participant ID is required</small>
                 </div>
 
-                <!-- Connector URL Combobox -->
+                <!-- Password -->
                 <div class="form-group pt-3">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text text-white"><i class="fa fa-link"></i></span>
+                  <div class="row">
+                    <!-- Password -->
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text text-white"><i class="fa fa-id-badge"></i></span>
+                        </div>
+                        <select class="form-control bg-transparent text-white placeholder-white"
+                                name="participant_id"
+                                [(ngModel)]="registerUser.participantId"
+                                #participantId="ngModel"
+                                (change)="onParticipantChange()"
+                                required>
+                          <option value="" disabled selected>Select Participant ID</option>
+                          <option *ngFor="let participant of participantIds" [value]="participant">{{ participant }}</option>
+                        </select>
+                      </div>
+                      <small class="text-white">*Participant ID is required</small>
                     </div>
-                    <select class="form-control bg-transparent text-white placeholder-white"
-                            name="connector_url"
-                            [(ngModel)]="registerUser.connectorUrl"
-                            #connectorUrl="ngModel"
-                            required>
-                      <option value="" disabled selected>Select Connector URL</option>
-                      <option *ngFor="let connector of connectors" [value]="connector">{{ connector }}</option>
-                    </select>
-                  </div>
-                  <small class="text-white">*Connector URL is required</small>
-                </div>
 
-                <button type="submit" class="btn btn-login btn-block mt-4 w-100 rounded-pill" [disabled]="registerForm.invalid">
-                  Register
-                </button>
+                    <!-- Participant ID -->
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text text-white"><i class="fa fa-link"></i></span>
+                        </div>
+                        <select class="form-control bg-transparent text-white placeholder-white"
+                                name="connector_url"
+                                [(ngModel)]="registerUser.connectorUrl"
+                                #connectorUrl="ngModel"
+                                required>
+                          <option value="" disabled selected>Select Connector URL</option>
+                          <option *ngFor="let connector of connectors" [value]="connector">{{ connector }}</option>
+                        </select>
+                      </div>
+                      <small class="text-white">*Connector URL is required</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-6">
+                    <button
+                      type="submit"
+                      class="btn btn-login btn-block mt-4 rounded-pill px-4 py-2 w-100"
+                      [disabled]="registerForm.invalid">
+                      Register
+                    </button>
+                  </div>
+                </div>
               </form>
             </div>
           </div>

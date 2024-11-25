@@ -1,0 +1,22 @@
+th {
+  cursor: pointer;
+}
+
+th i {
+  margin-left: 5px;
+}
+
+.date-input {
+  font-size: 0.875rem; /* Adjust the font size as needed */
+  padding: 0.375rem 0.75rem; /* Adjust the padding as needed */
+}
+
+.icon-button {
+  padding: 0.45rem 0.5rem;
+  margin-left: 0px;/* Adjust the padding as needed */
+}
+
+.icon-button i {
+  font-size: 0.875rem; /* Adjust the font size as needed */
+  margin-left: 0px;
+}

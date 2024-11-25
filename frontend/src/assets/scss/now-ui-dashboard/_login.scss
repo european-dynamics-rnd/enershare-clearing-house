@@ -1,4 +1,4 @@
-.login {
+.login, .register {
 
   .outer {
     background-color: rgba(0, 0, 0, 0.4);
@@ -88,4 +88,9 @@
 
   }
 
+}
+
+.register .card {
+    max-width: 100%;
+    margin: auto;
 }

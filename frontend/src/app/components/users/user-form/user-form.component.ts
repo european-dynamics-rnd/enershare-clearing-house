@@ -19,6 +19,7 @@ export class UserFormComponent implements OnInit {
     showRole: boolean = true;
     fromNavbar: boolean = false;
     readonlyConnectorUrl:boolean = false;
+    readonlyParticipantId:boolean = false;
 
 
   constructor(private usersService :UsersService,
@@ -33,6 +34,7 @@ export class UserFormComponent implements OnInit {
       this.showRole = params['showRole'] !== 'false';
       this.fromNavbar = params['fromNavbar'] === 'true';
       this.readonlyConnectorUrl = params['readonlyConnectorUrl'] === 'true';
+      this.readonlyParticipantId = params['readonlyParticipantId'] === 'true';
     });
 
     this.route.params.subscribe(params => {

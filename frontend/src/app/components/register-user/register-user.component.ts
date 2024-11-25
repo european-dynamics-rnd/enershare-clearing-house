@@ -7,9 +7,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 interface RegisterUser {
   firstname: string;
   lastname: string;
-  username: string;   // Added username field
+  username: string;
   email: string;
   password: string;
+  repeatPassword?: string;
   participantId: string;
   connectorUrl: string;
 }
@@ -23,16 +24,17 @@ export class RegisterUserComponent implements OnInit {
   registerUser: RegisterUser = {
     firstname: '',
     lastname: '',
-    username: '',  // Initialize username
+    username: '',
     email: '',
     password: '',
+    repeatPassword: '',
     participantId: '',
     connectorUrl: ''
   };
 
   participantIds: string[] = [];
   connectors: string[] = [];
-
+  passwordsMatch: boolean = true;
   constructor(
     private usersService: UsersService,
     private router: Router,
@@ -43,6 +45,11 @@ export class RegisterUserComponent implements OnInit {
   ngOnInit(): void {
     // Fetch available participants on component load
     this.fetchAvailableParticipants();
+  }
+
+  // Check if passwords match
+  checkPasswords(): void {
+    this.passwordsMatch = this.registerUser.password === this.registerUser.repeatPassword;
   }
 
   // Fetch participants from the backend without sending the JWT
@@ -90,6 +97,7 @@ export class RegisterUserComponent implements OnInit {
       !this.registerUser.username ||  // Added validation for username
       !this.registerUser.email ||
       !this.registerUser.password ||
+      !this.registerUser.repeatPassword || // Ensure repeatPassword is not empty
       !this.registerUser.participantId ||
       !this.registerUser.connectorUrl
     ) {

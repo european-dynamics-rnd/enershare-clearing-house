@@ -75,11 +75,11 @@
               <tbody>
               <tr *ngFor="let log of filteredLogs">
                 <td>{{ log.provider }}</td>
-                <td>{{ log.resourceId }}</td>
-                <td>{{ log.resourceType }}</td>
+                <td class="text-center">{{ log.resourceId }}</td>
+                <td class="text-center">{{ log.resourceType }}</td>
                 <td>{{ log.contractId }}</td>
-                <td>{{ log.createdOn | date : 'yyyy-MM-dd HH:mm'}}</td>
-                <td>{{ log.action }}</td>
+                <td class="text-center">{{ log.createdOn | date : 'yyyy-MM-dd HH:mm'}}</td>
+                <td class="text-center">{{ log.action }}</td>
               </tr>
               </tbody>
             </table>

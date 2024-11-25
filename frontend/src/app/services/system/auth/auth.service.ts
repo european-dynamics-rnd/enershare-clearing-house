@@ -32,7 +32,7 @@ export class AuthenticationService {
 
   onLogin(username: string, password: string) {
     return this.http.post(`${environment.serverUrl}/auth/authenticate`, { username, password });
-    
+
   }
 
   logOut(){
@@ -54,7 +54,7 @@ export class AuthenticationService {
 
   getCurrentUserName(): string | null {
     const currentUser = this.getCurrentUser();
-    return currentUser ? currentUser?.firstname + ' ' + currentUser?.lastname: null;
+    return currentUser ? currentUser?.username: null;
   }
 
   getLogs(){

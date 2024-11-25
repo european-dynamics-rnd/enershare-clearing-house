@@ -33,7 +33,7 @@ import {EgressLogsComponent} from "../../components/egress-logs/egress-logs.comp
     IconsComponent,
     NotificationsComponent,
     IngressLogsComponent,
-    EgressLogsComponent
+    EgressLogsComponent,
   ]
 })
 

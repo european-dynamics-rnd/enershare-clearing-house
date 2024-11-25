@@ -6,26 +6,18 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import {LoginComponent} from "./components/login/login.component";
 import {AuthGuard} from "./guards/auth.guard";
-import {DashboardComponent} from "./components/dashboard/dashboard.component";
-import {RegisterComponent} from "./components/register/register.component";
 import { RegisterUserComponent } from './components/register-user/register-user.component';
 
 const routes: Routes =[
   {path:'',
     redirectTo:'login',
     pathMatch:'full',
-    
+
   },
 
   {
     path:'login',
     component:LoginComponent
-  },
-
-  {
-    path: 'register',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
   },
 
   {

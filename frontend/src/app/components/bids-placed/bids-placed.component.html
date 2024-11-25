@@ -1,0 +1,103 @@
+<div class="panel-header panel-header-sm"></div>
+<div class="main-content">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Bids Placed</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive table-responsive-big">
+                        <table class="table table-striped">
+                            <thead class="text-enershare">
+                            <th scope="col" (click)="sortTable('resourceId')">
+                              Resource Id
+                              <i *ngIf="sortingApplied && searchRequest?.sort === 'resourceId'" class="fa"
+                                 [ngClass]="{'fa-solid fa-arrow-up': searchRequest?.direction === 'asc', 'fa-solid fa-arrow-down': searchRequest.direction === 'desc'}"></i>
+                            </th>
+                            <th scope="col" (click)="sortTable('hash')">
+                              Hash
+                              <i *ngIf="sortingApplied && searchRequest?.sort === 'hash'" class="fa"
+                                 [ngClass]="{'fa-solid fa-arrow-up': searchRequest?.direction === 'asc', 'fa-solid fa-arrow-down': searchRequest.direction === 'desc'}"></i>
+                            </th>
+                            <th scope="col" (click)="sortTable('auctionHash')">
+                              Auction Hash
+                              <i *ngIf="sortingApplied && searchRequest?.sort === 'auctionHash'" class="fa"
+                                 [ngClass]="{'fa-solid fa-arrow-up': searchRequest?.direction === 'asc', 'fa-solid fa-arrow-down': searchRequest.direction === 'desc'}"></i>
+                            </th>
+                            <th scope="col" (click)="sortTable('createdOn')">
+                              Created Date
+                              <i *ngIf="sortingApplied && searchRequest?.sort === 'createdOn'" class="fa"
+                                 [ngClass]="{'fa-solid fa-arrow-up': searchRequest?.direction === 'asc', 'fa-solid fa-arrow-down': searchRequest.direction === 'desc'}"></i>
+                            </th>
+                            <!-- Filter inputs -->
+                            <tr>
+                              <th><input type="text" class="form-control" (input)="onFilterChange('resourceId', $event.target.value)">
+                              </th>
+                              <th><input type="text" class="form-control" (input)="onFilterChange('hash', $event.target.value)">
+                              </th>
+                              <th><input type="text" class="form-control" (input)="onFilterChange('auctionHash', $event.target.value)">
+                              </th>
+                              <th>
+                                <div class="input-group">
+                                  <input
+                                    class="form-control date-input"
+                                    placeholder="yyyy-mm-dd"
+                                    name="dp"
+                                    [(ngModel)]="filterDate"
+                                    (ngModelChange)="onDateFilterChange($event)"
+                                    ngbDatepicker
+                                    #d="ngbDatepicker"
+                                  />
+                                  <div class="input-group-append">
+                                    <button class="btn btn-outline-info icon-button" (click)="d.toggle()" type="button">
+                                      <i class="far fa-calendar-alt"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </th>
+                            </tr>
+                            </thead>
+                          <tbody>
+                          <tr *ngFor="let bidsPlaced of filteredBidsPlaced">
+                            <td>{{ bidsPlaced.resourceId }}</td>
+                            <td>{{ bidsPlaced.hash }}</td>
+                            <td>{{ bidsPlaced.auctionHash }}</td>
+                            <td  class="text-center">{{ bidsPlaced.createdOn | date : 'yyyy-MM-dd HH:mm'}}</td>
+                          </tr>
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between p-2">
+                        <ngb-pagination
+                                [collectionSize]="collectionSize"
+                                [(page)]="page"
+                                [pageSize]="searchRequest.pageSize"
+                                (pageChange)="refreshBidsPlaced()"
+                                [boundaryLinks]="true"
+                        >
+                        </ngb-pagination>
+
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="pageSizeDropdown" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                {{ searchRequest.pageSize }} items per page
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="pageSizeDropdown">
+                                <button class="dropdown-item" (click)="setPageSize(10)">10 items per page</button>
+                                <button class="dropdown-item" (click)="setPageSize(20)">20 items per page</button>
+                                <button class="dropdown-item" (click)="setPageSize(40)">40 items per page</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

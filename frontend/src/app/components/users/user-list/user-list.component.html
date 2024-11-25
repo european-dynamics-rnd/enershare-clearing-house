@@ -12,9 +12,9 @@
             <table class="table table-striped">
               <thead class="text-enershare">
               <th scope="col">Id</th>
+              <th scope="col">Username</th>
               <th scope="col">First Name</th>
               <th scope="col">Last Name</th>
-              <th scope="col">Email</th>
               <th scope="col">Connector Url</th>
               <th scope="col">Role</th>
               <th scope="col" class="text-right">Actions</th>
@@ -22,9 +22,9 @@
               <tbody>
               <tr *ngFor="let user of users">
                 <td>{{user.id}}</td>
+                <td>{{user.username}}</td>
                 <td>{{user.firstname}}</td>
                 <td>{{user.lastname}}</td>
-                <td>{{user.email}}</td>
                 <td>{{user.connectorUrl}}</td>
                 <td>{{user.role}}</td>
                 <td class="text-right">

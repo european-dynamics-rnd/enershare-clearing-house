@@ -7,4 +7,6 @@ export class User {
   repeatPassword: string ;
   role: string;
   connectorUrl:string;
+  participantId : string;
+  username: string;
 }

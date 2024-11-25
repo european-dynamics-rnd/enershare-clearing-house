@@ -10,140 +10,267 @@
 </div>
 
 <div class="main-content">
-  <div class="row">
-    <div class="col-lg-4">
-      <div class="card card-chart">
-        <div class="card-header">
-          <h4 class="card-title">Ingress Logs</h4>
-        </div>
-        <div class="card-body">
-          <div class="chart-area">
-            <canvas baseChart id="IngressChart"
-                        [datasets]="ingressChartData"
-                        [labels]="ingressChartLabels"
-                        [colors]="ingressChartColors"
-                        [options]="ingressChartOptions"
-                        [chartType]="ingressChartType"
-                        (chartHover)="chartHovered($event)"
-                        (chartClick)="chartClicked($event)"></canvas>
-          </div>
-        </div>
-        <div class="card-footer">
-          <div class="stats" (click)="refreshIngressChart()">
-            <i class="now-ui-icons arrows-1_refresh-69"></i> Refresh
-          </div>
-        </div>
-      </div>
+  <div class="card">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="tab1-tab" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">Connector Logs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="tab2-tab" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">Marketplace Logs</a>
+        </li>
+      </ul>
     </div>
-    <div class="col-lg-4 col-md-6">
-      <div class="card card-chart">
-        <div class="card-header">
-          <h4 class="card-title">Egress Logs</h4>
-        </div>
-        <div class="card-body">
-          <div class="chart-area">
-            <!-- <canvas id="lineChartExampleWithNumbersAndGrid"></canvas> -->
-            <canvas baseChart id="EgressChart"
-                        [datasets]="egressChartData"
-                        [labels]="egressChartLabels"
-                        [colors]="egressChartColors"
-                        [options]="egressChartOptions"
-                        [chartType]="egressChartType"
-                        (chartHover)="chartHovered($event)"
-                        (chartClick)="chartClicked($event)"></canvas>
+    <div class="card-body">
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="card card-chart">
+                <div class="card-header">
+                  <h4 class="card-title">Ingress Logs</h4>
+                </div>
+                <div class="card-body">
+                  <div class="chart-area">
+                    <canvas baseChart id="IngressChart"
+                            [datasets]="ingressChartData"
+                            [labels]="ingressChartLabels"
+                            [colors]="ingressChartColors"
+                            [options]="ingressChartOptions"
+                            [chartType]="ingressChartType"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)"></canvas>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats" (click)="refreshIngressChart()">
+                    <i class="now-ui-icons arrows-1_refresh-69"></i> Refresh
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="card card-chart">
+                <div class="card-header">
+                  <h4 class="card-title">Egress Logs</h4>
+                </div>
+                <div class="card-body">
+                  <div class="chart-area">
+                    <!-- <canvas id="lineChartExampleWithNumbersAndGrid"></canvas> -->
+                    <canvas baseChart id="EgressChart"
+                            [datasets]="egressChartData"
+                            [labels]="egressChartLabels"
+                            [colors]="egressChartColors"
+                            [options]="egressChartOptions"
+                            [chartType]="egressChartType"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)"></canvas>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats" (click)="refreshEgressChart()">
+                    <i class="now-ui-icons arrows-1_refresh-69"></i> Refresh
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="card card-chart">
+                <div class="card-header">
+                  <h4 class="card-title">Last 10 Hours</h4>
+                </div>
+                <div class="card-body">
+                  <div class="chart-area">
+                    <canvas baseChart id="LastTenHoursChart"
+                            [datasets]="lastTenHoursChartData"
+                            [labels]="lastTenHoursChartLabels"
+                            [colors]="lastTenHoursChartColors"
+                            [options]="lastTenHoursChartOptions"
+                            [chartType]="lastTenHoursChartType"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)"></canvas>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats" (click)="refreshLast10HourChart()">
+                    <i class="now-ui-icons arrows-1_refresh-69"></i> Refresh
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Latest 5 Ingress Logs</h4>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="text-enershare">
+                      <th scope="col">Provider</th>
+                      <th scope="col">Resource Id</th>
+                      <th scope="col">Resource Type</th>
+                      <th scope="col">Contract Id</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Action</th>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let log of ingressLogs">
+                        <td>{{ log.provider }}</td>
+                        <td>{{ log.resourceId }}</td>
+                        <td>{{ log.resourceType }}</td>
+                        <td>{{ log.contractId }}</td>
+                        <td>{{ log.createdOn | date : 'yyyy-MM-dd HH:mm' }}</td>
+                        <td>{{ log.action }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Latest 5 Egress Logs</h4>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="text-enershare">
+                      <th scope="col">Consumer</th>
+                      <th scope="col">Resource Id</th>
+                      <th scope="col">Resource Type</th>
+                      <th scope="col">Contract Id</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Action</th>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let log of egressLogs">
+                        <td>{{ log.consumer }}</td>
+                        <td>{{ log.resourceId }}</td>
+                        <td>{{ log.resourceType }}</td>
+                        <td>{{ log.contractId }}</td>
+                        <td>{{ log.createdOn | date : 'yyyy-MM-dd HH:mm' }}</td>
+                        <td>{{ log.action }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="card-footer">
-          <div class="stats" (click)="refreshEgressChart()">
-            <i class="now-ui-icons arrows-1_refresh-69"></i> Refresh
+        <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card card-chart">
+                <div class="card-header">
+                  <h4 class="card-title">Incomes</h4>
+                </div>
+                <div class="card-body">
+                  <div class="chart-area">
+                    <canvas baseChart id="IncomesChart"
+                            [datasets]="incomeChartData"
+                            [labels]="incomeChartLabels"
+                            [colors]="incomeChartColors"
+                            [options]="incomeChartOptions"
+                            [chartType]="incomeChartType"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)"></canvas>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats" (click)="refreshIncomesChart()">
+                    <i class="now-ui-icons arrows-1_refresh-69"></i> Refresh
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+              <div class="card card-chart">
+                <div class="card-header">
+                  <h4 class="card-title">Expenses</h4>
+                </div>
+                <div class="card-body">
+                  <div class="chart-area">
+                    <!-- <canvas id="lineChartExampleWithNumbersAndGrid"></canvas> -->
+                    <canvas baseChart id="ExpensesChart"
+                            [datasets]="expensesChartData"
+                            [labels]="expensesChartLabels"
+                            [colors]="expensesChartColors"
+                            [options]="expensesChartOptions"
+                            [chartType]="expensesChartType"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)"></canvas>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <div class="stats" (click)="refreshExpensesChart()">
+                    <i class="now-ui-icons arrows-1_refresh-69"></i> Refresh
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-4 col-md-6">
-      <div class="card card-chart">
-        <div class="card-header">
-          <h4 class="card-title">Last 10 Hours</h4>
-        </div>
-        <div class="card-body">
-          <div class="chart-area">
-            <canvas baseChart id="LastTenHoursChart"
-                        [datasets]="lastTenHoursChartData"
-                        [labels]="lastTenHoursChartLabels"
-                        [colors]="lastTenHoursChartColors"
-                        [options]="lastTenHoursChartOptions"
-                        [chartType]="lastTenHoursChartType"
-                        (chartHover)="chartHovered($event)"
-                        (chartClick)="chartClicked($event)"></canvas>
-          </div>
-        </div>
-        <div class="card-footer">
-          <div class="stats" (click)="refreshLast10HourChart()">
-            <i class="now-ui-icons arrows-1_refresh-69"></i> Refresh
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-title">Latest 5 Ingress Logs</h4>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table">
-              <thead class="text-enershare">
-              <th scope="col">Provider</th>
-              <th scope="col">Resource Id</th>
-              <th scope="col">Resource Type</th>
-              <th scope="col">Contract Id</th>
-              <th scope="col">Date</th>
-              <th scope="col">Action</th>
-              </thead>
-              <tbody>
-              <tr *ngFor="let log of ingressLogs">
-                <td>{{ log.provider }}</td>
-                <td>{{ log.resourceId }}</td>
-                <td>{{ log.resourceType }}</td>
-                <td>{{ log.contractId }}</td>
-                <td>{{ log.createdOn | date : 'yyyy-MM-dd HH:mm' }}</td>
-                <td>{{ log.action }}</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-title">Latest 5 Egress Logs</h4>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table">
-                <thead class="text-enershare">
-                <th scope="col">Consumer</th>
-                <th scope="col">Resource Id</th>
-                <th scope="col">Resource Type</th>
-                <th scope="col">Contract Id</th>
-                <th scope="col">Date</th>
-                <th scope="col">Action</th>
-                </thead>
-                <tbody>
-                <tr *ngFor="let log of egressLogs">
-                  <td>{{ log.consumer }}</td>
-                  <td>{{ log.resourceId }}</td>
-                  <td>{{ log.resourceType }}</td>
-                  <td>{{ log.contractId }}</td>
-                  <td>{{ log.createdOn | date : 'yyyy-MM-dd HH:mm' }}</td>
-                  <td>{{ log.action }}</td>
-                </tr>
-                </tbody>
-            </table>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">My Latest 5 Purchases</h4>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="text-enershare">
+                      <th scope="col">Resource Id</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Hash</th>
+                      <th scope="col">Date</th>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let resource of purchasedProvidedResources">
+                        <td>{{ resource.resourceId }}</td>
+                        <td class="text-center">{{ resource.price }}</td>
+                        <td>{{ resource.hash }}</td>
+                        <td>{{ resource.createdOn | date : 'yyyy-MM-dd HH:mm' }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h4 class="card-title">Latest 5 Purchased Resources</h4>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead class="text-enershare">
+                      <th scope="col">Resource Id</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Hash</th>
+                      <th scope="col">Date</th>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let resource of purchasedConsumedResources">
+                        <td>{{ resource.resourceId }}</td>
+                        <td class="text-center">{{ resource.price }}</td>
+                        <td>{{ resource.hash }}</td>
+                        <td>{{ resource.createdOn | date : 'yyyy-MM-dd HH:mm' }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

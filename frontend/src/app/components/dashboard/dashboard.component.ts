@@ -4,6 +4,8 @@ import {LogSummary} from "../../dtos/logSummary";
 import {DashboardService} from "../../services/dashboard/dashboard.service";
 import {Subject} from "rxjs";
 import {ChartType} from "chart.js";
+import {Amount} from "../../dtos/amount";
+import {PurchasedResources} from "../../dtos/purchasedResources";
 
 
 @Component({
@@ -40,6 +42,20 @@ export class DashboardComponent implements OnInit {
   lastTenHoursChartLabels: Array<any>;
   lastTenHoursChartColors: Array<any>
 
+  //Income chart initialization
+  incomeChartType: ChartType;
+  incomeChartData: Array<any>;
+  incomeChartOptions: any;
+  incomeChartLabels: Array<any>;
+  incomeChartColors: Array<any>
+
+  //Expenses chart initialization
+  expensesChartType: ChartType;
+  expensesChartData: Array<any>;
+  expensesChartOptions: any;
+  expensesChartLabels: Array<any>;
+  expensesChartColors: Array<any>
+
 
   private gradientStroke;
   private chartColor;
@@ -51,19 +67,30 @@ export class DashboardComponent implements OnInit {
   private ingressChartOptionsConfiguration: any;
   private egressChartOptionsConfiguration: any;
 
+  private incomesChartOptionsConfiguration: any;
+  private expensesChartOptionsConfiguration: any;
+
   private loadDataToAllCharts = new Subject<void>();
+  private loadDataToIncomesChart = new Subject<void>();
+  private loadDataToExpensesChart = new Subject<void>();
   private loadDataToIngressCharts = new Subject<void>();
   private loadDataToEgressCharts = new Subject<void>();
 
   private labels: string[];
   private ingressCounts: number[];
   private egressCounts: number[];
+  private incomes: number[];
+  private expenses: number[];
 
 
   page = 1;
   pageSize = 5;
   ingressLogs: Logs[];
   egressLogs: Logs[];
+
+  purchasedProvidedResources: PurchasedResources[];
+  purchasedConsumedResources: PurchasedResources[];
+
 
 
   public chartClicked(e: any): void {
@@ -98,10 +125,25 @@ export class DashboardComponent implements OnInit {
       this.setDataToDashboardChart();
     });
 
+    this.loadDataToIncomesChart.subscribe(()=>{
+      this.setDataToIncomeChart();
+    });
+
+    this.loadDataToExpensesChart.subscribe(()=>{
+      this.setDataToExpensesChart();
+    });
+
     this.getSummary(this.loadDataToAllCharts);
     this.getLastTenHoursSummary();
     this.getLatestIngressLogs();
     this.getLatestEgressLogs();
+    this.getLatestProvidedPurchasedResources();
+    this.getLatestConsumedPurchasedResources();
+
+
+    this.getIncomes(this.loadDataToIncomesChart);
+    this.getExpenses(this.loadDataToExpensesChart);
+
 
 
     this.chartColor = "#FFFFFF";
@@ -257,6 +299,28 @@ export class DashboardComponent implements OnInit {
         }],
       }
     };
+
+      this.incomesChartOptionsConfiguration = {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      stepSize: 20,
+                      beginAtZero: true,
+                  }
+              }],
+          }
+      };
+
+      this.expensesChartOptionsConfiguration = {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      stepSize: 20,
+                      beginAtZero: true,
+                  }
+              }],
+          }
+      };
 
     this.canvas = document.getElementById("IngressChart");
     this.ctx = this.canvas.getContext("2d");
@@ -421,6 +485,79 @@ export class DashboardComponent implements OnInit {
     }
 
     this.lastTenHoursChartType = 'bar';
+
+    this.canvas = document.getElementById("IncomesChart");
+    this.ctx = this.canvas.getContext("2d");
+
+    this.gradientStroke = this.ctx.createLinearGradient(500, 0, 100, 0);
+    this.gradientStroke.addColorStop(0, '#18ce0f');
+    this.gradientStroke.addColorStop(1, this.chartColor);
+
+    this.gradientFill = this.ctx.createLinearGradient(0, 170, 0, 50);
+    this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
+    this.gradientFill.addColorStop(1, this.hexToRGB('#00fd33', 0.4));
+
+    this.incomeChartData = [
+      {
+        label: "Income",
+          pointBorderWidth: 2,
+          pointHoverRadius: 4,
+          pointHoverBorderWidth: 1,
+          pointRadius: 4,
+          fill: true,
+          borderWidth: 2,
+          data: [30, 250, 200, 290, 230, 20, 250, 260, 220, 240, 290, 25]
+          }
+      ];
+    this.incomeChartColors = [
+      {
+        borderColor: "#00fd33",
+          pointBorderColor: "#FFF",
+          pointBackgroundColor: "#00fd33",
+          backgroundColor: this.gradientFill
+      }
+      ];
+    this.incomeChartLabels = [];
+    this.incomeChartLabels.push()
+
+      this.incomeChartOptions = this.incomesChartOptionsConfiguration;
+
+      this.incomeChartType = 'line';
+
+      this.canvas = document.getElementById("ExpensesChart");
+      this.ctx = this.canvas.getContext("2d");
+
+      this.gradientStroke = this.ctx.createLinearGradient(500, 0, 100, 0);
+      this.gradientStroke.addColorStop(0, '#18ce0f');
+      this.gradientStroke.addColorStop(1, this.chartColor);
+
+      this.gradientFill = this.ctx.createLinearGradient(0, 170, 0, 50);
+      this.gradientFill.addColorStop(0, "rgba(128, 182, 244, 0)");
+      this.gradientFill.addColorStop(1, this.hexToRGB('#e37a7a', 0.4));
+
+      this.expensesChartData = [
+          {
+              label: "Expenses",
+              pointBorderWidth: 2,
+              pointHoverRadius: 4,
+              pointHoverBorderWidth: 1,
+              pointRadius: 4,
+              fill: true,
+              borderWidth: 2,
+              data: [30, 250, 200, 290, 230, 20, 250, 260, 220, 240, 290, 25]
+          }
+      ];
+      this.expensesChartColors = [
+          {
+              borderColor: "#f96332",
+              pointBorderColor: "#FFF",
+              pointBackgroundColor: "#f96332",
+              backgroundColor: this.gradientFill
+          }
+      ];
+      this.expensesChartLabels = [];
+      this.expensesChartOptions = this.expensesChartOptionsConfiguration;
+      this.expensesChartType = 'line';
   }
 
   private formatDate(date: Date): string {
@@ -459,6 +596,42 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
+
+  getIncomes(subject: Subject<void>) {
+    this.dashboardService.getIncomes().subscribe(
+      (data: Amount[]) => {
+        console.log(data); // Log the response for debugging
+
+        // Extract the labels and counts from the received data
+        this.labels = data.map(item => item.dataLabel);
+        this.incomes = data.map(item => item.price);
+
+        subject.next();
+      },
+      (error) => {
+        console.error('Error fetching custom log summaries:', error);
+        // Handle error
+      }
+    );
+  }
+
+    getExpenses(subject: Subject<void>) {
+        this.dashboardService.getExpenses().subscribe(
+            (data: Amount[]) => {
+                console.log(data); // Log the response for debugging
+
+                // Extract the labels and counts from the received data
+                this.labels = data.map(item => item.dataLabel);
+                this.expenses = data.map(item => item.price);
+
+                subject.next();
+            },
+            (error) => {
+                console.error('Error fetching custom log summaries:', error);
+                // Handle error
+            }
+        );
+    }
 
   getLastTenHoursSummary() {
     this.dashboardService.getLastTenHoursSummary().subscribe(
@@ -515,6 +688,20 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  getLatestProvidedPurchasedResources(){
+      this.dashboardService.getLatestProvidedPurchasedRecourses(this.pageSize).subscribe(
+          data => this.purchasedProvidedResources = data,
+          error => console.error('Error fetching latest egress logs:', error)
+      );
+  }
+
+  getLatestConsumedPurchasedResources(){
+    this.dashboardService.getLatestConsumedPurchasedRecourses(this.pageSize).subscribe(
+            data => this.purchasedConsumedResources = data,
+            error => console.error('Error fetching latest egress logs:', error)
+        );
+    }
+
   setDataToIngressChart() {
     this.ingressChartLabels = this.labels;
     this.ingressChartData = [
@@ -538,7 +725,22 @@ export class DashboardComponent implements OnInit {
     ];
   }
 
-  refreshIngressChart() {
+    setDataToIncomeChart() {
+        this.incomeChartLabels = this.labels;
+        this.incomeChartData = [
+            {data: this.incomes, label: 'Incomes (€)'}
+        ];
+    }
+
+    setDataToExpensesChart() {
+        this.expensesChartLabels = this.labels;
+        this.expensesChartData = [
+            {data: this.expenses, label: 'Expenses (€)'}
+        ];
+    }
+
+
+    refreshIngressChart() {
     this.loadDataToIngressCharts.subscribe(() => {
       this.setDataToIngressChart();
     });
@@ -557,5 +759,21 @@ export class DashboardComponent implements OnInit {
   refreshLast10HourChart() {
     this.getLastTenHoursSummary()
   }
+
+  refreshIncomesChart() {
+    this.loadDataToIncomesChart.subscribe(() => {
+      this.setDataToIncomeChart();
+    });
+
+    this.getIncomes(this.loadDataToIncomesChart);
+  }
+
+    refreshExpensesChart() {
+        this.loadDataToExpensesChart.subscribe(() => {
+            this.setDataToExpensesChart();
+        });
+
+        this.getIncomes(this.loadDataToExpensesChart);
+    }
 }
 

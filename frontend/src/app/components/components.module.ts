@@ -7,12 +7,18 @@ import { FooterComponent } from './footer/footer.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import { RegisterComponent } from './register/register.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { UserFormComponent } from './users/user-form/user-form.component';
 import { UserListComponent } from './users/user-list/user-list.component';
 import {ConfirmationDialogComponent} from "./confirmation-dialog/confirmation-dialog.component";
 import { RegisterUserComponent } from './register-user/register-user.component';
+import { PurchaseResourcesComponent } from './purchase-resources/purchase-resources.component';
+import { ResourcesComponent } from './resources/resources.component';
+import { ProposedAuctionsComponent} from "./proposed-auctions/proposed-auctions.component";
+import { WonAuctionsComponent} from "./won-auctions/won-auctions.component";
+import { BidsPlacedComponent } from './bids-placed/bids-placed.component';
+import { BidsAcceptedComponent} from "./bids-accepted/bids-accepted.component";
+
 
 @NgModule({
     imports: [
@@ -22,17 +28,22 @@ import { RegisterUserComponent } from './register-user/register-user.component';
         FontAwesomeModule,
         FormsModule,
         ReactiveFormsModule,
-      
+
     ],
   declarations: [
     FooterComponent,
     NavbarComponent,
     SidebarComponent,
-    RegisterComponent,
     UserFormComponent,
     UserListComponent,
     ConfirmationDialogComponent,
-    RegisterUserComponent
+    RegisterUserComponent,
+    PurchaseResourcesComponent,
+    ResourcesComponent,
+    ProposedAuctionsComponent,
+    WonAuctionsComponent,
+    BidsPlacedComponent,
+    BidsAcceptedComponent,
   ],
   exports: [
     FooterComponent,
