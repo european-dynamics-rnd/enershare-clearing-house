@@ -1,0 +1,230 @@
+{
+	"info": {
+		"_postman_id": "ba2a8f12-90b3-4557-80f4-11dc0a31d1a3",
+		"name": "ENERSHARE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3380004"
+	},
+	"item": [
+		{
+			"name": "Register New User",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstname\": \"chris1\",\r\n  \"lastname\": \"asla1\",\r\n  \"email\": \"chrisasla1@eurodyn.com\",\r\n  \"password\": \"1234\",\r\n  \"role\": \"ADMIN\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{secure}}://{{url}}/api/user/create",
+					"protocol": "{{secure}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate New User",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"admin\",\r\n  \"password\": \"admin\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{secure}}://{{url}}/api/auth/authenticate",
+					"protocol": "{{secure}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Logs",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2dWtAZXVyb2R5bi5jb20iLCJpYXQiOjE3MTI5MjM0MzksImV4cCI6MTcxMjkyMzQ5OX0.fXk2Sw5PcBGR1yQJPXc7xMu64Je4YcHKjfHgrpNY_WI",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"consumer\": \"urn:ids:consumer\",\r\n  \"provider\": \"urn:ids:provider\",\r\n  \"senderAgent\": \"urn:ids:agent:ConsumerA\",\r\n  \"recipientAgent\": \"urn:ids:agent:ProviderA\",\r\n  \"contractId\": \"urn:contracts:clearing\",\r\n  \"requestParameters\": {\r\n    \"resourceId\": \"urn:ids:tno:artifact-99\",\r\n    \"resourceType\": \"openapi\",\r\n    \"action\": \"READ\"\r\n  },\r\n  \"contextParameters\": { \"purpose\": null, \"datClaims\": null },\r\n  \"mode\": \"EGRESS\",\r\n  \"stage\": \"PRE\",\r\n  \"requestId\": \"urn:uuid:XXX\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{secure}}://{{url}}/api/logs",
+					"protocol": "{{secure}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"logs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Log",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2dWtAZXVyb2R5bi5jb20iLCJpYXQiOjE3MTI5MjM0MzksImV4cCI6MTcxMjkyMzQ5OX0.fXk2Sw5PcBGR1yQJPXc7xMu64Je4YcHKjfHgrpNY_WI",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"consumer\": \"urn:ids:enershare:connector:ed:consumer\",\r\n  \"provider\": \"urn:ids:enershare:connector:ed:provider\",\r\n  \"senderAgent\": \"urn:ids:agent:ConsumerA\",\r\n  \"recipientAgent\": \"urn:ids:agent:ProviderA\",\r\n  \"contractId\": \"urn:contracts:clearing\",\r\n  \"requestParameters\": {\r\n    \"resourceType\": \"openapi\",\r\n    \"action\": \"READ\"\r\n  },\r\n  \"contextParameters\": { \"purpose\": null, \"datClaims\": null },\r\n  \"mode\": \"INGRESS\",\r\n  \"stage\": \"PRE\",\r\n  \"requestId\": \"urn:uuid:XXX\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{secure}}://{{url}}:{{port}}/api/logs/create",
+					"protocol": "{{secure}}",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"logs",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Health Check",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{secure}}://{{url}}/api/health-page",
+					"protocol": "{{secure}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"health-page"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxNzQxOTgzNiwiZXhwIjoxNzE3NzE5ODM2fQ.bIb8Lb2QTqg2u43oA2yHt4UDYNXvRF5JHSgHoAPdBVo",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "enershare.eurodyn.com",
+			"type": "string"
+		},
+		{
+			"key": "secure",
+			"value": "https",
+			"type": "string"
+		},
+		{
+			"key": "port",
+			"value": "15111",
+			"type": "string"
+		}
+	]
+}
