@@ -1,0 +1,280 @@
+{
+	"info": {
+		"_postman_id": "4d674d71-3134-4198-bc73-efeb0459fd18",
+		"name": "Enershare Clearing House",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3380004"
+	},
+	"item": [
+		{
+			"name": "Create Free Resource",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:ed:artifact-001\",\r\n    \"providerConnectorID\": \"urn:ids:enershare:connector:ed:provider\",\r\n    \"providerParticipantIDSID\": \"urn:ids:enershare:participants:european-dynamics-provider\",\r\n    \"artifactsIds\": [\"urn:ids:enershare:connector:ed:provider:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"free\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url}}/api/resources/free/create",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"resources",
+						"free",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create On Sale Resource",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:ed:artifact-002\",\r\n    \"providerConnectorID\": \"urn:ids:enershare:connector:ed:provider\",\r\n    \"providerParticipantIDSID\": \"urn:ids:enershare:participants:european-dynamics-provider\",\r\n    \"artifactsIds\": [\"urn:ids:enershare:connector:ed:provider:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"free\": false,\r\n    \"hash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d90\",\r\n    \"status\": \"onSale\",\r\n    \"price\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url}}/api/resources/sale/create",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"resources",
+						"sale",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Purchase",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:ed:artifact-002\",\r\n    \"artifactsIds\": [\"urn:ids:enershare:connector:ed:provider:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"consumerParticipantIDSID\": \"urn:ids:enershare:participants:european-dynamics-consumer\",\r\n    \"hash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d90\",\r\n    \"status\": \"Purchased\",\r\n    \"price\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url}}/api/purchases/create",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"purchases",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auction Opened",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:ed:artifact-002\",\r\n    \"providerConnectorID\": \"urn:ids:enershare:connector:ed:provider\",\r\n    \"providerParticipantIDSID\": \"urn:ids:enershare:participants:european-dynamics-provider\",\r\n    \"artifactsIds\": [\"urn:ids:enershare:connector:ed:provider:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"free\": false,\r\n    \"hash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d90\",\r\n    \"endDate\": 1732794733,\r\n    \"status\": \"AuctionOpened\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url}}/api/auctions/open/create",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"auctions",
+						"open",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bid Placed",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:ed:artifact-002\",\r\n    \"providerConnectorID\": \"urn:ids:enershare:connector:ed:provider\",\r\n    \"providerParticipantIDSID\": \"urn:ids:enershare:participants:european-dynamics-provider\",\r\n    \"free\": false,\r\n    \"artifactsIds\": [\"urn:ids:enershare:connector:ed:provider:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"auctionHash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d90\",\r\n    \"hash\": \"0x22222222222222222222222222222222222222222222222222222222222226\",\r\n    \"status\": \"BidPlaced\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url}}/api/bids/placed/create",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"bids",
+						"placed",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bid Accepted",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:ed:artifact-002\",\r\n    \"consumerParticipantIDSID\": \"urn:ids:enershare:participants:european-dynamics-consumer\",\r\n    \"free\": false,\r\n    \"artifactsIds\": [\"urn:ids:enershare:connector:ed:provider:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"auctionHash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d90\",\r\n    \"hash\": \"0x22222222222222222222222222222222222222222222222222222222222227\",\r\n    \"status\": \"BidAccepted\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url}}/api/bids/accepted/create",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"bids",
+						"accepted",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auction Closed",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resourceID\": \"urn:ids:ed:artifact-002\",\r\n    \"consumerParticipantIDSID\": \"urn:ids:enershare:participants:european-dynamics-consumer\",\r\n    \"artifactsIds\": [\"urn:ids:enershare:connector:ed:provider:artifacts:fa4a5836-1f4f-4b0a-b88d-dbdbb16bed5b\"],\r\n    \"hash\": \"0x96b7a59890a95132cd87364a0e4547a5cbd874f686d18ff3f71af72711a96d90\",\r\n    \"winnerBidHash\": \"0x22222222222222222222222222222222222222222222222222222222222227\",\r\n    \"status\": \"AuctionClosed\",\r\n    \"bids\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url}}/api/auctions/closed/create",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"auctions",
+						"closed",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Log",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"consumer\": \"urn:ids:enershare:connector:ed:consumer\",\r\n  \"provider\": \"urn:ids:enershare:connector:ed:provider\",\r\n  \"senderAgent\": \"urn:ids:agent:Consumer\",\r\n  \"recipientAgent\": \"urn:ids:agent:Provider\",\r\n  \"contractId\": \"urn:contracts:clearing\",\r\n  \"requestParameters\": {\r\n    \"resourceId\": \"urn:ids:ed:artifact-001\",\r\n    \"resourceType\": \"openapi\",\r\n    \"action\": \"READ\"\r\n  },\r\n  \"contextParameters\": { \"purpose\": null, \"datClaims\": null },\r\n  \"mode\": \"INGRESS\",\r\n  \"stage\": \"PRE\",\r\n  \"requestId\": \"urn:uuid:XXX\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{url}}/api/logs/create",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"logs",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "enershare.eurodyn.com",
+			"type": "string"
+		}
+	]
+}
