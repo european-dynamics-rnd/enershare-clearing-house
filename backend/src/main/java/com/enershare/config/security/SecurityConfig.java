@@ -41,8 +41,8 @@ public class SecurityConfig {
                         "/auctions/open/create",
                         "/bids/accepted/create",
                         "/bids/placed/create",
-                        "/resources/free/crete",
-                        "/resources/sale/crete",
+                        "/resources/free/create",
+                        "/resources/sale/create",
                         "/purchases/create",
                         "/user/fetch-available-participants",
                         "/user/fetch-available-connectors/*")
