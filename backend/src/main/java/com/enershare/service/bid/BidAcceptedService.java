@@ -6,7 +6,9 @@ import com.enershare.filtering.specification.bid.BidAcceptedSpecification;
 import com.enershare.mapper.BidAcceptedMapper;
 import com.enershare.model.bid.BidAccepted;
 import com.enershare.repository.bid.BidAcceptedRepository;
+import com.enershare.service.auth.BasicAuthenticationService;
 import com.enershare.service.user.UsernameService;
+import com.enershare.utils.RunnableWithReturn;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,10 +30,12 @@ public class BidAcceptedService {
     private final BidAcceptedRepository bidAcceptedRepository;
     private final BidAcceptedMapper bidAcceptedMapper;
     private final UsernameService usernameService;
+    private final BasicAuthenticationService basicAuthenticationService;
 
-    public void createBidAccepted(BidAcceptedDTO bidAcceptedDTO) {
+    public ResponseEntity<Void> createBidAccepted(BidAcceptedDTO bidAcceptedDTO) {
         BidAccepted bidAccepted = bidAcceptedMapper.mapDTOToEntity(bidAcceptedDTO);
         bidAcceptedRepository.save(bidAccepted);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     public Optional<BidAccepted> getBidAcceptedById(Long id) {
@@ -59,5 +65,9 @@ public class BidAcceptedService {
     public List<BidAccepted> getBidsAcceptedByUser(HttpServletRequest request) {
         String username = usernameService.getUsernameFromRequest(request);
         return bidAcceptedRepository.findBidsAcceptedByUsername(username);
+    }
+
+    public ResponseEntity<Void> createBidAcceptedWithBasicAuthentication(String authHeader, RunnableWithReturn<ResponseEntity<Void>> createBidAcceptedAction) {
+        return basicAuthenticationService.authenticateAndExecute(authHeader, createBidAcceptedAction);
     }
 }

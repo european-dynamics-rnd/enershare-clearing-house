@@ -23,9 +23,9 @@ public class BidPlacedController {
     private final UsernameService usernameService;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createBidPlaced(@RequestBody BidPlacedDTO bidPlacedDTO) {
-        bidPlacedService.createBidPlaced(bidPlacedDTO);
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<Void> createBidPlaced(@RequestBody BidPlacedDTO bidPlacedDTO,
+                                                @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        return bidPlacedService.createBidPlacedWithBasicAuthentication(authHeader, () -> bidPlacedService.createBidPlaced(bidPlacedDTO));
     }
 
     @GetMapping("/{id}")

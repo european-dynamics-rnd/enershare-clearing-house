@@ -6,12 +6,16 @@ import com.enershare.filtering.specification.resource.ResourceSpecification;
 import com.enershare.mapper.ResourceMapper;
 import com.enershare.model.resource.Resource;
 import com.enershare.repository.resource.ResourceRepository;
+import com.enershare.service.auth.BasicAuthenticationService;
+import com.enershare.utils.RunnableWithReturn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,10 +27,12 @@ public class ResourceService {
 
     private final ResourceRepository resourceRepository;
     private final ResourceMapper resourceMapper;
+    private final BasicAuthenticationService basicAuthenticationService;
 
-    public void createResource(ResourceDTO resourceDTO) {
+    public ResponseEntity<Void> createResource(ResourceDTO resourceDTO) {
         Resource resource = resourceMapper.mapDTOToEntity(resourceDTO);
         resourceRepository.save(resource);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     public Optional<Resource> getResourceById(String id) {
@@ -54,5 +60,9 @@ public class ResourceService {
 
     public List<Resource> getResourcesByStatus(String status) {
         return resourceRepository.findByStatus(status);
+    }
+
+    public ResponseEntity<Void> createResourceWithBasicAuthentication(String authHeader, RunnableWithReturn<ResponseEntity<Void>> createResourceAction) {
+        return basicAuthenticationService.authenticateAndExecute(authHeader, createResourceAction);
     }
 }

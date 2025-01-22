@@ -19,10 +19,10 @@ public class SaleController {
     private final ResourceService resourceService;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createSaleResource(@Valid @RequestBody ResourceDTO resourceDTO) {
+    public ResponseEntity<Void> createSaleResource(@Valid @RequestBody ResourceDTO resourceDTO,
+                                                   @RequestHeader(value = "Authorization", required = false) String authHeader) {
         resourceDTO.setStatus("onSale");
-        resourceService.createResource(resourceDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return resourceService.createResourceWithBasicAuthentication(authHeader, () -> resourceService.createResource(resourceDTO));
     }
 
     @GetMapping

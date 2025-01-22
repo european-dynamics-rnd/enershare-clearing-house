@@ -6,12 +6,16 @@ import com.enershare.filtering.specification.auction.AuctionSpecification;
 import com.enershare.mapper.AuctionMapper;
 import com.enershare.model.auction.Auction;
 import com.enershare.repository.auction.AuctionRepository;
+import com.enershare.service.auth.BasicAuthenticationService;
+import com.enershare.utils.RunnableWithReturn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +27,9 @@ public class AuctionService {
 
     private final AuctionRepository auctionRepository;
     private final AuctionMapper auctionMapper;
+    private final BasicAuthenticationService basicAuthenticationService;
 
-    public void createAuction(AuctionDTO auctionDTO) {
+    public ResponseEntity<Void> createAuction(AuctionDTO auctionDTO) {
         Auction auction = auctionMapper.mapAuctionDTOToEntity(auctionDTO);
 
         // Check if an entry with the same hash already exists
@@ -38,6 +43,8 @@ public class AuctionService {
             // Save as a new auction
             auctionRepository.save(auction);
         }
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     public Optional<Auction> getAuctionById(Long id) {
@@ -74,6 +81,10 @@ public class AuctionService {
     public List<Auction> getLatestWonAuctions(String username, int count) {
         Pageable pageable = PageRequest.of(0, count, Sort.by(Sort.Direction.DESC, "createdOn")); // Sort by createdOn
         return auctionRepository.findLatestWonAuctions(username, pageable);
+    }
+
+    public ResponseEntity<Void> createAuctionWithBasicAuthentication(String authHeader, RunnableWithReturn<ResponseEntity<Void>> createAuctionAction) {
+        return basicAuthenticationService.authenticateAndExecute(authHeader, createAuctionAction);
     }
 
 

@@ -23,10 +23,11 @@ public class FreeController {
     private final ResourceService resourceService;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createFreeResource(@Valid @RequestBody ResourceDTO resourceDTO) {
+    public ResponseEntity<Void> createFreeResource(@Valid @RequestBody ResourceDTO resourceDTO,
+                                                   @RequestHeader(value = "Authorization", required = false) String authHeader){
         resourceDTO.setStatus("free");
-        resourceService.createResource(resourceDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return resourceService.createResourceWithBasicAuthentication(authHeader,()->resourceService.createResource(resourceDTO));
+
     }
 
 

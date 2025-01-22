@@ -23,9 +23,9 @@ public class BidAcceptedController {
     private final UsernameService usernameService;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createBidAccepted(@RequestBody BidAcceptedDTO bidAcceptedDTO) {
-        bidAcceptedService.createBidAccepted(bidAcceptedDTO);
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<Void> createBidAccepted(@RequestBody BidAcceptedDTO bidAcceptedDTO,
+                                                  @RequestHeader(value = "Authorization", required = false) String authHeader) {
+       return bidAcceptedService.createBidAcceptedWithBasicAuthentication(authHeader,()->bidAcceptedService.createBidAccepted(bidAcceptedDTO));
     }
 
     @GetMapping("/{id}")

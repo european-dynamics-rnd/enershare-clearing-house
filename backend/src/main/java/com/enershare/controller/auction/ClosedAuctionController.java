@@ -18,9 +18,10 @@ public class ClosedAuctionController {
     private final AuctionService auctionService;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createClosedAuction(@RequestBody AuctionDTO auctionDTO) {
-        auctionService.createAuction(auctionDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Void> createClosedAuction(@RequestBody AuctionDTO auctionDTO,
+                                                    @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        return auctionService.createAuctionWithBasicAuthentication(authHeader,()-> auctionService.createAuction(auctionDTO));
+
     }
 
     @GetMapping

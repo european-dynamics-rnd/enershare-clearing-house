@@ -11,7 +11,9 @@ import com.enershare.model.resource.Resource;
 import com.enershare.repository.logs.LogsRepository;
 import com.enershare.repository.purchase.PurchaseRepository;
 import com.enershare.repository.resource.ResourceRepository;
+import com.enershare.service.auth.BasicAuthenticationService;
 import com.enershare.service.user.UserService;
+import com.enershare.utils.RunnableWithReturn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,6 +36,7 @@ public class LogsService {
     private  final PurchaseRepository purchaseRepository;
     private final ResourceRepository resourceRepository;
     private final UserService userService;
+    private final BasicAuthenticationService basicAuthenticationService;
 
     public ResponseEntity<String> createLog(LogsDTO logsDTO) {
         return Optional.ofNullable(logsDTO)
@@ -117,6 +120,11 @@ public class LogsService {
 
     public List<Logs> getLatestEgressLogs(String username, int count) {
         return logsRepository.findLatestEgressLogs(username, PageRequest.of(0, count));
+    }
+
+
+    public ResponseEntity<String> createLogWithBasicAuthentication(String authHeader, RunnableWithReturn<ResponseEntity<String>> createLogAction) {
+        return basicAuthenticationService.authenticateAndExecute(authHeader, createLogAction);
     }
 
 

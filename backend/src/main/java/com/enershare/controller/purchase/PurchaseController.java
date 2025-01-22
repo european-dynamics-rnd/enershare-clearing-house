@@ -26,9 +26,9 @@ public class PurchaseController {
     private final UsernameService usernameService;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createPurchase(@Valid @RequestBody PurchaseDTO purchaseDTO) {
-        purchaseService.createPurchase(purchaseDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Void> createPurchase(@Valid @RequestBody PurchaseDTO purchaseDTO,
+                                               @RequestHeader(value = "Authorization", required = false) String authHeader) {
+       return  purchaseService.createPurchaseWithBasicAuthentication(authHeader,()->purchaseService.createPurchase(purchaseDTO));
     }
 
     @GetMapping("/{id}")

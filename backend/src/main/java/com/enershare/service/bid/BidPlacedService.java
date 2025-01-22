@@ -6,7 +6,9 @@ import com.enershare.filtering.specification.bid.BidPlacedSpecification;
 import com.enershare.mapper.BidPlacedMapper;
 import com.enershare.model.bid.BidPlaced;
 import com.enershare.repository.bid.BidPlacedRepository;
+import com.enershare.service.auth.BasicAuthenticationService;
 import com.enershare.service.user.UsernameService;
+import com.enershare.utils.RunnableWithReturn;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,10 +30,12 @@ public class BidPlacedService {
     private final BidPlacedRepository bidPlacedRepository;
     private final BidPlacedMapper bidPlacedMapper;
     private final UsernameService usernameService;
+    private final BasicAuthenticationService basicAuthenticationService;
 
-    public void createBidPlaced(BidPlacedDTO bidPlacedDTO) {
+    public ResponseEntity<Void> createBidPlaced(BidPlacedDTO bidPlacedDTO) {
         BidPlaced bidPlaced = bidPlacedMapper.mapDTOToEntity(bidPlacedDTO);
         bidPlacedRepository.save(bidPlaced);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     public Optional<BidPlaced> getBidPlacedById(Long id) {
@@ -59,5 +65,9 @@ public class BidPlacedService {
     public List<BidPlaced> getBidsPlacedByUser(HttpServletRequest request) {
         String username = usernameService.getUsernameFromRequest(request);
         return bidPlacedRepository.findBidsPlacedByUsername(username);
+    }
+
+    public ResponseEntity<Void> createBidPlacedWithBasicAuthentication(String authHeader, RunnableWithReturn<ResponseEntity<Void>> createBidPlacedAction) {
+        return basicAuthenticationService.authenticateAndExecute(authHeader, createBidPlacedAction);
     }
 }

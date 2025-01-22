@@ -7,12 +7,16 @@ import com.enershare.filtering.specification.purchase.PurchaseSpecification;
 import com.enershare.mapper.PurchaseMapper;
 import com.enershare.model.purchase.Purchase;
 import com.enershare.repository.purchase.PurchaseRepository;
+import com.enershare.service.auth.BasicAuthenticationService;
+import com.enershare.utils.RunnableWithReturn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,10 +28,12 @@ public class PurchaseService {
 
     private final PurchaseRepository purchaseRepository;
     private final PurchaseMapper purchaseMapper;
+    private final BasicAuthenticationService basicAuthenticationService;
 
-    public void createPurchase(PurchaseDTO purchaseDTO) {
+    public ResponseEntity<Void> createPurchase(PurchaseDTO purchaseDTO) {
         Purchase purchase = purchaseMapper.mapDTOToEntity(purchaseDTO);
         purchaseRepository.save(purchase);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     public Optional<Purchase> getPurchaseById(Long id) {
@@ -63,5 +69,8 @@ public class PurchaseService {
 
     public List<AmountDTO> getIncomes(String username) {
         return purchaseRepository.getIncomesLastYearByMonth(username);
+    }
+    public ResponseEntity<Void> createPurchaseWithBasicAuthentication(String authHeader, RunnableWithReturn<ResponseEntity<Void>> createPurchaseAction) {
+        return basicAuthenticationService.authenticateAndExecute(authHeader, createPurchaseAction);
     }
 }
