@@ -27,9 +27,8 @@ public class LogsController {
     private final LogsRepository logsRepository;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createLog(@RequestBody LogsDTO logsDTO,
-                                            @RequestHeader(value = "Authorization", required = false) String authHeader) {
-        return logsService.createLogWithBasicAuthentication(authHeader, () -> logsService.createLog(logsDTO));
+    public ResponseEntity<String> createLog(@RequestBody LogsDTO logsDTO) {
+        return logsService.createLog(logsDTO);
     }
 
     @GetMapping("/{id}")

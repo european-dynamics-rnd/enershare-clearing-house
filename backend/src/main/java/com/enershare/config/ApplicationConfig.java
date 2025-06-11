@@ -60,7 +60,7 @@ public class ApplicationConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(false);
+        config.setAllowCredentials(true);
         config.setAllowedOrigins(allowedOrigins);
         config.setAllowedHeaders(List.of(ORIGIN, CONTENT_TYPE, ACCEPT, AUTHORIZATION));
         config.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH"));

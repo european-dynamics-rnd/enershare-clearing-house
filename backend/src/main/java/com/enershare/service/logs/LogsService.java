@@ -68,10 +68,10 @@ public class LogsService {
 
                     } else {
                         Optional<Resource> resource = resourceRepository.findById(resourceId);
-
+                        Logs logs = logsMapper.mapDTOToEntity(logsDTO);
                         if (resource.isPresent()) {
                             Resource r = resource.get();
-                            Logs logs = logsMapper.mapDTOToEntity(logsDTO);
+
                             if (r.getFree()) {
                                 logs.setTransactionStatus("Transaction is completed");
                                 logsRepository.save(logs);
@@ -83,8 +83,9 @@ public class LogsService {
                                         .body("Forbidden: You need first to purchase this resource ");
                             }
                         } else {
-                            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                    .body("Bad Request: Resource does not exist");
+                            logs.setTransactionStatus("Transaction is completed");
+                            logsRepository.save(logs);
+                            return ResponseEntity.status(HttpStatus.CREATED).body("Transaction is completed");
                         }
                     }
                 })
